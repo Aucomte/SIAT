@@ -14,6 +14,7 @@ require(shinyFeedback) #met des warning aux inputs
 require(shinyjqui) #redimentionner tableau image etc / créé une div
 require(shinyFiles) #géner des directory
 
+library(data.table)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
@@ -106,7 +107,7 @@ heatplotSR <- function(tab,SR,var1,var2,var3,var4){
   data_moyenne$Mean[data_moyenne$Mean <= SR] = 0
   data_moyenne$Mean[data_moyenne$Mean > SR] = 1
   
-  p <- ggvis(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
+  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
   if(var4 != "None" && var4 !="" && !is.null(var4)){
       p <- p + facet_grid(. ~ data_moyenne[[varF[3]]])
   }

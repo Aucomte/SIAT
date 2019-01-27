@@ -6,74 +6,166 @@ server <-function(input,output,session){
 #liste des réactifs
 
   sr <- reactiveValues(
-    # pour l'analyse
+    
+    # panel 1 : lecture de la table
+    
     booTable = 0,
     table = NULL,
     timefactor = NULL,
     sep = ";",
     head = TRUE,
     dec = ",",
-    outVar = NULL
+    outVar = NULL,
+    
+    # panel 2 : Moyenne / SD
+    
+    resp1 = NULL,
+    fact1 = NULL,
+    
+    # panel 3 : Anova
+    
+    respanov = NULL,
+    factanov = NULL,
+    
+    # panel 4 : ACP
+    
+    # panel 5 : Heatmap
+    
+    respheat = NULL,
+    factH1 = NULL,
+    factH2 = NULL,
+    factH3 = NULL,
+    slidethresSH = NULL
+
+    
   )
   
-  observeEvent(input$timefactor, {
-    sr$timefactor = input$timefactor
+  # panel 1 : lecture de la table
+  observeEvent(input$TimeFactor, {
+    sr$timefactor = input$TimeFactor
+    if(!is.null(sr$timefactor) &&  sr$timefactor != "None" && sr$timefactor != ""){
+      sr$table[,sr$timefactor] = dmy(sr$table[,sr$timefactor])
+    }
   })
   observeEvent(input$sep, {
     sr$sep = input$sep
-  })
-  observeEvent(input$dec, {
-    sr$dec = input$dec
-  })
-  observeEvent(input$head, {
-    sr$head = input$head
-  })
-  observeEvent(input$file1, {
-    sr$booTable = 1
-  })
-  observe({
     if(sr$booTable == 1) {
-      sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE)
-      if(!is.null(sr$timefactor) &&  sr$timefactor != "None"){
-        sr$table[,sr$timefactor] = parse_date_time(sr$table[,sr$timefactor])
-      }
+      sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
       sr$table = as.data.frame(sr$table)
     }
   })
-  observe({
-    if(!is.null(sr$table)){
-      sr$outVar = colnames(sr$table)
-      updateSelectInput(session, inputId = "TimeFactor", choices = c("None", sr$outVar), selected = "None")
-      
-      output$DataSet <- renderDT({
-          datatable(sr$table, filter = c("none", "bottom", "top"))
-       })
+  observeEvent(input$dec, {
+    sr$dec = input$dec
+    if(sr$booTable == 1) {
+      sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
+      sr$table = as.data.frame(sr$table)
     }
   })
- 
+  observeEvent(input$head, {
+    sr$head = input$head
+    if(sr$booTable == 1) {
+      sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
+      sr$table = as.data.frame(sr$table)
+    }
+  })
+  observeEvent(input$file1, {
+    sr$booTable = 1
+    sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
+    sr$table = as.data.frame(sr$table)
+    sr$outVar = colnames(sr$table)
+    updateSelectInput(session, inputId = "TimeFactor", choices = c("None", sr$outVar), selected = "None")
+    
+    updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+    
+    updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+    
+    updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[2])
+    updateSelectInput(session, inputId = "factorH3", choices = c("None",sr$outVar, selected = ""))
+    
+  })
+  observe({
+    if(sr$booTable == 1) {
+      output$DataSet <- renderDT({
+        datatable(sr$table, filter = c("none", "bottom", "top"))
+      })
+    }
+  })
+  
+  # panel 2 : Moyenne / SD
+  
+  observeEvent(input$responseVar1,{
+    sr$resp1 = input$responseVar1
+  })
+  observeEvent(input$factors1,{
+    sr$fact1 = input$factors1
+  })
+  observe({
+    if(sr$booTable==1){
+      output$moyenne <- renderDT({
+        datatable(Data_Moyenne(sr$table,sr$resp1,sr$fact1), filter = c("none", "bottom", "top"))
+      })
+    }
+  })
+  
+  # panel 3 : Anova
+  observeEvent(input$responseVar,{
+    sr$respanov = input$responseVar
+  })
+  observeEvent(input$factors,{
+    vector=c()
+    sr$factanov = c(vector,input$factors)
+  })
+  observe({
+    if(sr$booTable==1){
+      output$anov <- renderPrint({
+        anov(sr$table,sr$respanov,sr$factanov)
+      })
+      output$anovplot <- renderPlot({
+        anovplot(sr$table,sr$respanov,sr$factanov)
+      })
+    }
+  })
+  
+  # panel 4 : ACP
+  
+  # panel 5 : Heatmap
+  
+  observeEvent(input$responseVarHeat, {
+    sr$respheat = input$responseVarHeat
+  })
+  observeEvent(input$factorH1, {
+    sr$factH1 = input$factorH1
+  })
+  observeEvent(input$factorH2, {
+    sr$factH2 = input$factorH2
+  })
+  observeEvent(input$factorH3, {
+    sr$factH3 = input$factorH3
+  })
+  observeEvent(input$thresSR, {
+    sr$slidethresSR = input$thresSR
+  })
+  observe({
+    if(sr$booTable==1){
+      if(!is.null(sr$factH1) && !is.null(sr$factH2) && !is.null(sr$factH3) && !is.null(sr$respheat)){
+       # updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3), step=1) 
+      }
+      output$heatplot <- renderPlot({
+        heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3)
+      })
+      output$heatplotSR <- renderPlot({
+        heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2,sr$factH3)
+     })
+    }
+  })
 }
 
-#   outVar <-reactive({
-#     var = colnames(table())
-#     return(var)
-#   })
-#   #mean reactives
-#   resp1 <-reactive({
-#     input$responseVar1
-#   })
-#   fact1 <-reactive({
-#     input$factors1
-#   })
-#   #anova reactive
-#   respanov <-reactive({
-#     input$responseVar
-#   })
-#   factanov <-reactive({
-#     vector = c()
-#     y = c(vector, input$factors)
-#     return(y)
-#   })
-# 
+
+
 #   #heatmap reactive
 #   respheat <- reactive({
 #     input$responseVarHeat
@@ -122,18 +214,6 @@ server <-function(input,output,session){
 #   #What happens when we add datas
 #   observeEvent(input$file1, {
 #     
-#     reset("DataSet")
-#     
-#     reset("TimeFactor")
-#     reset("responseVar1")
-#     reset("factors1")
-#     reset("responseVar")
-#     reset("factors")
-#     reset("responseVarHeat")
-#     reset("factorH1")
-#     reset("factorH2")
-#     reset("factorH3")
-#     reset("thresSR")
 #      
 #     updateSelectInput(session, inputId = "TimeFactor", choices = c("None", outVar()), selected = "")
 #     
