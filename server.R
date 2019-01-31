@@ -3,15 +3,17 @@
 
 server <-function(input,output,session){
 
+  observe_helpers() # active help icon
+  
 #liste des réactifs
-
+  
   sr <- reactiveValues(
     
     # panel 1 : lecture de la table
     
     booTable = 0,
     table = NULL,
-    timefactor = NULL,
+    resp0 = NULL,
     sep = ";",
     head = TRUE,
     dec = ",",
@@ -29,29 +31,74 @@ server <-function(input,output,session){
     
     # panel 4 : ACP
     
+    respacp = NULL,
+    individual = NULL,
+    variable = NULL,
+    center = FALSE,
+    reduct = FALSE,
+    axis = NULL,
+    
     # panel 5 : Heatmap
     
     respheat = NULL,
     factH1 = NULL,
     factH2 = NULL,
-    factH3 = NULL,
-    slidethresSH = NULL
-
+    dendocol = TRUE,
+    dendorow = TRUE,
+    slidethresSH = NULL,
+    
+    # panel 6 : Visu
+    
+    responseVarPG = NULL,
+    factorPG1 = NULL,
+    factorPG2 = NULL,
+    factorPG3 = NULL,
+    
+    # panel 7 : Time
+    
+    responseVarT= NULL,
+    factorT1 = NULL,
+    factorT2 = NULL,
+    factorT3 = NULL,
+    factorT4 = NULL
     
   )
   
   # panel 1 : lecture de la table
-  observeEvent(input$TimeFactor, {
-    sr$timefactor = input$TimeFactor
-    if(!is.null(sr$timefactor) &&  sr$timefactor != "None" && sr$timefactor != ""){
-      sr$table[,sr$timefactor] = dmy(sr$table[,sr$timefactor])
-    }
-  })
+
   observeEvent(input$sep, {
     sr$sep = input$sep
     if(sr$booTable == 1) {
       sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
       sr$table = as.data.frame(sr$table)
+      sr$outVar = colnames(sr$table)
+      updateSelectInput(session, inputId = "responseVar0", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      
+      updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+      
+      updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorT1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT3", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
+
     }
   })
   observeEvent(input$dec, {
@@ -59,6 +106,33 @@ server <-function(input,output,session){
     if(sr$booTable == 1) {
       sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
       sr$table = as.data.frame(sr$table)
+      sr$outVar = colnames(sr$table)
+      updateSelectInput(session, inputId = "responseVar0", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      
+      updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+      
+      updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorT1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT3", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
     }
   })
   observeEvent(input$head, {
@@ -66,6 +140,33 @@ server <-function(input,output,session){
     if(sr$booTable == 1) {
       sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
       sr$table = as.data.frame(sr$table)
+      sr$outVar = colnames(sr$table)
+      updateSelectInput(session, inputId = "responseVar0", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      
+      updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[1])
+      
+      updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+      
+      updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+      updateSelectInput(session, inputId = "factorT1", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT2", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT3", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
     }
   })
   observeEvent(input$file1, {
@@ -73,7 +174,7 @@ server <-function(input,output,session){
     sr$table = read.table(input$file1$datapath, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE, row.names=NULL)
     sr$table = as.data.frame(sr$table)
     sr$outVar = colnames(sr$table)
-    updateSelectInput(session, inputId = "TimeFactor", choices = c("None", sr$outVar), selected = "None")
+    updateSelectInput(session, inputId = "responseVar0", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
     
     updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
     updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
@@ -83,9 +184,31 @@ server <-function(input,output,session){
     
     updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
     updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
-    updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[2])
-    updateSelectInput(session, inputId = "factorH3", choices = c("None",sr$outVar, selected = ""))
+    updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
     
+    updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[1])
+    
+    updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+    
+    updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+    updateSelectInput(session, inputId = "factorT1", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorT2", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorT3", choices = sr$outVar, selected = sr$outVar[1])
+    updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
+    
+  })
+  observeEvent(input$responseVar0, {
+    sr$resp0 = input$responseVar0
+    if(!is.null(sr$resp0) && (sr$resp0 != "")){
+      output$ShapiroWilk <- renderPrint({
+        normality(sr$table, sr$resp0)
+      })
+    }
   })
   observe({
     if(sr$booTable == 1) {
@@ -104,7 +227,7 @@ server <-function(input,output,session){
     sr$fact1 = input$factors1
   })
   observe({
-    if(sr$booTable==1){
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$resp1]])){
       output$moyenne <- renderDT({
         datatable(Data_Moyenne(sr$table,sr$resp1,sr$fact1), filter = c("none", "bottom", "top"))
       })
@@ -131,6 +254,36 @@ server <-function(input,output,session){
   })
   
   # panel 4 : ACP
+  observeEvent(input$respacp,{
+    sr$respacp = input$respacp
+  })
+  observeEvent(input$individual,{
+    sr$individual = input$individual
+  })
+  observeEvent(input$variable,{
+    sr$variable = input$variable
+  })
+  observeEvent(input$reduct,{
+    sr$reduct = input$reduct
+  })
+  observeEvent(input$center,{
+    sr$center = input$center
+  })
+  observeEvent(input$axis,{
+    sr$axis = input$axis
+  })
+  observe({
+    if(sr$booTable==1){
+      # out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$scale, nf = 2)
+      # print(out$ind)
+      # output$indPlot <- renderPlot({
+      #   out$ind
+      # })
+    # output$varPlot <- renderPlot(
+    # 
+    # )
+    }
+  })
   
   # panel 5 : Heatmap
   
@@ -143,145 +296,70 @@ server <-function(input,output,session){
   observeEvent(input$factorH2, {
     sr$factH2 = input$factorH2
   })
-  observeEvent(input$factorH3, {
-    sr$factH3 = input$factorH3
+  observeEvent(input$row, {
+    sr$dendorow = input$row
+  })
+  observeEvent(input$column, {
+    sr$dendocol = input$column
   })
   observeEvent(input$thresSR, {
     sr$slidethresSR = input$thresSR
   })
   observe({
     if(sr$booTable==1){
-      if(!is.null(sr$factH1) && !is.null(sr$factH2) && !is.null(sr$factH3) && !is.null(sr$respheat)){
+      if(!is.null(sr$factH1) && !is.null(sr$factH2) && !is.null(sr$respheat)){
        # updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3), step=1) 
       }
       output$heatplot <- renderPlot({
-        heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3)
+        heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
       })
       output$heatplotSR <- renderPlot({
-        heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2,sr$factH3)
+        heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
      })
+    }
+  })
+  
+  # panel 6 : Visu
+  observeEvent(input$responseVarPG, {
+    sr$responseVarPG = input$responseVarPG
+  })
+  observeEvent(input$factorPG1, {
+    sr$factorPG1 = input$factorPG1
+  })
+  observeEvent(input$factorPG2, {
+    sr$factorPG2 = input$factorPG2
+  })
+  observeEvent(input$factorPG3, {
+    sr$factorPG3 = input$factorPG3
+  })
+  observe({
+    if(sr$booTable==1){
+      output$PrettyG <- renderPlot({
+        NiceGraph(sr$table,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+      })
+    }
+  })
+  
+  # panel 7 : Time
+  observeEvent(input$responseVarT, {
+    sr$responseVarT = input$responseVarT
+  })
+  observeEvent(input$factorT1, {
+    sr$factorT1 = input$factorT1
+  })
+  observeEvent(input$factorT2, {
+    sr$factorT2 = input$factorT2
+  })
+  observeEvent(input$factorT3, {
+    sr$factorT3 = input$factorT3
+  })
+  observeEvent(input$factorT4, {
+    sr$factorT4 = input$factorT4
+  })
+  observe({
+    if(sr$booTable==1){
+      GraphTime(sr$table,sr$factorT1,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4)
     }
   })
 }
 
-
-
-#   #heatmap reactive
-#   respheat <- reactive({
-#     input$responseVarHeat
-#   })
-#   factH1 <- reactive({
-#     input$factorH1
-#   })
-#   factH2 <- reactive({
-#     input$factorH2
-#   })
-#   factH3 <- reactive({
-#     input$factorH3
-#   })
-#   slidethresSR <- reactive({
-#     input$thresSR
-#   })
-#   
-#   #pretty plot reactive
-#   respPG <- reactive({
-#     input$responseVarPG
-#   })
-#   factPG1 <- reactive({
-#     input$factorPG1
-#   })
-#   factPG2 <- reactive({
-#     input$factorPG2
-#   })
-#   factPG3 <- reactive({
-#     input$factorPG3
-#   })
-#   
-#   #time plot reactive
-#   respT <- reactive({
-#     input$responseVarT
-#   })
-#   factT1 <- reactive({
-#     input$factorT1
-#   })
-#   factT2 <- reactive({
-#     input$factorT2
-#   })
-#   factT3 <- reactive({
-#     input$factorT3
-#   })
-#   
-#   #What happens when we add datas
-#   observeEvent(input$file1, {
-#     
-#      
-#     updateSelectInput(session, inputId = "TimeFactor", choices = c("None", outVar()), selected = "")
-#     
-#     observe({
-#       updateSelectInput(session, inputId = "responseVar1", choices = outVar(), selected = outVar()[length(outVar())])
-#       updateSelectInput(session, inputId = "factors1", choices = outVar(), selected = outVar()[1])
-#       updateSelectInput(session, inputId = "responseVar", choices = outVar(), selected = outVar()[length(outVar())])
-#       updateSelectInput(session, inputId = "factors", choices = outVar(), selected = outVar()[1])
-#       
-#       updateSelectInput(session, inputId = "responseVarHeat", choices = outVar(), selected = outVar()[length(outVar())])
-#       updateSelectInput(session, inputId = "factorH1", choices = outVar(), selected = outVar()[1])
-#       updateSelectInput(session, inputId = "factorH2", choices = outVar(), selected = outVar()[2])
-#       updateSelectInput(session, inputId = "factorH3", choices = c("None",outVar()), selected = "")
-#       updateSelectInput(session, inputId = "factors", choices = outVar(), selected = outVar()[1])
-#       
-#       updateSelectInput(session, inputId = "responseVarPG", choices = outVar(), selected = outVar()[length(outVar())])
-#       updateSelectInput(session, inputId = "factorPG1", choices = outVar(), selected = outVar()[1])
-#       updateSelectInput(session, inputId = "factorPG2", choices = outVar(), selected = outVar()[2])
-#       updateSelectInput(session, inputId = "factorPG3", choices = c("None",outVar()), selected = "")
-#       
-#       updateSelectInput(session, inputId = "responseVarT", choices = outVar(), selected = outVar()[length(outVar())])
-#       updateSelectInput(session, inputId = "factorT1", choices = outVar(), selected = outVar()[1])
-#       updateSelectInput(session, inputId = "factorT2", choices = outVar(), selected = outVar()[2])
-#       updateSelectInput(session, inputId = "factorT3", choices = c("None",outVar()), selected = "")
-#       
-#       output$DataSet <- renderDT({
-#         datatable(table())
-#       })
-#     })
-#     observeEvent(input$TimeFactor, {
-#         output$DataSet <- renderDT({
-#           datatable(table())
-#         })
-#     })
-#     observeEvent(input$CalculationMean, {
-# 
-#       output$moyenne <- renderDT({
-#         datatable(Data_Moyenne(table(),resp1(),fact1()), filter = c("none", "bottom", "top"))
-#       })
-#     })
-#     observeEvent(input$CalculationAnov, {
-#       output$anov <- renderPrint({
-#         anov(table(),respanov(),factanov())
-#       })
-#       output$anovplot <- renderPlot({
-#         anovplot(table(),respanov(),factanov())
-#       })
-#     })
-#     observeEvent(input$CalculationHeat, {
-#       observe({
-#         updateSliderInput(session, inputId = "thresSR", value = maxMean(table(),respheat(),factH1(),factH2(),factH3())/2, min=0, max=maxMean(table(),respheat(),factH1(),factH2(),factH3()), step=1) 
-#       })
-#       output$heatplot <- renderPlot({
-#         heatplot(table(),respheat(),factH1(),factH2(),factH3())
-#       })
-#       output$heatplotSR <- renderPlot({
-#         heatplotSR(table(),slidethresSR(),respheat(),factH1(),factH2(),factH3())
-#       })
-#     })
-#     observeEvent(input$CalculationPG, {
-#       output$PrettyG <- renderPlot({
-#         NiceGraph(table(),respPG(),factPG1(),factPG2(),factPG3())
-#       })
-#     })
-#     observeEvent(input$CalculationT, {
-#       output$TimePlot <- renderPlot({
-#         GraphTime(table(),timefactor(),respT(),factT1(),factT2(),factT3())
-#       })
-#     })
-#   })
-# }

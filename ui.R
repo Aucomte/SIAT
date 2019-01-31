@@ -10,7 +10,7 @@ sidebar <- dashboardSidebar(
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Visu", tabName = "Visu", icon = icon("eye")),
-    menuItem("Evolution", tabName = "Evol", icon = icon("eye")),
+    menuItem("Evolution", tabName = "Evolution", icon = icon("eye")),
     menuItem("Debug", tabName = "tabDebug", icon = icon("dashboard"))
   )
 )
@@ -28,9 +28,8 @@ body <- dashboardBody(
                  helper(icon = "question",
                         type = "markdown",
                         content = "file1"),
-          checkboxInput("header", "Header", TRUE),
-          HTML("Is there a time factor (day/month/year) in your dataset?"),
-          pickerInput(inputId='TimeFactor', label ='Time factor', "")
+          pickerInput(inputId='responseVar0', label ='Choose the response variable', ""),
+          checkboxInput("header", "Header", TRUE)
         ),
         box(
           radioButtons('sep', 'Separator',
@@ -47,6 +46,11 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           DTOutput(outputId = "DataSet")
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            verbatimTextOutput(outputId = "ShapiroWilk")
         )
       )
     ),
@@ -72,7 +76,6 @@ body <- dashboardBody(
         box(width = 12,
             pickerInput(inputId='responseVar', label ='Choose the response variable', ""),
             pickerInput(inputId='factors', label ='Choose the factors', "", multiple = TRUE)
-            
         )
       ),
       fluidRow(
@@ -83,7 +86,41 @@ body <- dashboardBody(
       )
     ),
     tabItem(
-      tabName = "ACP"
+      tabName = "ACP",
+      fluidRow(
+        box(width = 12,
+            pickerInput(inputId='respacp', label ='Choose the response variable', ""),
+            column(width = 6,
+              pickerInput(inputId='individual', label ='individuals', "")
+            ),
+            column(width = 6,
+              pickerInput(inputId='variable', label ='variables', "")
+            ),
+            column(width = 3,
+              checkboxInput("reduct", "reduct variable", FALSE)
+            ),
+            column(width = 3,
+              checkboxInput("center", "center variable", FALSE)
+            ),
+            column(width = 6,
+              pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(1,2,3,4,5))
+            )
+        )
+      ),
+      fluidRow(
+        box(width = 6,
+            plotOutput(outputId = "indPlot")
+        )
+        ,
+        box(width = 6,
+            plotOutput(outputId = "varPlot")
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+          downloadButton("downloadRMD", "Download Analysis")
+        )
+      )
     ),
     tabItem(
       tabName = "Heatmap",
@@ -92,7 +129,10 @@ body <- dashboardBody(
              pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
              pickerInput(inputId='factorH1', label ='Choose the first factor', ""),
              pickerInput(inputId='factorH2', label ='Choose the second factor', ""),
-             pickerInput(inputId='factorH3', label ='Choose the third factor', "")
+             HTML("Clusterisation : "),
+             checkboxInput("column", "col", TRUE),
+             checkboxInput("row", "row", TRUE)
+             
           )
         ),
       fluidRow(
@@ -131,10 +171,18 @@ body <- dashboardBody(
       tabName = "Evolution",
         fluidRow(
           box(width = 12,
-             pickerInput(inputId='responseVarT', label ='Choose the response variable', ""),
-             pickerInput(inputId='factorT1', label ='Choose the first factor', ""),
-             pickerInput(inputId='factorT2', label ='Choose the second factor', ""),
-             pickerInput(inputId='factorT3', label ='Choose the third factor', "")
+            column(width = 6,
+                pickerInput(inputId='responseVarT', label ='Choose the response variable', "")
+            ),
+            column(width = 6,
+                pickerInput(inputId='factorT1', label ='Choose the Time factor', "")
+            ),
+            column(width = 6,
+                pickerInput(inputId='factorT2', label ='Choose the second factor', "")
+            ),
+            column(width = 6,
+                pickerInput(inputId='factorT3', label ='Choose the third factor', "")
+            )
         )
       ),
       fluidRow(
@@ -152,6 +200,6 @@ body <- dashboardBody(
 )
 
 shinyUI(
-  dashboardPage(title="symptom", skin = "yellow", header, sidebar, body)
+  dashboardPage(title = "symptom", skin = "yellow", header, sidebar, body)
 )
 

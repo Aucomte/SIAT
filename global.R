@@ -21,6 +21,10 @@ library(lubridate)
 library(RColorBrewer)
 
 library(ggvis)
+library(gplots)
+
+library(ade4)
+library(factoextra)
 
 ##ggviz interactive plot
 
@@ -62,71 +66,94 @@ anovplot <- function(tab,var1,var2){
   return(x)
 }
 
-heatplot <- function(tab,var1,var2,var3,var4){
-  if(!is.null(var4)){
-    if (var4 == "None"){
-      var4 = NULL
+# ---------------------------------------------------------------------------------------------------
+# ACP
+
+ACPPlot <- function(){
+
+d = dcast(datatable,Strain_name~Plant_genotype, value.var = "Mean")
+rownames(d) = d[,1]
+d = d[,-1]
+pca.res = FactoMineR::PCA(d)
+return(pca.res)
+}
+
+# ---------------------------------------------------------------------------------------------------
+# HEATMAPS
+
+heatplot <- function(tab,var1,var2,var3,row,col){
+  
+  varF = c(var2, var3)
+  datatable = Data_Moyenne(tab,var1,varF)
+  
+  MAX = max(datatable$Mean)
+  MIN = min(datatable$Mean)
+  MID = (MAX + MIN) / 2
+  
+  x = matrix(1,nrow=length(levels(datatable[,var2])),ncol=length(levels(datatable[,var3])))
+  
+  colnames(x) = (levels(datatable[,var3]))
+  rownames(x) = (levels(datatable[,var2]))
+
+  for(i in 1:nrow(x)){
+    for(j in 1:ncol(x)){
+      for(ligne in 1:nrow(datatable)){
+        if((colnames(x)[j] == datatable[ligne,var3]) && (rownames(x)[i] == datatable[ligne,var2])){
+          x[i,j] = as.numeric(as.character(datatable$Mean[ligne]))
+        }
+      }
     }
   }
-  varF = c(var2, var3, var4)
-  data_moyenne = Data_Moyenne(tab,var1,varF)
+  x=data.matrix(x)
   
-  MAX = max(data_moyenne$Mean)
-  MIN = min(data_moyenne$Mean)
-  MID = (MAX + MIN) / 2
-
-  jBuPuFun <- colorRampPalette(brewer.pal(n = 9, "BuPu"))
-  paletteSize <- 256
-  jBuPuPalette <- jBuPuFun(paletteSize)
-  
-  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
-  if(var4 != "None" && var4 !="" && !is.null(var4)){
-    p <- p + facet_grid( . ~ data_moyenne[[varF[3]]])
+  color.palette  <- colorRampPalette(c("white", "orange", "red"))
+  if (row == TRUE && col == TRUE){
+    dend = "both"
   }
-    p <- p +  geom_text(aes(data_moyenne[[varF[1]]], data_moyenne[[varF[2]]], label = round(data_moyenne$Mean,digits=2)), color = "black", size = 4)
-    p <- p + labs(x = varF[1], y=varF[2])
-    p <- p +  scale_fill_gradient2(low = jBuPuPalette[1],
-                                   mid = jBuPuPalette[paletteSize/2],
-                                   high = jBuPuPalette[paletteSize],
-                                   midpoint = MID,
-                                   limit = c(MIN,MAX),
-                                   space = "Lab",
-                                   name=var1)
+  else if (row == FALSE && col == FALSE){
+    dend = "none"
+  }
+  else if (row == TRUE && col == FALSE){
+    dend = "row"
+  }
+  else if (row == FALSE && col == TRUE){
+    dend = "col"
+  }
+  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6))
   return(p)
 }
 
-heatplotSR <- function(tab,SR,var1,var2,var3,var4){
-  if(!is.null(var4)){
-    if(var4 == "None"){
-      var4 = NULL
-    }
-  }
-  varF = c(var2, var3, var4)
+heatplotSR <- function(tab,SR,var1,var2,var3){
+
+  varF = c(var2, var3)
   data_moyenne = Data_Moyenne(tab,var1,varF)
   
   data_moyenne$Mean[data_moyenne$Mean <= SR] = 0
   data_moyenne$Mean[data_moyenne$Mean > SR] = 1
   
-  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
-  if(var4 != "None" && var4 !="" && !is.null(var4)){
-      p <- p + facet_grid(. ~ data_moyenne[[varF[3]]])
+  x = matrix(1,nrow=length(levels(data_moyenne[,var2])),ncol=length(levels(data_moyenne[,var3])))
+  
+  colnames(x) = (levels(data_moyenne[,var3]))
+  rownames(x) = (levels(data_moyenne[,var2]))
+  
+  for(i in 1:nrow(x)){
+    for(j in 1:ncol(x)){
+      for(ligne in 1:nrow(data_moyenne)){
+        if((colnames(x)[j] == data_moyenne[ligne,var3]) && (rownames(x)[i] == data_moyenne[ligne,var2])){
+          x[i,j] = as.numeric(as.character(data_moyenne$Mean[ligne]))
+        }
+      }
+    }
   }
-  p <- p + labs(x = varF[1], y=varF[2])
-
-  p <- p +  scale_fill_gradient2(low = "white",
-                                 high = "red",
-                                 name=var1)
-  p
+  x=data.matrix(x)
+  
+  p = gplots::heatmap.2(x, dendrogram = "none", col=c("yellow","red"), cexCol=.9, cexRow = .9, margins = c(6, 6), key = FALSE, trace = "none", cellnote = round(x,1), notecol="black")
+  
   return(p)
 }
 
-maxMean <- function(tab,var1,var2,var3,var4){
-  if(!is.null(var4)){
-   if(var4 == "None"){
-      var4 = NULL
-   }
-  }
-  varF = c(var2, var3, var4)
+maxMean <- function(tab,var1,var2,var3){
+  varF = c(var2, var3)
     data_moyenne = Data_Moyenne(tab,var1,varF)
     x = ceiling(max(data_moyenne$Mean))
     return(x)
@@ -172,4 +199,95 @@ NiceGraph <-  function(tab,var1,var2,var3,var4){
   return(p)
 }
 
+#Normality test (Shapiro wilk)
+
+normality <- function(data, var1){
+  if(is.numeric(data[,var1])){
+    x = shapiro.test(data[,var1])
+    x[4] = var1
+    return(x)
+  }
+  else{
+    return("response variable is not numeric.")
+  }
+}
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+#ACP
+
+adeACP <- function(data, var1, var2, var3, center, scale, nf){
+  
+  varF = c(var2, var3)
+  data_moyenne = Data_Moyenne(data,var1,varF)
+print(data_moyenne)
+  x = matrix(1,nrow=length(levels(data_moyenne[,var2])),ncol=length(levels(data_moyenne[,var3])))
+  
+  colnames(x) = (levels(data_moyenne[,var3]))
+  rownames(x) = (levels(data_moyenne[,var2]))
+  
+  for(i in 1:nrow(x)){
+    for(j in 1:ncol(x)){
+      for(ligne in 1:nrow(data_moyenne)){
+        if((colnames(x)[j] == data_moyenne[ligne,var3]) && (rownames(x)[i] == data_moyenne[ligne,var2])){
+          x[i,j] = as.numeric(as.character(data_moyenne$Mean[ligne]))
+        }
+      }
+    }
+  }
+  x=data.matrix(x)
+  
+  adePCA = dudi.pca(x, center = center, scale =scale, nf = nf, scannf = FALSE)
+  VP = fviz_eig(adePCA)
+  ind = fviz_pca_ind(adePCA)
+  var = fviz_pca_var(adePCA)
+  both = fviz_pca_biplot(adePCA, repel = TRUE,
+                  col.var = "#2E9FDF", 
+                  col.ind = "#696969"  
+  )
+  ade = list()
+  ade$VP = VP
+  ade$ind = ind
+  ade$var = var
+  ade$both = both
+  
+  return(ade)
+}
+
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+heatplot_old <- function(tab,var1,var2,var3,var4){
+  if(!is.null(var4)){
+    if (var4 == "None"){
+      var4 = NULL
+    }
+  }
+  varF = c(var2, var3, var4)
+  data_moyenne = Data_Moyenne(tab,var1,varF)
+  
+  MAX = max(data_moyenne$Mean)
+  MIN = min(data_moyenne$Mean)
+  MID = (MAX + MIN) / 2
+  
+  jBuPuFun <- colorRampPalette(brewer.pal(n = 9, "BuPu"))
+  paletteSize <- 256
+  jBuPuPalette <- jBuPuFun(paletteSize)
+  
+  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
+  if(var4 != "None" && var4 !="" && !is.null(var4)){
+    p <- p + facet_grid( . ~ data_moyenne[[varF[3]]])
+  }
+  p <- p +  geom_text(aes(data_moyenne[[varF[1]]], data_moyenne[[varF[2]]], label = round(data_moyenne$Mean,digits=2)), color = "black", size = 4)
+  p <- p + labs(x = varF[1], y=varF[2])
+  p <- p +  scale_fill_gradient2(low = jBuPuPalette[1],
+                                 mid = jBuPuPalette[paletteSize/2],
+                                 high = jBuPuPalette[paletteSize],
+                                 midpoint = MID,
+                                 limit = c(MIN,MAX),
+                                 space = "Lab",
+                                 name=var1)
+  return(p)
+}
 
