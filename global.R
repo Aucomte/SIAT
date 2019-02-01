@@ -59,9 +59,11 @@ anov <- function(tab,var1,var2){
 anovplot <- function(tab,var1,var2){
   if(length(var2) == 1){
     x = boxplot(as.numeric(tab[[var1]])~tab[[var2[1]]], tab, xlab = var2[1], ylab=var1)
+    #x = tab %>% ggvis(~tab[[var2[1]]], ~as.numeric(tab[[var1]])) %>% layer_boxplots()
   }
   else if(length(var2) >= 2){
     x = boxplot(as.numeric(tab[[var1]])~tab[[var2[1]]] * tab[[var2[2]]], tab, xlab = paste(var2[1],"*",var2[2]), ylab=var1)
+    #x = tab %>% ggvis(~tab[[var2[1]]]:tab[[var2[2]]], ~as.numeric(tab[[var1]])) %>% layer_boxplots()
   }
   return(x)
 }
@@ -123,7 +125,7 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   return(p)
 }
 
-heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
+heatplotSR <- function(tab,SR,var1,var2,var3){
 
   varF = c(var2, var3)
   data_moyenne = Data_Moyenne(tab,var1,varF)
@@ -146,22 +148,7 @@ heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
     }
   }
   x=data.matrix(x)
-  
-  if (row == TRUE && col == TRUE){
-    dend = "both"
-  }
-  else if (row == FALSE && col == FALSE){
-    dend = "none"
-  }
-  else if (row == TRUE && col == FALSE){
-    dend = "row"
-  }
-  else if (row == FALSE && col == TRUE){
-    dend = "col"
-  }
-  
-  p = gplots::heatmap.2(x, dendrogram = dend, col=c("yellow","red"), cexCol=.9, cexRow = .9, margins = c(6, 6), trace = "none", cellnote = round(x,1), notecol="black")
-  
+  p = gplots::heatmap.2(x, key = FALSE, dendrogram = "none", col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6))
   return(p)
 }
 
@@ -172,8 +159,8 @@ maxMean <- function(tab,var1,var2,var3){
     return(x)
 }
 
-GraphTime <- function(tab,date,var1,var2,var3,var4){
-  
+GraphTime <- function(tab,date,var1,var2,var3){
+  var4 =NULL
   if(!is.null(var4)){
     if(var4 == "None"){
       var4 = NULL
@@ -205,7 +192,7 @@ NiceGraph <-  function(tab,var1,var2,var3,var4){
   p <- ggplot(data=tab, aes(x=tab[,var2], y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
   p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
   if(var4 != "None" && !is.null(var4) && var4 !=""){
-    p <- p + facet_grid(data[,var4] ~ .)
+    p <- p + facet_grid(tab[,var4] ~ .)
   }
   p <- p + labs(y=var1, x =var2, colour = var3)
   p + theme_minimal()
@@ -231,7 +218,7 @@ normality <- function(data, var1){
 adeACP <- function(data, var1, var2, var3, center, scale, nf){
   
   varF = c(var2, var3)
-  data_moyenne = Data_Moyenne(data,var1,varF)
+  datatable = Data_Moyenne(data,var1,varF)
   
   x = matrix(1,nrow=length(unique(datatable[,var2])),ncol=length(unique(datatable[,var3])))
   
@@ -249,7 +236,7 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   }
   x=data.matrix(x)
   
-  adePCA = dudi.pca(x, center = center, scale =scale, nf = nf, scannf = FALSE)
+  adePCA = dudi.pca(x, center = center, scale = scale, nf = nf, scannf = FALSE)
   VP = fviz_eig(adePCA)
   ind = fviz_pca_ind(adePCA)
   var = fviz_pca_var(adePCA)
@@ -264,43 +251,5 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   ade$both = both
   
   return(ade)
-}
-
-
-
-
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-heatplot_old <- function(tab,var1,var2,var3,var4){
-  if(!is.null(var4)){
-    if (var4 == "None"){
-      var4 = NULL
-    }
-  }
-  varF = c(var2, var3, var4)
-  data_moyenne = Data_Moyenne(tab,var1,varF)
-  
-  MAX = max(data_moyenne$Mean)
-  MIN = min(data_moyenne$Mean)
-  MID = (MAX + MIN) / 2
-  
-  jBuPuFun <- colorRampPalette(brewer.pal(n = 9, "BuPu"))
-  paletteSize <- 256
-  jBuPuPalette <- jBuPuFun(paletteSize)
-  
-  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
-  if(var4 != "None" && var4 !="" && !is.null(var4)){
-    p <- p + facet_grid( . ~ data_moyenne[[varF[3]]])
-  }
-  p <- p +  geom_text(aes(data_moyenne[[varF[1]]], data_moyenne[[varF[2]]], label = round(data_moyenne$Mean,digits=2)), color = "black", size = 4)
-  p <- p + labs(x = varF[1], y=varF[2])
-  p <- p +  scale_fill_gradient2(low = jBuPuPalette[1],
-                                 mid = jBuPuPalette[paletteSize/2],
-                                 high = jBuPuPalette[paletteSize],
-                                 midpoint = MID,
-                                 limit = c(MIN,MAX),
-                                 space = "Lab",
-                                 name=var1)
-  return(p)
 }
 

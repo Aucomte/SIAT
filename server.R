@@ -59,8 +59,7 @@ server <-function(input,output,session){
     responseVarT= NULL,
     factorT1 = NULL,
     factorT2 = NULL,
-    factorT3 = NULL,
-    factorT4 = NULL
+    factorT3 = NULL
     
   )
   
@@ -292,18 +291,33 @@ server <-function(input,output,session){
   })
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]])){
-      # out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$scale, nf = 2)
-      # output$indPlot <- renderPlot({
-      #   out$ind
-      # })
-    # output$varPlot <- renderPlot(
-    #
-    # )
+      out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+      output$indPlot <- renderPlot({
+        out$ind
+      })
+      output$varPlot <- renderPlot(
+        out$var
+      )
+      output$vpPlot <- renderPlot({
+        out$VP
+      })
+      output$bothPlot <- renderPlot(
+        out$both
+      )
     }
     else{
      output$indPlot <- renderPlot({
         NULL
       })
+     output$varPlot <- renderPlot({
+       NULL
+     })
+     output$vpPlot <- renderPlot({
+       NULL
+     })
+     output$bothPlot <- renderPlot({
+       NULL
+     })
     }
   })
   
@@ -330,7 +344,6 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        print(sr$factH1)
        updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
         output$heatplot <- renderPlot({
           heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
@@ -389,13 +402,10 @@ server <-function(input,output,session){
   observeEvent(input$factorT3, {
     sr$factorT3 = input$factorT3
   })
-  observeEvent(input$factorT4, {
-    sr$factorT4 = input$factorT4
-  })
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
       output$TimePlot <- renderPlot({
-        GraphTime(sr$table,sr$factorT1,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4)
+        GraphTime(sr$table,sr$factorT1,sr$responseVarT,sr$factorT2,sr$factorT3)
       })
     }
     else{

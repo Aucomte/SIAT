@@ -80,8 +80,12 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            verbatimTextOutput(outputId = "anov"),
-            plotOutput(outputId = "anovplot")
+            verbatimTextOutput(outputId = "anov")
+        ),
+        fluidRow(
+          box(width = 12, 
+            plotOutput(outputId = "anovplot", height = "1000px")
+          )
         )
       )
     ),
@@ -110,17 +114,25 @@ body <- dashboardBody(
       fluidRow(
         box(width = 6,
             plotOutput(outputId = "indPlot")
-        )
-        ,
+        ),
         box(width = 6,
             plotOutput(outputId = "varPlot")
         )
       ),
       fluidRow(
-        box(width = 12,
-          downloadButton("downloadRMD", "Download Analysis")
+        box(width = 6,
+            plotOutput(outputId = "vpPlot")
+        ),
+        box(width = 6,
+            plotOutput(outputId = "bothPlot")
         )
       )
+      # ,
+      # fluidRow(
+      #   box(width = 12,
+      #     downloadButton("downloadRMD", "Download Analysis")
+      #   )
+      # )
     ),
     tabItem(
       tabName = "Heatmap",
@@ -143,17 +155,27 @@ body <- dashboardBody(
         ),
       fluidRow(
         box(width = 12,
-            plotOutput(outputId = "heatplot")
+          plotOutput(outputId = "heatplot")
         )
       ),
       fluidRow(
         box(width = 12,
-             sliderInput(inputId="thresSR", label = "Treshold of sensibility/resistance", value = 12, min=0, max=20, step=1)
+           sliderInput(inputId="thresSR", label = "Threshold of sensibility/resistance", value = 12, min=0, max=20, step=1)
           )
         ),
       fluidRow(
         box(width = 12,
-           plotOutput(outputId = "heatplotSR")
+            column(width = 6,
+                HTML("
+                 <br>
+                 <p align='left'>
+                 <img src='legendSR.png' width='20%' height='20%'>
+                 </p>
+                ")
+            ),
+            column(width = 12,
+              plotOutput(outputId = "heatplotSR")
+            )
         )
       )
     ),
@@ -161,15 +183,15 @@ body <- dashboardBody(
       tabName = "Visu",
       fluidRow(
         box(width=12,
-           pickerInput(inputId='responseVarPG', label ='Choose the response variable', ""),
-           pickerInput(inputId='factorPG1', label ='Choose the first factor', ""),
-           pickerInput(inputId='factorPG2', label ='Choose the second factor', ""),
-           pickerInput(inputId='factorPG3', label ='Choose the third factor', "")
+          pickerInput(inputId='responseVarPG', label ='Choose the response variable', ""),
+          pickerInput(inputId='factorPG1', label ='Choose the first factor', ""),
+          pickerInput(inputId='factorPG2', label ='Choose the second factor', ""),
+          pickerInput(inputId='factorPG3', label ='Choose the third factor', "")
         )
       ),
       fluidRow(
         box(width = 12,
-            plotOutput(outputId = "PrettyG")
+          plotOutput(outputId = "PrettyG", height = "1000px")
         )
       )
     ),
@@ -178,30 +200,31 @@ body <- dashboardBody(
         fluidRow(
           box(width = 12,
             column(width = 6,
-                pickerInput(inputId='responseVarT', label ='Choose the response variable', "")
+              pickerInput(inputId='responseVarT', label ='Choose the response variable', "")
             ),
             column(width = 6,
-                pickerInput(inputId='factorT1', label ='Choose the Time factor', "")
+              pickerInput(inputId='factorT1', label ='Choose the Time factor (x)', "")
             ),
             column(width = 6,
-                pickerInput(inputId='factorT2', label ='Choose the second factor', "")
+              pickerInput(inputId='factorT2', label ='Choose the y', "")
             ),
             column(width = 6,
-                pickerInput(inputId='factorT3', label ='Choose the third factor', "")
+              pickerInput(inputId='factorT3', label ='Choose the z', "")
             )
         )
       ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "TimePlot")  
+          plotOutput(outputId = "TimePlot", height = "1000px")  
         )
       )
-    ),
-    tabItem(
-      tabName = "tabDebug",
-      h1("DEBUG"),
-      verbatimTextOutput("debug")
     )
+    # ,
+    # tabItem(
+    #   tabName = "tabDebug",
+    #   h1("DEBUG"),
+    #   verbatimTextOutput("debug")
+    # )
   )
 )
 
