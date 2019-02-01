@@ -204,17 +204,22 @@ server <-function(input,output,session){
   })
   observeEvent(input$responseVar0, {
     sr$resp0 = input$responseVar0
-    if(!is.null(sr$resp0) && (sr$resp0 != "")){
-      output$ShapiroWilk <- renderPrint({
-        normality(sr$table, sr$resp0)
-      })
-    }
   })
   observe({
     if(sr$booTable == 1) {
       output$DataSet <- renderDT({
         datatable(sr$table, filter = c("none", "bottom", "top"))
       })
+      if(!is.null(sr$resp0) && (sr$resp0 != "") && is.numeric(sr$table[[sr$resp0]])){
+        output$ShapiroWilk <- renderPrint({
+          normality(sr$table, sr$resp0)
+        })
+      }
+      else{
+        output$ShapiroWilk <- renderPrint({
+          "Check your inputs variables please"
+        })
+      }
     }
   })
   
@@ -232,6 +237,11 @@ server <-function(input,output,session){
         datatable(Data_Moyenne(sr$table,sr$resp1,sr$fact1), filter = c("none", "bottom", "top"))
       })
     }
+    else{
+      output$moyenne <- renderDT({ 
+        NULL
+      })
+    }
   })
   
   # panel 3 : Anova
@@ -243,12 +253,20 @@ server <-function(input,output,session){
     sr$factanov = c(vector,input$factors)
   })
   observe({
-    if(sr$booTable==1){
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
       output$anov <- renderPrint({
         anov(sr$table,sr$respanov,sr$factanov)
       })
       output$anovplot <- renderPlot({
         anovplot(sr$table,sr$respanov,sr$factanov)
+      })
+    }
+    else{
+      output$anov <- renderPrint({ 
+        "Can't print anything. Check your inputs."
+      })
+      output$anovplot <- renderPlot({ 
+        NULL
       })
     }
   })
@@ -273,15 +291,19 @@ server <-function(input,output,session){
     sr$axis = input$axis
   })
   observe({
-    if(sr$booTable==1){
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]])){
       # out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$scale, nf = 2)
-      # print(out$ind)
       # output$indPlot <- renderPlot({
       #   out$ind
       # })
     # output$varPlot <- renderPlot(
-    # 
+    #
     # )
+    }
+    else{
+     output$indPlot <- renderPlot({
+        NULL
+      })
     }
   })
   
@@ -306,16 +328,25 @@ server <-function(input,output,session){
     sr$slidethresSR = input$thresSR
   })
   observe({
-    if(sr$booTable==1){
-      if(!is.null(sr$factH1) && !is.null(sr$factH2) && !is.null(sr$respheat)){
-       # updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2,sr$factH3), step=1) 
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
+      if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
+        print(sr$factH1)
+       updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+        output$heatplot <- renderPlot({
+          heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+        })
+        output$heatplotSR <- renderPlot({
+          heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
+       })
       }
+    }
+    else{
       output$heatplot <- renderPlot({
-        heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+        NULL
       })
       output$heatplotSR <- renderPlot({
-        heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
-     })
+        NULL
+      })
     }
   })
   
@@ -333,9 +364,14 @@ server <-function(input,output,session){
     sr$factorPG3 = input$factorPG3
   })
   observe({
-    if(sr$booTable==1){
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarPG]])){
       output$PrettyG <- renderPlot({
         NiceGraph(sr$table,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+      })
+    }
+    else{
+      output$PrettyG <- renderPlot({
+        NULL
       })
     }
   })
@@ -357,8 +393,15 @@ server <-function(input,output,session){
     sr$factorT4 = input$factorT4
   })
   observe({
-    if(sr$booTable==1){
-      GraphTime(sr$table,sr$factorT1,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4)
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
+      output$TimePlot <- renderPlot({
+        GraphTime(sr$table,sr$factorT1,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4)
+      })
+    }
+    else{
+      output$TimePlot <- renderPlot({
+        NULL
+      })
     }
   })
 }

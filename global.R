@@ -90,10 +90,10 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   MIN = min(datatable$Mean)
   MID = (MAX + MIN) / 2
   
-  x = matrix(1,nrow=length(levels(datatable[,var2])),ncol=length(levels(datatable[,var3])))
+  x = matrix(1,nrow=length(unique(datatable[,var2])),ncol=length(unique(datatable[,var3])))
   
-  colnames(x) = (levels(datatable[,var3]))
-  rownames(x) = (levels(datatable[,var2]))
+  colnames(x) = (unique(datatable[,var3]))
+  rownames(x) = (unique(datatable[,var2]))
 
   for(i in 1:nrow(x)){
     for(j in 1:ncol(x)){
@@ -123,7 +123,7 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   return(p)
 }
 
-heatplotSR <- function(tab,SR,var1,var2,var3){
+heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
 
   varF = c(var2, var3)
   data_moyenne = Data_Moyenne(tab,var1,varF)
@@ -131,10 +131,10 @@ heatplotSR <- function(tab,SR,var1,var2,var3){
   data_moyenne$Mean[data_moyenne$Mean <= SR] = 0
   data_moyenne$Mean[data_moyenne$Mean > SR] = 1
   
-  x = matrix(1,nrow=length(levels(data_moyenne[,var2])),ncol=length(levels(data_moyenne[,var3])))
+  x = matrix(1,nrow=length(unique(data_moyenne[,var2])),ncol=length(unique(data_moyenne[,var3])))
   
-  colnames(x) = (levels(data_moyenne[,var3]))
-  rownames(x) = (levels(data_moyenne[,var2]))
+  colnames(x) = (unique(data_moyenne[,var3]))
+  rownames(x) = (unique(data_moyenne[,var2]))
   
   for(i in 1:nrow(x)){
     for(j in 1:ncol(x)){
@@ -147,7 +147,20 @@ heatplotSR <- function(tab,SR,var1,var2,var3){
   }
   x=data.matrix(x)
   
-  p = gplots::heatmap.2(x, dendrogram = "none", col=c("yellow","red"), cexCol=.9, cexRow = .9, margins = c(6, 6), key = FALSE, trace = "none", cellnote = round(x,1), notecol="black")
+  if (row == TRUE && col == TRUE){
+    dend = "both"
+  }
+  else if (row == FALSE && col == FALSE){
+    dend = "none"
+  }
+  else if (row == TRUE && col == FALSE){
+    dend = "row"
+  }
+  else if (row == FALSE && col == TRUE){
+    dend = "col"
+  }
+  
+  p = gplots::heatmap.2(x, dendrogram = dend, col=c("yellow","red"), cexCol=.9, cexRow = .9, margins = c(6, 6), trace = "none", cellnote = round(x,1), notecol="black")
   
   return(p)
 }
@@ -219,17 +232,17 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   
   varF = c(var2, var3)
   data_moyenne = Data_Moyenne(data,var1,varF)
-print(data_moyenne)
-  x = matrix(1,nrow=length(levels(data_moyenne[,var2])),ncol=length(levels(data_moyenne[,var3])))
   
-  colnames(x) = (levels(data_moyenne[,var3]))
-  rownames(x) = (levels(data_moyenne[,var2]))
+  x = matrix(1,nrow=length(unique(datatable[,var2])),ncol=length(unique(datatable[,var3])))
+  
+  colnames(x) = (unique(datatable[,var3]))
+  rownames(x) = (unique(datatable[,var2]))
   
   for(i in 1:nrow(x)){
     for(j in 1:ncol(x)){
-      for(ligne in 1:nrow(data_moyenne)){
-        if((colnames(x)[j] == data_moyenne[ligne,var3]) && (rownames(x)[i] == data_moyenne[ligne,var2])){
-          x[i,j] = as.numeric(as.character(data_moyenne$Mean[ligne]))
+      for(ligne in 1:nrow(datatable)){
+        if((colnames(x)[j] == datatable[ligne,var3]) && (rownames(x)[i] == datatable[ligne,var2])){
+          x[i,j] = as.numeric(as.character(datatable$Mean[ligne]))
         }
       }
     }

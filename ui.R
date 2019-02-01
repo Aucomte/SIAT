@@ -129,10 +129,16 @@ body <- dashboardBody(
              pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
              pickerInput(inputId='factorH1', label ='Choose the first factor', ""),
              pickerInput(inputId='factorH2', label ='Choose the second factor', ""),
-             HTML("Clusterisation : "),
-             checkboxInput("column", "col", TRUE),
-             checkboxInput("row", "row", TRUE)
              
+             column(width=3,
+                HTML("Clusterisation : ")
+             ),
+             column(width=3,
+                checkboxInput("column", "col", TRUE)
+             ),
+             column(width=3,
+                checkboxInput("row", "row", TRUE)
+             )  
           )
         ),
       fluidRow(
