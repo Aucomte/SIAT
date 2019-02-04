@@ -159,32 +159,49 @@ maxMean <- function(tab,var1,var2,var3){
     return(x)
 }
 
-GraphTime <- function(tab,date,var1,var2,var3){
-  var4 =NULL
-  if(!is.null(var4)){
-    if(var4 == "None"){
-      var4 = NULL
-    }
-  }
-  varF = c(var2, var3, var4)
-  allmoy = Data_Moyenne(tab,var1,c(date,varF))
+GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
 
+  if(var4 == "None"){
+    var4 = NULL
+  }
+  if(var2 == "None" || var3 == "None"){
+    var2 = NULL
+    var3 = NULL
+  }
+
+  varF = c(var2, var3, var4)
+  
+  allmoy = Data_Moyenne(tab,var1,c(tim,varF))
+
+  if(timeselecter == "dmy"){
+    allmoy[,tim] = dmy(allmoy[,tim])
+  }
+  else if(timeselecter == "ymd"){
+    allmoy[,tim] = ymd(allmoy[,tim])
+  }
+  
   if(!is.null(var4)){
-    p <- ggplot(allmoy, aes(x = allmoy[date], y = allmoy$Mean, group=allmoy[var4], color = allmoy[var4]))
+    p <- ggplot(allmoy, aes(x = allmoy[,tim], y = allmoy$Mean, group=allmoy[,var4], color = allmoy[,var4]))
   }
   else{
-    p <- ggplot(allmoy, aes(x = allmoy[date], y = allmoy$Mean))
+    p <- ggplot(allmoy, aes(x = allmoy[,tim], y = allmoy$Mean))
   }
-  p <- p + facet_grid(allmoy[var1] ~ allmoy[var2])
-  p <- p + geom_point(size=allmoy$nb, show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$moyenne+allmoy$Sd), width =.2)
+  
+  if(!is.null(var2) && !is.null("None")){
+    p <- p + facet_grid(allmoy[,var2] ~ allmoy[,var3])
+  }
+  
+  p <- p + geom_point(size=(allmoy$nb/sum(allmoy$nb)*50), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
   if(!is.null(var4)){
-    p <- p + labs(color=var4 ,x=date, y= var1)
+    p <- p + labs(color=var4 ,x=tim, y= var1)
   }
   else{
-    p <- p + labs(x=date, y= var1)
+    p <- p + labs(x=tim, y= var1)
   }
-  p + geom_smooth()
+  p <- p + geom_smooth(se = FALSE)
+  
   return(p)
+
 }
 
 NiceGraph <-  function(tab,var1,var2,var3,var4){

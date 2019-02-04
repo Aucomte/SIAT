@@ -1,10 +1,11 @@
 
-header <- dashboardHeader(title = "Symptoms length Analysis", titleWidth = 300)
+header <- dashboardHeader(title = "Symptoms Length Analysis", titleWidth = 320)
 
 sidebar <- dashboardSidebar(
   width = 150,
   sidebarMenu(
-    menuItem("Table", tabName = "tabHome", icon = icon("book-open")),
+    menuItem("Menu", tabName = "menu", icon = icon("home")),
+    menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
@@ -21,7 +22,56 @@ body <- dashboardBody(
   useShinyFeedback(),
   tabItems(
     tabItem(
-      tabName ="tabHome",
+      tabName ="menu",
+      fluidRow(
+        box(width = 12,
+          HTML("
+            <h2 align='center'>Symptoms Length Analysis</h2>
+            <hr style='height: 3px; color: #FF4000; background-color: #FF4000; width: 50%; border: none;'>
+            ")
+        ),
+        box(width = 12,
+          HTML("
+              <p>
+                <h3>HOW DO YOU USE THIS APP ?</h3><br>
+                There is a lot of tab you can use:<br>
+                <ul>
+                  <li><b>Menu :</b> That's this page !</li>
+                  <li><b>Input table :</b> </li>
+                  <li><b>Mean/Sd :</b></li>
+                  <li><b>Anova :</b></li>
+                  <li><b>ACP :</b></li>
+                  <li><b>Heatmap :</b></li>
+                  <li><b>Visu :</b></li>
+                </ul>
+              </p>
+          ")
+        ),
+        # box(width = 6,
+        #     HTML("
+        #       <p>
+        #         
+        #       </p>
+        #   ")
+        # ),
+        box(width = 12,
+            HTML("
+              <p align='center'>
+                <u>contacts:</u><br><br>
+                Aurore Comte - <a href='mailto:aurore.comte@ird.fr'>aurore.comte@ird.fr</a>
+              </p>
+
+              <footer align='right'>
+                <a href='http://www.umr-ipme.ird.fr'><img  style = 'width: 5%;' src='IPME.jpg'></a>
+                &nbsp; &nbsp; &nbsp; 
+                <a href='https://www.ird.fr'><img style = 'width:5%;' src='logo_ird.png'></a><br>
+              </footer>
+          ")
+        )
+      )
+    ),
+    tabItem(
+      tabName ="Table",
       fluidRow(
         box(
           fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>% 
@@ -200,16 +250,22 @@ body <- dashboardBody(
         fluidRow(
           box(width = 12,
             column(width = 6,
-              pickerInput(inputId='responseVarT', label ='Choose the response variable', "")
+              pickerInput(inputId='responseVarT', label ='Choose the response variable (y)', "")
             ),
-            column(width = 6,
-              pickerInput(inputId='factorT1', label ='Choose the Time factor (x)', "")
+            column(width = 3,
+              pickerInput(inputId='TimeFactor', label ='Choose the factor 1 (x)', "")
             ),
-            column(width = 6,
-              pickerInput(inputId='factorT2', label ='Choose the y', "")
+            column(width = 3,
+              radioButtons("Time", "Is factor1 a Time factor (ex : 10/02/2018)?", c("no", "dmy", "ymd"), selected="no")
             ),
-            column(width = 6,
-              pickerInput(inputId='factorT3', label ='Choose the z', "")
+            column(width = 4,
+              pickerInput(inputId='factorT2', label ='Choose the factor2 (grid x)', "")
+            ),
+            column(width = 4,
+              pickerInput(inputId='factorT3', label ='Choose the factor3 (grid y)', "")
+            ),
+            column(width = 4,
+              pickerInput(inputId='factorT4', label ='Choose the factor4 (z)', "")
             )
         )
       ),
