@@ -80,12 +80,19 @@ server <-function(input,output,session){
   })
   observeEvent(input$dec, {
     sr$dec = input$dec
+    if(sr$booTable == 1) {
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      sr$table = as.data.frame(myCSV())
+    }
   })
   observeEvent(input$head, {
     sr$head = input$head
   })
   observeEvent(input$file1, {
     sr$booTable = 1
+  })
+  observeEvent(input$responseVar0, {
+    sr$resp0 = input$responseVar0
   })
   
   # observeEvent(input$DataSet_state, {
@@ -94,15 +101,9 @@ server <-function(input,output,session){
   #   k=dataTableProxy('DataSet', session)
   # })
   
-
-  observeEvent(input$responseVar0, {
-    sr$resp0 = input$responseVar0
-  })
-  
   observeEvent(c(
     input$file1,
     input$sep,
-    input$dec,
     input$head),
     {
     if(sr$booTable == 1) {
@@ -213,9 +214,22 @@ server <-function(input,output,session){
       output$anov <- renderPrint({
         anov(sr$table,sr$respanov,sr$factanov)
       })
-      output$anovplot <- renderPlot({
+      PlotAnov <- reactive({
         anovplot(sr$table,sr$respanov,sr$factanov)
       })
+      output$anovplot <- renderPlot({
+        PlotAnov()
+      })
+      # output$downloadAnov <- downloadHandler(
+      #   filename = function() {
+      #     "outputAnova.png"
+      #     },
+      #   content = function(file) {
+      #     png(file)
+      #     print(PlotAnov())
+      #   },
+      #   contentType = 'image/png'
+      # )
     }
     else{
       output$anov <- renderPrint({ 

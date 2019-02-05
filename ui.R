@@ -133,14 +133,21 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
             verbatimTextOutput(outputId = "anov")
-        ),
-        fluidRow(
-          box(width = 12, 
-            plotOutput(outputId = "anovplot", height = "1000px")
-          )
+        )
+      ),
+      fluidRow(
+        box(width = 12, 
+            plotOutput(outputId = "anovplot", height = "800px") %>% withSpinner(color="#0dc5c1")
         )
       )
+      # ,
+      # fluidRow(
+      #   box(width = 12,
+      #     downloadButton("downloadAnov", "Download Anova Plot")
+      #   )
+      # )
     ),
+    
     tabItem(
       tabName = "ACP",
       fluidRow(
@@ -165,26 +172,20 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 6,
-            plotOutput(outputId = "indPlot", height = "600px")
+            plotOutput(outputId = "indPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
         ),
         box(width = 6,
-            plotOutput(outputId = "varPlot", height = "600px")
+            plotOutput(outputId = "varPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
         )
       ),
       fluidRow(
         box(width = 6,
-            plotOutput(outputId = "vpPlot", height = "600px")
+            plotOutput(outputId = "vpPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
         ),
         box(width = 6,
-            plotOutput(outputId = "bothPlot", height = "600px")
+            plotOutput(outputId = "bothPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
         )
       )
-      # ,
-      # fluidRow(
-      #   box(width = 12,
-      #     downloadButton("downloadRMD", "Download Analysis")
-      #   )
-      # )
     ),
     tabItem(
       tabName = "Heatmap",
@@ -207,7 +208,7 @@ body <- dashboardBody(
         ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "heatplot", height = "700px")
+          plotOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
       ),
       fluidRow(
@@ -226,7 +227,7 @@ body <- dashboardBody(
                 ")
             ),
             column(width = 12,
-              plotOutput(outputId = "heatplotSR", height = "700px")
+              plotOutput(outputId = "heatplotSR", height = "700px") %>% withSpinner(color="#0dc5c1")
             )
         )
       )
@@ -243,7 +244,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            plotOutput(outputId = "heatplot2", height = "700px")
+            plotOutput(outputId = "heatplot2", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
       )
     ),
@@ -259,7 +260,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "PrettyG", height = "1000px")
+          plotOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )
       )
     ),
@@ -289,8 +290,8 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "TimePlot", height = "1000px")  
-        )
+          plotOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
+        )  
       )
     )
   )

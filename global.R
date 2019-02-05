@@ -19,6 +19,7 @@ library(ggplot2)
 library(dplyr)
 library(lubridate)
 library(RColorBrewer)
+library(shinycssloaders)
 
 library(ggvis)
 library(gplots)
