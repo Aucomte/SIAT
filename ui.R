@@ -31,39 +31,38 @@ body <- dashboardBody(
             ")
         ),
         box(width = 12,
-          HTML("
-              <p>
-                <h3>HOW DO YOU USE THIS APP ?</h3><br>
-                There is a lot of tab you can use:<br>
-                <ul>
-                  <li><b>Home:</b> That's this page !</li>
-                  <li><b>Input table:</b> </li>
-                  <li><b>Mean/Sd:</b></li>
-                  <li><b>Anova:</b></li>
-                  <li><b>ACP:</b></li>
-                  <li><b>Heatmap/Cluster:</b></li>
-                  <li><b>Heatmap/Visu:</b></li>
-                  <li><b>Visualization:</b></li>
-                  <li><b>Evolution:</b></li>
-                </ul>
-              </p>
-          ")
+            HTML("
+              <h4>
+              This is an application web developped in order to visualize and analyze the mesure of symptom intensity as quantitative variable in function of several experimental factors.
+              </h4>
+            ")
         ),
-        # box(width = 6,
-        #     HTML("
+        # box(width = 12,
+        #   HTML("
         #       <p>
-        #         
+        #         <h3>How do you use this app ?</h3><br>
+        #         There is a lot of tab you can use :<br><br>
+        #         <ul>
+        #           <li><b>Home :</b> That's this page !</li><br>
+        #           <li><b>Input table :</b> First of all you should go on the Input Table page and input your dataset in CSV format and ajust parameters.</li><br>
+        #           <li><b>Mean/Sd :</b> Explorate your dataset. Calculate the number of data, mean and standard deviation for a variable or a group of variables. </li><br>
+        #           <li><b>Anova :</b> Analyze the differences among group means in a sample and output a corresponding bloxplot. </li><br>
+        #           <li><b>ACP :</b></li><br>
+        #           <li><b>Heatmap/Cluster :</b></li><br>
+        #           <li><b>Heatmap/Visu :</b></li><br>
+        #           <li><b>Visualization :</b></li><br>
+        #           <li><b>Evolution :</b></li><br>
+        #         </ul>
         #       </p>
         #   ")
         # ),
         box(width = 12,
             HTML("
-              <p align='center'>
-                <u>contacts:</u><br><br>
+              <footer align='right'>
+              <p align='left'>
+                <u>contacts</u> : &nbsp;&nbsp;
                 Aurore Comte - <a href='mailto:aurore.comte@ird.fr'>aurore.comte@ird.fr</a>
               </p>
-
-              <footer align='right'>
                 <a href='http://www.umr-ipme.ird.fr'><img  style = 'width: 5%;' src='IPME.jpg'></a>
                 &nbsp; &nbsp; &nbsp; 
                 <a href='https://www.ird.fr'><img style = 'width:5%;' src='logo_ird.png'></a><br>
@@ -76,13 +75,12 @@ body <- dashboardBody(
       tabName ="Table",
       fluidRow(
         box(
-          fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>% 
-                 helper(icon = "question",
-                        type = "markdown",
-                        content = "file1"),
-          pickerInput(inputId='responseVar0', label ='Choose the response variable', ""),
-          checkboxInput("header", "Header", TRUE)
-        ),
+          fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
+            helper(icon = "question",
+                   type = "markdown",
+                   content = "file1"),
+          pickerInput(inputId='responseVar0', label ='Choose the response variable', "")
+         ),
         box(
           radioButtons('sep', 'Separator',
                             c(Comma=',',

@@ -21,14 +21,11 @@ library(lubridate)
 library(RColorBrewer)
 library(shinycssloaders)
 
-library(ggvis)
+library(ggvis) ##ggviz interactive plot
 library(gplots)
 
 library(ade4)
 library(factoextra)
-
-##ggviz interactive plot
-
 
 #mettre les fonctions ici
 

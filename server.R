@@ -16,7 +16,6 @@ server <-function(input,output,session){
     table2 = NULL,
     resp0 = NULL,
     sep = ";",
-    head = TRUE,
     dec = ",",
     outVar = NULL,
     
@@ -81,12 +80,9 @@ server <-function(input,output,session){
   observeEvent(input$dec, {
     sr$dec = input$dec
     if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
     }
-  })
-  observeEvent(input$head, {
-    sr$head = input$head
   })
   observeEvent(input$file1, {
     sr$booTable = 1
@@ -103,11 +99,10 @@ server <-function(input,output,session){
   
   observeEvent(c(
     input$file1,
-    input$sep,
-    input$head),
+    input$sep),
     {
     if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = sr$head, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
       
       # selected_row = input$DataSet_rows_all
