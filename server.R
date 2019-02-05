@@ -121,7 +121,7 @@ server <-function(input,output,session){
       
       updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
       updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
-      updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[1])
+      updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[2])
       
       updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
       updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
@@ -226,7 +226,7 @@ server <-function(input,output,session){
     sr$axis = input$axis
   })
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]])){
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]]) && length(unique(sr$table[[sr$individual]])) > 1 && length(unique(sr$table[[sr$variable]])) > 1){
       out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
       output$indPlot <- renderPlot({
         out$ind

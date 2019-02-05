@@ -252,7 +252,6 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
     }
   }
   x=data.matrix(x)
-  
   adePCA = dudi.pca(x, center = center, scale = scale, nf = nf, scannf = FALSE)
   VP = fviz_eig(adePCA)
   ind = fviz_pca_ind(adePCA)
