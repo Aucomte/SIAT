@@ -205,7 +205,7 @@ body <- dashboardBody(
         ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "heatplot")
+          plotOutput(outputId = "heatplot", height = "700px")
         )
       ),
       fluidRow(
@@ -224,7 +224,7 @@ body <- dashboardBody(
                 ")
             ),
             column(width = 12,
-              plotOutput(outputId = "heatplotSR")
+              plotOutput(outputId = "heatplotSR", height = "700px")
             )
         )
       )
