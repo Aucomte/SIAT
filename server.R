@@ -48,6 +48,13 @@ server <-function(input,output,session){
     dendorow = TRUE,
     slidethresSH = NULL,
     
+    # panel 5-2 : Heatmap2
+    
+    respheat2 = NULL,
+    factH12 = NULL,
+    factH22 = NULL,
+    factH32 = NULL,
+    
     # panel 6 : Visu
     
     responseVarPG = NULL,
@@ -67,7 +74,7 @@ server <-function(input,output,session){
   )
   
   # panel 1 : lecture de la table
-
+  
   observeEvent(input$sep, {
     sr$sep = input$sep
   })
@@ -123,6 +130,11 @@ server <-function(input,output,session){
         updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
         updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
         updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+        
+        updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+        updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = sr$outVar[1])
+        updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = sr$outVar[1])
+        updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
         
         updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
         updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
@@ -303,6 +315,35 @@ server <-function(input,output,session){
         NULL
       })
       output$heatplotSR <- renderPlot({
+        NULL
+      })
+    }
+  })
+  
+  # panel 5-2 : Heatmap2
+  
+  observeEvent(input$responseVarHeat2, {
+    sr$respheat2 = input$responseVarHeat2
+  })
+  observeEvent(input$factorH12, {
+    sr$factH12 = input$factorH12
+  })
+  observeEvent(input$factorH22, {
+    sr$factH22 = input$factorH22
+  })
+  observeEvent(input$factorH32, {
+    sr$factH32 = input$factorH32
+  })
+  observe({
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
+      if(!is.null(sr$factH12) && sr$factH12 != "" && !is.null(sr$factH22) && sr$factH22 != "" && !is.null(sr$factH32) && sr$factH32 != ""){
+        output$heatplot2 <- renderPlot({
+          heatplot2(sr$table,sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
+        })
+      }
+    }
+    else{
+      output$heatplot2 <- renderPlot({
         NULL
       })
     }

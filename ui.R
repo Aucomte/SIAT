@@ -4,15 +4,15 @@ header <- dashboardHeader(title = "Symptoms Length Analysis", titleWidth = 320)
 sidebar <- dashboardSidebar(
   width = 150,
   sidebarMenu(
-    menuItem("Menu", tabName = "menu", icon = icon("home")),
+    menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
-    menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
-    menuItem("Visu", tabName = "Visu", icon = icon("eye")),
-    menuItem("Evolution", tabName = "Evolution", icon = icon("eye")),
-    menuItem("Debug", tabName = "tabDebug", icon = icon("dashboard"))
+    menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
+    menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
+    menuItem("Visualization", tabName = "Visu", icon = icon("eye")),
+    menuItem("Evolution", tabName = "Evolution", icon = icon("eye"))
   )
 )
 
@@ -36,13 +36,15 @@ body <- dashboardBody(
                 <h3>HOW DO YOU USE THIS APP ?</h3><br>
                 There is a lot of tab you can use:<br>
                 <ul>
-                  <li><b>Menu :</b> That's this page !</li>
-                  <li><b>Input table :</b> </li>
-                  <li><b>Mean/Sd :</b></li>
-                  <li><b>Anova :</b></li>
-                  <li><b>ACP :</b></li>
-                  <li><b>Heatmap :</b></li>
-                  <li><b>Visu :</b></li>
+                  <li><b>Home:</b> That's this page !</li>
+                  <li><b>Input table:</b> </li>
+                  <li><b>Mean/Sd:</b></li>
+                  <li><b>Anova:</b></li>
+                  <li><b>ACP:</b></li>
+                  <li><b>Heatmap/Cluster:</b></li>
+                  <li><b>Heatmap/Visu:</b></li>
+                  <li><b>Visualization:</b></li>
+                  <li><b>Evolution:</b></li>
                 </ul>
               </p>
           ")
@@ -163,18 +165,18 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 6,
-            plotOutput(outputId = "indPlot")
+            plotOutput(outputId = "indPlot", height = "600px")
         ),
         box(width = 6,
-            plotOutput(outputId = "varPlot")
+            plotOutput(outputId = "varPlot", height = "600px")
         )
       ),
       fluidRow(
         box(width = 6,
-            plotOutput(outputId = "vpPlot")
+            plotOutput(outputId = "vpPlot", height = "600px")
         ),
         box(width = 6,
-            plotOutput(outputId = "bothPlot")
+            plotOutput(outputId = "bothPlot", height = "600px")
         )
       )
       # ,
@@ -230,6 +232,22 @@ body <- dashboardBody(
       )
     ),
     tabItem(
+      tabName = "Heatmap2",
+      fluidRow(
+        box(width = 12,
+            pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
+            pickerInput(inputId='factorH12', label ='Choose the first factor', ""),
+            pickerInput(inputId='factorH22', label ='Choose the second factor', ""),
+            pickerInput(inputId='factorH32', label ='Choose the third factor', "") 
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            plotOutput(outputId = "heatplot2", height = "700px")
+        )
+      )
+    ),
+    tabItem(
       tabName = "Visu",
       fluidRow(
         box(width=12,
@@ -275,12 +293,6 @@ body <- dashboardBody(
         )
       )
     )
-    # ,
-    # tabItem(
-    #   tabName = "tabDebug",
-    #   h1("DEBUG"),
-    #   verbatimTextOutput("debug")
-    # )
   )
 )
 
