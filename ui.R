@@ -26,7 +26,7 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           HTML("
-            <h2 align='center'>Symptoms Length Analysis</h2>
+            <h1 align='center'>Symptoms Length Analysis</h1>
             <hr style='height: 3px; color: #FF4000; background-color: #FF4000; width: 50%; border: none;'>
             ")
         ),
@@ -37,25 +37,32 @@ body <- dashboardBody(
               </h4>
             ")
         ),
-        # box(width = 12,
-        #   HTML("
-        #       <p>
-        #         <h3>How do you use this app ?</h3><br>
-        #         There is a lot of tab you can use :<br><br>
-        #         <ul>
-        #           <li><b>Home :</b> That's this page !</li><br>
-        #           <li><b>Input table :</b> First of all you should go on the Input Table page and input your dataset in CSV format and ajust parameters.</li><br>
-        #           <li><b>Mean/Sd :</b> Explorate your dataset. Calculate the number of data, mean and standard deviation for a variable or a group of variables. </li><br>
-        #           <li><b>Anova :</b> Analyze the differences among group means in a sample and output a corresponding bloxplot. </li><br>
-        #           <li><b>ACP :</b></li><br>
-        #           <li><b>Heatmap/Cluster :</b></li><br>
-        #           <li><b>Heatmap/Visu :</b></li><br>
-        #           <li><b>Visualization :</b></li><br>
-        #           <li><b>Evolution :</b></li><br>
-        #         </ul>
-        #       </p>
-        #   ")
-        # ),
+        box(width = 12,
+          HTML("
+              <p>
+                <h3>Comment utiliser cette application ?</h3><br>
+                
+                <p>
+                  &#9888;<br>
+                  Avant toute chose vous devez aller dans l'onglet Input Table et upload votre jeu de données en format CSV (format long). Reglez les parametres Separator, response variable et decimal. Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets!
+                  <br>&#9888;
+                </p>
+              
+                Description des differents onglets:<br><br>
+                <ul>
+                  <li><b>Home :</b> Il s'agit de la page sur laquelle vous êtes déjà. </li><br>
+                  <li><b>Input table :</b> Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé. </li><br>
+                  <li><b>Mean/Sd :</b> Cet onglet permet d'explorer le jeu de données en calculant le nombre de points, la moyenne et l'écartype de la variable réponse quantitative choisie en fonction d'une variable ou d'un groupe de variables.</li><br>
+                  <li><b>Anova :</b> Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum. </li><br>
+                  <li><b>ACP :</b> Analyse en Composantes Principales. Méthode  factorielle  de  réduction  de  dimension. L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables. </li><br>
+                  <li><b>Heatmap/Cluster :</b> Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation est présente dans cet onglet et permet</li><br>
+                  <li><b>Heatmap/Visu :</b></li><br>
+                  <li><b>Visualization :</b> Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis.</li><br>
+                  <li><b>Evolution :</b> Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel. </li><br>
+                </ul>
+              </p>
+          ")
+        ),
         box(width = 12,
             HTML("
               <footer align='right'>
@@ -74,23 +81,48 @@ body <- dashboardBody(
     tabItem(
       tabName ="Table",
       fluidRow(
-        box(
-          fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
-            helper(icon = "question",
-                   type = "markdown",
-                   content = "file1"),
-          pickerInput(inputId='responseVar0', label ='Choose the response variable', "")
-         ),
-        box(
-          radioButtons('sep', 'Separator',
-                            c(Comma=',',
-                              Semicolon=';',
-                              Tab='\t'),
-                            ';'),
-          radioButtons('dec', 'decimal',
-                           c(Comma=',',
-                             Dot='.'),
-                            ',')
+        box(width=12,
+          column(width = 6,
+           downloadButton("downloadData", label = "Download a test file"),
+           bsPopover("downloadData", "Example Data Set", content = "A CSV file. Separator is Semicolon. Decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
+           HTML("<br><br>"),
+            fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
+              helper(icon = "question",
+                     type = "markdown",
+                     content = "file1"),
+            pickerInput(inputId='responseVar0', label ='Choose the response variable', "")
+           ),
+          column(width = 6,
+            column(width = 3,
+              radioButtons('sep', 'Separator',
+                                c(Comma=',',
+                                  Semicolon=';',
+                                  Tab='\t'),
+                                ';')
+              ),
+            column(width = 3,
+              radioButtons('dec', 'decimal',
+                               c(Comma=',',
+                                 Dot='.'),
+                                ',')
+            )
+          )
+        )
+      ),
+      fluidRow(
+        box(width=12,
+          column(width = 6,
+              HTML("
+                  <b><u>Data Validation</u>:</b>
+              "),
+              verbatimTextOutput(outputId = "CheckPoint")
+          ),
+          column(width = 6,
+              HTML("
+                 <b><u>Normality test : Shapiro-Wilk</u>:</b>
+                "),
+              verbatimTextOutput(outputId = "ShapiroWilk")
+          )
         )
       ),
       fluidRow(
@@ -100,7 +132,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            verbatimTextOutput(outputId = "ShapiroWilk")
+            DTOutput(outputId = "filtered_DataSet")
         )
       )
     ),

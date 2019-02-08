@@ -18,6 +18,7 @@ server <-function(input,output,session){
     sep = ";",
     dec = ",",
     outVar = NULL,
+    filtered_data = NULL,
     
     # panel 2 : Moyenne / SD
     
@@ -69,11 +70,22 @@ server <-function(input,output,session){
     factorT2 = NULL,
     factorT3 = NULL,
     factorT4 = NULL
-    
   )
   
   # panel 1 : lecture de la table
   
+  #download file test
+  output$downloadData <- downloadHandler(
+    filename = "dataExemple.csv",
+    content = function(file) {
+      file.copy("www/dataExemple.csv", file)
+    },
+    contentType = "csv"
+  )
+  
+  observeEvent(input$DataSet_rows_all, {
+    sr$filtered_data <- input$DataSet_rows_all
+  })
   observeEvent(input$sep, {
     sr$sep = input$sep
   })
@@ -91,12 +103,6 @@ server <-function(input,output,session){
     sr$resp0 = input$responseVar0
   })
   
-  # observeEvent(input$DataSet_state, {
-  #   str(input$DataSet_state)
-  #   k = sapply(input$DataSet_state$columns, function(x) x$search$search)
-  #   k=dataTableProxy('DataSet', session)
-  # })
-  
   observeEvent(c(
     input$file1,
     input$sep),
@@ -105,17 +111,9 @@ server <-function(input,output,session){
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
       
-      # selected_row = input$DataSet_rows_all
-      # print(selected_row)
-      # if(length(selected_row) > 0 && length(selected_row) < nrow(sr$table)){
-      #   sr$table2 = sr$table[selected_row,]
-      # }
-      # else{
-      #   sr$table2 = sr$table
-      # }
         sr$outVar = colnames(myCSV())
         
-        updateSelectInput(session, inputId = "responseVar0", choices = sr$outVar)
+        updateSelectInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
         
         updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
         updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
@@ -149,28 +147,63 @@ server <-function(input,output,session){
       }
     })
         
-  observe({
-    if(sr$booTable == 1) {
-      output$DataSet <- DT::renderDataTable(
+    output$DataSet <- DT::renderDataTable(
+      DT::datatable(
         sr$table, 
-        #class = "display nowrap compact", # style
-        filter = "top", 
+        filter = list(position = 'top', clear = TRUE, plain = FALSE), 
         options = list(
-          stateSave = TRUE,
-          scrollX = TRUE
+          scrollX = TRUE,
+          lengthChange = FALSE
           )
       )
+    )
+    output$filtered_DataSet <- DT::renderDataTable(
+      if (!is.null(sr$filtered_data)){
+        DT::datatable(
+          sr$table[sr$filtered_data,],
+          extensions = 'Buttons', 
+          options = list(dom = 'Bfrtip',buttons = list('copy', 'print'))
+        )
+      }
+    )
     
+  observe({
+    if(sr$booTable == 1) {
       if(!is.null(sr$resp0) && (sr$resp0 != "") && is.numeric(sr$table[[sr$resp0]])){
         output$ShapiroWilk <- renderPrint({
-          normality(sr$table, sr$resp0)
+          normality(sr$table[sr$filtered_data,], sr$resp0)
         })
       }
       else{
-        output$ShapiroWilk <- renderPrint({
+        output$ShapiroWilk <- renderText({
           "Check your inputs variables please"
         })
       }
+      
+      if(!is.null(sr$resp0) && (sr$resp0 != "")){
+        if(is.numeric(sr$table[[sr$resp0]])){
+          output$CheckPoint <- renderPrint({
+            "Looks like everything is fine now ! :)"
+          })
+        }
+        else{
+          output$CheckPoint <- renderText({
+"The Response Variable is not numeric !
+Change the decimal parameter or the response Variable!"
+          })
+        }
+      }
+      else{
+        output$CheckPoint <- renderText({
+"First of all, choose your separator until your columns look good
+Then, you need to choose a quantitative response variable (ex: Lenght)"
+        })
+      }
+    }
+    else{
+      output$CheckPoint <- renderText({
+        "You need to upload a CSV file"
+      })
     }
   })
   
@@ -186,7 +219,7 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$resp1]])){
       output$moyenne <- renderDT({
-        datatable(Data_Moyenne(sr$table,sr$resp1,sr$fact1))
+        datatable(Data_Moyenne(sr$table[sr$filtered_data,],sr$resp1,sr$fact1))
       })
     }
     else{
@@ -207,10 +240,10 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
       output$anov <- renderPrint({
-        anov(sr$table,sr$respanov,sr$factanov)
+        anov(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
       })
       PlotAnov <- reactive({
-        anovplot(sr$table,sr$respanov,sr$factanov)
+        anovplot(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
       })
       output$anovplot <- renderPlot({
         PlotAnov()
@@ -257,19 +290,35 @@ server <-function(input,output,session){
   })
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]]) && length(unique(sr$table[[sr$individual]])) > 1 && length(unique(sr$table[[sr$variable]])) > 1){
-      out = adeACP(sr$table, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
-      output$indPlot <- renderPlot({
-        out$ind
-      })
-      output$varPlot <- renderPlot(
-        out$var
-      )
-      output$vpPlot <- renderPlot({
-        out$VP
-      })
-      output$bothPlot <- renderPlot(
-        out$both
-      )
+      if(length(unique(sr$table[sr$filtered_data,][[sr$individual]])) > 1 && length(unique(sr$table[sr$filtered_data,][[sr$variable]])) > 1){
+        out = adeACP(sr$table[sr$filtered_data,], sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+        output$indPlot <- renderPlot({
+          out$ind
+        })
+        output$varPlot <- renderPlot(
+          out$var
+        )
+        output$vpPlot <- renderPlot({
+          out$VP
+        })
+        output$bothPlot <- renderPlot(
+          out$both
+        )
+      }
+      else{
+        output$indPlot <- renderPlot({
+          NULL
+        })
+        output$varPlot <- renderPlot({
+          NULL
+        })
+        output$vpPlot <- renderPlot({
+          NULL
+        })
+        output$bothPlot <- renderPlot({
+          NULL
+        })
+      }
     }
     else{
      output$indPlot <- renderPlot({
@@ -310,12 +359,12 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-       updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+       updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table[sr$filtered_data,],sr$respheat,sr$factH1,sr$factH2)/2, min=0, max=maxMean(sr$table[sr$filtered_data,],sr$respheat,sr$factH1,sr$factH2), step=1) 
         output$heatplot <- renderPlot({
-          heatplot(sr$table,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+          heatplot(sr$table[sr$filtered_data,],sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
         })
         output$heatplotSR <- renderPlot({
-          heatplotSR(sr$table,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
+          heatplotSR(sr$table[sr$filtered_data,],sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
        })
       }
     }
@@ -347,7 +396,7 @@ server <-function(input,output,session){
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH12) && sr$factH12 != "" && !is.null(sr$factH22) && sr$factH22 != "" && !is.null(sr$factH32) && sr$factH32 != ""){
         output$heatplot2 <- renderPlot({
-          heatplot2(sr$table,sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
+          heatplot2(sr$table[sr$filtered_data,],sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
         })
       }
     }
@@ -374,7 +423,7 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarPG]])){
       output$PrettyG <- renderPlot({
-        NiceGraph(sr$table,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+        NiceGraph(sr$table[sr$filtered_data,],sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
       })
     }
     else{
@@ -406,7 +455,7 @@ server <-function(input,output,session){
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
       output$TimePlot <- renderPlot({
-        GraphTime(sr$table,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
+        GraphTime(sr$table[sr$filtered_data,],sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
       })
     }
     else{
