@@ -92,7 +92,9 @@ server <-function(input,output,session){
   observeEvent(input$dec, {
     sr$dec = input$dec
     if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      #myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.table, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      
       sr$table = as.data.frame(myCSV())
     }
   })
@@ -153,8 +155,14 @@ server <-function(input,output,session){
         filter = list(position = 'top', clear = TRUE, plain = FALSE), 
         options = list(
           scrollX = TRUE,
-          lengthChange = FALSE
+          dom = 'Blfrtip',
+          lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+          initComplete = JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+            "}"
           )
+        )
       )
     )
     output$filtered_DataSet <- DT::renderDataTable(
@@ -162,10 +170,44 @@ server <-function(input,output,session){
         DT::datatable(
           sr$table[sr$filtered_data,],
           extensions = 'Buttons', 
-          options = list(dom = 'Bfrtip',buttons = list('copy', 'print'))
+          options = list(
+            dom = 'Blfrtip', 
+            buttons = list(
+              'copy', list(
+               extend = "collection"
+              , text = "Download entire dataset",
+              action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
+            )
+          ),
+          lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+            initComplete = JS(
+              "function(settings, json) {",
+              "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+              "}"
+            )
+          )
         )
       }
     )
+    
+    output$download1 <- downloadHandler(
+      filename = function() {
+        paste("data-", Sys.Date(), ".csv", sep="")
+      },
+      content = function(file) {
+        write.csv( sr$table[sr$filtered_data,], file)
+      }
+    )
+    myModal <- function() {
+      div(id = "test",
+          modalDialog(downloadButton("download1","Download as csv"),
+                      easyClose = TRUE, title = "Download Table")
+      )
+    }
+    
+    observeEvent(input$test, {
+      showModal(myModal())
+    })
     
   observe({
     if(sr$booTable == 1) {

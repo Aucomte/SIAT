@@ -1,5 +1,5 @@
 
-header <- dashboardHeader(title = "Symptoms Length Analysis", titleWidth = 320)
+header <- dashboardHeader(title = "Symptoms Length Analysis Tool", titleWidth = 380)
 
 sidebar <- dashboardSidebar(
   width = 150,
@@ -26,7 +26,7 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           HTML("
-            <h1 align='center'>Symptoms Length Analysis</h1>
+            <h1 align='center'>Symptoms Length Analysis Tool</h1>
             <hr style='height: 3px; color: #FF4000; background-color: #FF4000; width: 50%; border: none;'>
             ")
         ),
@@ -55,8 +55,8 @@ body <- dashboardBody(
                   <li><b>Mean/Sd :</b> Cet onglet permet d'explorer le jeu de données en calculant le nombre de points, la moyenne et l'écartype de la variable réponse quantitative choisie en fonction d'une variable ou d'un groupe de variables.</li><br>
                   <li><b>Anova :</b> Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum. </li><br>
                   <li><b>ACP :</b> Analyse en Composantes Principales. Méthode  factorielle  de  réduction  de  dimension. L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables. </li><br>
-                  <li><b>Heatmap/Cluster :</b> Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation est présente dans cet onglet et permet</li><br>
-                  <li><b>Heatmap/Visu :</b></li><br>
+                  <li><b>Heatmap/Cluster :</b> Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation présente dans cet onglet permet de fixer un seuil de sensibilité / résistance en fonction des longueurs de lésion. Cette représentation offre alors en sortie une heatmap binaire de résistance / sensibilité. </li><br>
+                  <li><b>Heatmap/Visu :</b> Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux ou trois variables choisies. </li><br>
                   <li><b>Visualization :</b> Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis.</li><br>
                   <li><b>Evolution :</b> Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel. </li><br>
                 </ul>
@@ -83,9 +83,9 @@ body <- dashboardBody(
       fluidRow(
         box(width=12,
           column(width = 6,
-           downloadButton("downloadData", label = "Download a test file"),
-           bsPopover("downloadData", "Example Data Set", content = "A CSV file. Separator is Semicolon. Decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
-           HTML("<br><br>"),
+           #downloadButton("downloadData", label = "Download a test file"),
+           #bsPopover("downloadData", "Example Data Set", content = "A CSV file. Separator is Semicolon. Decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
+           #HTML("<br><br>"),
             fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
               helper(icon = "question",
                      type = "markdown",
@@ -127,12 +127,12 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          DTOutput(outputId = "DataSet")
+          DT::dataTableOutput(outputId = "DataSet")
         )
       ),
       fluidRow(
         box(width = 12,
-            DTOutput(outputId = "filtered_DataSet")
+          DT::dataTableOutput(outputId = "filtered_DataSet")
         )
       )
     ),
