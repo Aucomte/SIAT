@@ -119,11 +119,11 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   else if (row == FALSE && col == TRUE){
     dend = "col"
   }
-  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6))
+  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=45)
   return(p)
 }
 
-heatplotSR <- function(tab,SR,var1,var2,var3){
+heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
 
   varF = c(var2, var3)
   data_moyenne = Data_Moyenne(tab,var1,varF)
@@ -146,7 +146,21 @@ heatplotSR <- function(tab,SR,var1,var2,var3){
     }
   }
   x=data.matrix(x)
-  p = gplots::heatmap.2(x, key = FALSE, dendrogram = "none", col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6))
+  
+  if (row == TRUE && col == TRUE){
+    dend = "both"
+  }
+  else if (row == FALSE && col == FALSE){
+    dend = "none"
+  }
+  else if (row == TRUE && col == FALSE){
+    dend = "row"
+  }
+  else if (row == FALSE && col == TRUE){
+    dend = "col"
+  }
+  
+  p = gplots::heatmap.2(x, key = FALSE, dendrogram = dend, col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=45)
   return(p)
 }
 
@@ -179,15 +193,19 @@ heatplot2 <- function(tab,var1,var2,var3,var4){
                                  midpoint = MID,
                                  limit = c(MIN,MAX),
                                  space = "Lab",
-                                 name=var1)
+                                 name = var1)
+  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+                axis.title.x = element_text(size = 14),
+                axis.text = element_text(size = 12), 
+                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   return(p)
 }
 
 maxMean <- function(tab,var1,var2,var3){
   varF = c(var2, var3)
-    data_moyenne = Data_Moyenne(tab,var1,varF)
-    x = ceiling(max(data_moyenne$Mean))
-    return(x)
+  data_moyenne = Data_Moyenne(tab,var1,varF)
+  x = ceiling(max(data_moyenne$Mean))
+  return(x)
 }
 
 #--------------------------------
@@ -234,6 +252,11 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
   }
   p <- p + geom_smooth(se = FALSE)
   
+  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+                axis.title.x = element_text(size = 14),
+                axis.text = element_text(size = 12), 
+                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+  
   return(p)
 
 }
@@ -248,9 +271,16 @@ NiceGraph <-  function(tab,var1,var2,var3,var4){
   p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
   if(var4 != "None" && !is.null(var4) && var4 !=""){
     p <- p + facet_grid(tab[,var4] ~ .)
+    p <- p + theme(legend.text = element_text(size = 12), legend.title = element_text(face = "bold",size = 12))
   }
   p <- p + labs(y=var1, x =var2, colour = var3)
   p + theme_minimal()
+  
+  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+                axis.title.x = element_text(size = 14),
+                axis.text = element_text(size = 12), 
+                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+  
   return(p)
 }
 

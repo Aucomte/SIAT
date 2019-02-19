@@ -169,13 +169,12 @@ body <- dashboardBody(
         box(width = 12, 
             plotOutput(outputId = "anovplot", height = "800px") %>% withSpinner(color="#0dc5c1")
         )
+      ),
+      fluidRow(
+        box(width = 12,
+          downloadButton("downloadAnov", "Download Anova Plot")
+        )
       )
-      # ,
-      # fluidRow(
-      #   box(width = 12,
-      #     downloadButton("downloadAnov", "Download Anova Plot")
-      #   )
-      # )
     ),
     
     tabItem(

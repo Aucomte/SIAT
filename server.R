@@ -195,13 +195,12 @@ server <-function(input,output,session){
         paste("data-", Sys.Date(), ".csv", sep="")
       },
       content = function(file) {
-        write.csv( sr$table[sr$filtered_data,], file)
+        write.table(sr$table[sr$filtered_data,], file, sep="\t", dec= ",", col.names = T, row.names = F)
       }
     )
     myModal <- function() {
       div(id = "test",
-          modalDialog(downloadButton("download1","Download as csv"),
-                      easyClose = TRUE, title = "Download Table")
+         modalDialog(downloadButton("download1","Download as csv"),easyClose = TRUE, title = "Download Table")
       )
     }
     
@@ -272,6 +271,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   
   # panel 3 : Anova
+  
   observeEvent(input$responseVar,{
     sr$respanov = input$responseVar
   })
@@ -279,27 +279,27 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     vector=c()
     sr$factanov = c(vector,input$factors)
   })
+  
+  output$downloadAnov <- downloadHandler(
+    filename = "outputAnova.png",
+    content = function(file) {
+      png(file)
+      print(PlotAnov())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
+  PlotAnov <- function(){
+    anovplot(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
+  }
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
       output$anov <- renderPrint({
         anov(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
       })
-      PlotAnov <- reactive({
-        anovplot(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
-      })
       output$anovplot <- renderPlot({
         PlotAnov()
       })
-      # output$downloadAnov <- downloadHandler(
-      #   filename = function() {
-      #     "outputAnova.png"
-      #     },
-      #   content = function(file) {
-      #     png(file)
-      #     print(PlotAnov())
-      #   },
-      #   contentType = 'image/png'
-      # )
     }
     else{
       output$anov <- renderPrint({ 
@@ -406,7 +406,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
           heatplot(sr$table[sr$filtered_data,],sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
         })
         output$heatplotSR <- renderPlot({
-          heatplotSR(sr$table[sr$filtered_data,],sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2)
+          heatplotSR(sr$table[sr$filtered_data,],sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
        })
       }
     }
