@@ -165,28 +165,32 @@ server <-function(input,output,session){
         )
       )
     )
-    output$filtered_DataSet <- DT::renderDataTable(
-      if (!is.null(sr$filtered_data)){
-        DT::datatable(
-          sr$table[sr$filtered_data,],
-          extensions = 'Buttons', 
-          options = list(
-            dom = 'Blfrtip', 
-            buttons = list(
-              'copy', list(
-               extend = "collection"
-              , text = "Download entire dataset",
-              action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
-            )
-          ),
-          lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
-            initComplete = JS(
-              "function(settings, json) {",
-              "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-              "}"
+    output$filtered_DataSet <- DT::renderDataTable( server = FALSE, {
+        if (!is.null(sr$filtered_data)){
+          DT::datatable(
+            sr$table[sr$filtered_data,],
+            extensions = 'Buttons', 
+            options = list(
+              dom = 'Blfrtip', 
+              buttons = list(
+                'copy', 
+                'print',
+                list(
+                 extend = "collection", 
+                 text = "Download entire dataset",
+                 #buttons = c("csv","excel","pdf")
+                 action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
+              )
+            ),
+            lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                "}"
+              )
             )
           )
-        )
+        }
       }
     )
     
@@ -280,6 +284,10 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$factanov = c(vector,input$factors)
   })
   
+  PlotAnov <- function(){
+    anovplot(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
+  }
+  
   output$downloadAnov <- downloadHandler(
     filename = "outputAnova.png",
     content = function(file) {
@@ -289,9 +297,6 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     },
     contentType = 'image/png'
   )
-  PlotAnov <- function(){
-    anovplot(sr$table[sr$filtered_data,],sr$respanov,sr$factanov)
-  }
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
       output$anov <- renderPrint({
@@ -312,6 +317,24 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   
   # panel 4 : ACP
+
+  outind <- function(){
+    ACP = adeACP(sr$table[sr$filtered_data,], sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    return(ACP$ind)
+  }
+  outvar <- function(){
+    ACP = adeACP(sr$table[sr$filtered_data,], sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    return(ACP$var)
+  }
+  outvp <- function(){
+    ACP = adeACP(sr$table[sr$filtered_data,], sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    return(ACP$VP)
+  }
+  outboth <- function(){
+    ACP = adeACP(sr$table[sr$filtered_data,], sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    return(ACP$both)
+  }
+  
   observeEvent(input$respacp,{
     sr$respacp = input$respacp
   })
@@ -377,6 +400,42 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
      })
     }
   })
+  output$downloadACPind <- downloadHandler(
+    filename = "outputACPind.png",
+    content = function(file) {
+      png(file)
+      print(outind())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
+  output$downloadACPVar <- downloadHandler(
+    filename = "outputACPvar.png",
+    content = function(file) {
+      png(file)
+      print(outvar())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
+  output$downloadACPVP <- downloadHandler(
+    filename = "outputACPVP.png",
+    content = function(file) {
+      png(file)
+      print(outvp())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
+  output$downloadACPBoth <- downloadHandler(
+    filename = "outputACPBoth.png",
+    content = function(file) {
+      png(file)
+      print(outboth())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
   
   # panel 5 : Heatmap
   
@@ -422,6 +481,11 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   
   # panel 5-2 : Heatmap2
   
+  outheat2 <- function(){
+    x = heatplot2(sr$table[sr$filtered_data,],sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
+    return(x)
+  }
+  
   observeEvent(input$responseVarHeat2, {
     sr$respheat2 = input$responseVarHeat2
   })
@@ -448,8 +512,23 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       })
     }
   })
+  output$downloadHeat2 <- downloadHandler(
+    filename = "outputHeat.png",
+    content = function(file) {
+      png(file)
+      print(outheat2())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
   
   # panel 6 : Visu
+  
+  outVisu <- function(){
+    x = NiceGraph(sr$table[sr$filtered_data,],sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+    return(x)
+  }
+  
   observeEvent(input$responseVarPG, {
     sr$responseVarPG = input$responseVarPG
   })
@@ -474,8 +553,23 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       })
     }
   })
+  output$downloadVisu <- downloadHandler(
+    filename = "outputVisu.png",
+    content = function(file) {
+      png(file)
+      print(outVisu())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
   
   # panel 7 : Time
+  
+  outTime <- function(){
+    x = GraphTime(sr$table[sr$filtered_data,],sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
+    return(x)
+  }
+  
   observeEvent(input$responseVarT, {
     sr$responseVarT = input$responseVarT
   })
@@ -506,5 +600,14 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       })
     }
   })
+  output$downloadEvol <- downloadHandler(
+    filename = "outputTime.png",
+    content = function(file) {
+      png(file)
+      print(outTime())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
 }
 

@@ -70,9 +70,11 @@ body <- dashboardBody(
                 <u>contacts</u> : &nbsp;&nbsp;
                 Aurore Comte - <a href='mailto:aurore.comte@ird.fr'>aurore.comte@ird.fr</a>
               </p>
-                <a href='http://www.umr-ipme.ird.fr'><img  style = 'width: 5%;' src='IPME.jpg'></a>
+                <a href='http://www.bioinfo.ird.fr'><img  style = 'width: 6%;' src='i-trop-longtransparent.png'></a>
                 &nbsp; &nbsp; &nbsp; 
-                <a href='https://www.ird.fr'><img style = 'width:5%;' src='logo_ird.png'></a><br>
+                <a href='http://www.umr-ipme.ird.fr'><img  style = 'width: 6%;' src='IPME.jpg'></a>
+                &nbsp; &nbsp; &nbsp; 
+                <a href='https://www.ird.fr'><img style = 'width:6%;' src='logo_ird.png'></a><br>
               </footer>
           ")
         )
@@ -209,10 +211,26 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 6,
+            downloadButton("downloadACPind", "Download Plot ind")
+        ),
+        box(width = 6,
+            downloadButton("downloadACPVar", "Download Plot Var")
+        )
+      ),
+      fluidRow(
+        box(width = 6,
             plotOutput(outputId = "vpPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
         ),
         box(width = 6,
             plotOutput(outputId = "bothPlot", height = "600px") %>% withSpinner(color="#0dc5c1")
+        )
+      ),
+      fluidRow(
+        box(width = 6,
+            downloadButton("downloadACPVP", "Download Plot VP")
+        ),
+        box(width = 6,
+            downloadButton("downloadACPBoth", "Download Plot Both")
         )
       )
     ),
@@ -275,6 +293,11 @@ body <- dashboardBody(
         box(width = 12,
             plotOutput(outputId = "heatplot2", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
+      ),
+      fluidRow(
+        box(width = 12,
+            downloadButton("downloadHeat2", "Download Plot Heatmap")
+        )
       )
     ),
     tabItem(
@@ -290,6 +313,11 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           plotOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            downloadButton("downloadVisu", "Download Plot Visu")
         )
       )
     ),
@@ -321,6 +349,11 @@ body <- dashboardBody(
         box(width = 12,
           plotOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )  
+      ),
+      fluidRow(
+        box(width = 12,
+            downloadButton("downloadEvol", "Download Plot Evol")
+        )
       )
     )
   )
