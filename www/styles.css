@@ -73,28 +73,30 @@
 .skin-yellow .main-sidebar .sidebar .sidebar-menu .active a{
 					  background-color: #3C3C3C;
 					  color: white;
+                      border-left-color: #3C3C3C; 
 					  }
 
 /* other links in the sidebarmenu */
 .skin-yellow .main-sidebar .sidebar .sidebar-menu a{
 					  background-color: #626E60;
 					  color: #FFFFFF;
-					  border: 0.5px solid #3C3C3C;
-				      border-radius: 30px;
+				      border-radius: 20px;
 					  }
 
 /* other links in the sidebarmenu when hovered */
  .skin-yellow .main-sidebar .sidebar .sidebar-menu a:hover{
 					  background-color: #3C3C3C;
 					  color: #FFFFFF;
-					  border-radius: 30px;
+					  border-radius: 20px;
+                      border-left-color: #3C3C3C; 
 					  }
 
 /* toggle button when hovered  */
  .skin-yellow .main-header .navbar .sidebar-toggle:hover{
 					  background-color: #3C3C3C;
 					  color: #FFFFFF;
-					  border-radius: 30px;
+					  border-radius: 20px;
+                      border-left-color: #3C3C3C;
 					  }
 
 .sidebar-menu {
