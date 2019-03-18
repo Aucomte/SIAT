@@ -1,8 +1,9 @@
 
-header <- dashboardHeader(title = "Symptoms Length Analysis Tool", titleWidth = 380)
+#header <- dashboardHeader(title = "Symptoms Length Analysis Tool", titleWidth = 380)
+header <- dashboardHeader(title = img(style = 'width: 80%;', src = "SLATlogo2.png", class = 'img-responsive'), titleWidth = 500)
 
 sidebar <- dashboardSidebar(
-  width = 150,
+  width = 180,
   sidebarMenu(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
@@ -26,9 +27,10 @@ body <- dashboardBody(
       fluidRow(
         box(class = "titlebox", width = 12,
             withTags(
-              div(class = "title",
-                "Symptoms Length Analysis Tool"
+              div(class = "title", 
+               #"Symptoms Length Analysis Tool"
                # hr(style='height: 3px; color: #FF4000; background-color: #FF4000; width: 50%; border: none;')
+               img(style = 'width: 75%;', src = "SLATtransparent.png")
               )
             )
         ),
@@ -130,6 +132,11 @@ body <- dashboardBody(
               verbatimTextOutput(outputId = "ShapiroWilk")
           )
         )
+      ),
+      fluidRow(
+        box(width=12,class = "box1",
+           checkboxInput("logTrans", "logarithmic transformation", FALSE)
+          )
       ),
       fluidRow(
         box(width = 12,
@@ -316,7 +323,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
+          plotlyOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )
       ),
       fluidRow(
@@ -351,7 +358,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
+            plotlyOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )  
       ),
       fluidRow(

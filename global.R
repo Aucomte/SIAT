@@ -20,6 +20,7 @@ library(dplyr)
 library(lubridate)
 library(RColorBrewer)
 library(shinycssloaders)
+library(plotly)
 
 library(ggvis) ##ggviz interactive plot
 library(gplots)
@@ -56,12 +57,18 @@ anov <- function(tab,var1,var2){
 
 anovplot <- function(tab,var1,var2){
   if(length(var2) == 1){
-    x = boxplot(as.numeric(tab[[var1]])~tab[[var2[1]]], tab, xlab = var2[1], ylab=var1)
-    #x = tab %>% ggvis(~tab[[var2[1]]], ~as.numeric(tab[[var1]])) %>% layer_boxplots()
+    x <- ggplot(tab, aes(x=tab[[var2[1]]], y=as.numeric(tab[[var1]]), fill = tab[[var2[1]]]))
+    x <- x + geom_boxplot()
+    x <- x + labs(x=var2[1], y=var1, fill=var2[1]) 
+    #x <- x + stat_summary(fun.y=mean, geom="point", shape=20, size=5, color="red", fill="red")
+    #x <- x + geom_jitter()
   }
   else if(length(var2) >= 2){
-    x = boxplot(as.numeric(tab[[var1]])~tab[[var2[1]]] * tab[[var2[2]]], tab, xlab = paste(var2[1],"*",var2[2]), ylab=var1)
-    #x = tab %>% ggvis(~tab[[var2[1]]]:tab[[var2[2]]], ~as.numeric(tab[[var1]])) %>% layer_boxplots()
+    #inter = interaction(tab[[var1]], tab[[var2[1]]])
+    x <- ggplot(tab, aes(x=tab[[var2[1]]], y=as.numeric(tab[[var1]]), fill = tab[[var2[2]]]))
+    x <- x + geom_boxplot(position = position_dodge2())
+    x <- x + labs(x = var2[1], y=var1, fill=var2[2]) 
+    #x <- x + stat_summary(fun.y=mean, geom="point", shape=20, size=5, color="red", fill="red")
   }
   return(x)
 }
@@ -243,7 +250,7 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
     p <- p + facet_grid(allmoy[,var2] ~ allmoy[,var3])
   }
   
-  p <- p + geom_point(size=(allmoy$nb/sum(allmoy$nb)*50), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
+  p <- p + geom_point(size=(allmoy$nb/sum(allmoy$nb)*100), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
   if(!is.null(var4)){
     p <- p + labs(color=var4 ,x=tim, y= var1)
   }
