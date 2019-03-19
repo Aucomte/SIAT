@@ -28,7 +28,8 @@ library(gplots)
 library(ade4)
 library(factoextra)
 
-#mettre les fonctions ici
+#FUNCTIONS
+#---------------------------------------------------------------------------------------------------------------
 
 Data_Moyenne <- function(table,var1,var2){
   datatable = table %>% group_by(.dots = as.character(var2)) %>%
@@ -40,6 +41,9 @@ Data_Moyenne <- function(table,var1,var2){
 
   return(datatable)
 }
+
+#--------------------------------------------------------------------------------------------------------------
+#anova
 
 anov <- function(tab,var1,var2){
   output = list()
@@ -228,7 +232,7 @@ maxMean <- function(tab,var1,var2,var3){
   return(x)
 }
 
-#--------------------------------
+#---------------------------------------------------------------------------------------------------------------------
 #evolution
 
 GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
@@ -315,6 +319,16 @@ normality <- function(data, var1){
   else{
     return("response variable is not numeric.")
   }
+}
+
+vizBarplot <- function(tab, var1, var2, var3, var4){
+  varF = c(var1, var2, var3, var4)
+  data_moyenne = Data_Moyenne(tab, var1, varF)
+  p<- ggplot(data=data_moyenne, aes(x=data_moyenne[,"cellules"]:data_moyenne[,"varietes"], y=as.numeric(as.character(data_moyenne[,"moyenne"])), fill = data_moyenne[,"souches"])) + geom_bar(stat="identity", position=position_dodge())
+  p <- p + geom_errorbar(aes(ymin=as.numeric(as.character(data_moyenne[,"moyenne"]))-as.numeric(as.character(data_moyenne[,"ecartype"])), ymax=as.numeric(as.character(data_moyenne[,"moyenne"]))+as.numeric(as.character(data_moyenne[,"ecartype"]))), width=.2, position=position_dodge(.9))
+  p <- p + labs(y="longueurs des lesions", x ="cellules x varietes", fill = "souches")
+  p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+  return(p)
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------

@@ -57,14 +57,22 @@ server <-function(input,output,session){
     factH22 = NULL,
     factH32 = NULL,
     
-    # panel 6 : Visu
+    # panel 6 : Boxplot
     
     responseVarPG = NULL,
     factorPG1 = NULL,
     factorPG2 = NULL,
     factorPG3 = NULL,
     
-    # panel 7 : Time
+    # panel 7 : Barplot
+    
+    responseVarBar = NULL,
+    factorBar1 = NULL,
+    factorBar2 = NULL,
+    factorBar3 = NULL,
+    factorBar4 = NULL,
+    
+    # panel 8 : Time
     
     responseVarT= NULL,
     TimeFactor = NULL,
@@ -155,6 +163,11 @@ server <-function(input,output,session){
         updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
         updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
         updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+        
+        updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
+        updateSelectInput(session, inputId = "factorBar1", choices = c("None", sr$outVar), selected = sr$outVar[1])
+        updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
+        updateSelectInput(session, inputId = "factorBar3", choices = c("None", sr$outVar), selected = "None")
         
         updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
         updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])

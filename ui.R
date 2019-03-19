@@ -13,7 +13,7 @@ sidebar <- dashboardSidebar(
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
-    menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
+   # menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
   )
 )
@@ -349,6 +349,35 @@ body <- dashboardBody(
       )
     ),
     tabItem(
+      tabName = "barplot",
+      fluidRow(
+        box(width=12, class = "box1",
+          column(width = 12,
+            pickerInput(inputId='responseVarBar', label ='Choose the response variable', "")
+           ),
+          column(width=6,
+            pickerInput(inputId='factorBar1', label ='Choose the first factor', "")
+          ),
+          column(width=6,
+            pickerInput(inputId='factorBar2', label ='Choose the second factor', "")
+          ),
+          column(width=12,
+            pickerInput(inputId='factorBar3', label ='Choose the third factor', "")
+          )
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            plotlyOutput(outputId = "BarPlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
+        )  
+      ),
+      fluidRow(
+        box(width = 12,
+            downloadButton("downloadBarplot", "Download Barplot")
+        )
+      )
+    ),
+    tabItem(
       tabName = "Evolution",
         fluidRow(
           box(width = 12, class = "box1",
@@ -379,7 +408,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            downloadButton("downloadEvol", "Download Plot Evol")
+            downloadButton("downloadEvol", "Download Plot Time")
         )
       )
     )
