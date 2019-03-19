@@ -175,7 +175,7 @@ server <-function(input,output,session){
           lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
           initComplete = JS(
             "function(settings, json) {",
-            "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+            "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
             "}"
           )
         )
@@ -201,7 +201,7 @@ server <-function(input,output,session){
             lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
               initComplete = JS(
                 "function(settings, json) {",
-                "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
                 "}"
               )
             )
@@ -295,7 +295,29 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$resp1]])){
       output$moyenne <- renderDT({
-        datatable(Data_Moyenne(sr$tableF,sr$resp1,sr$fact1))
+        datatable(
+          Data_Moyenne(sr$tableF,sr$resp1,sr$fact1),
+            extensions = 'Buttons', 
+            options = list(
+              dom = 'Blfrtip', 
+              buttons = list(
+                'copy', 
+                'print',
+                list(
+                  extend = "collection", 
+                  text = "Download entire dataset",
+                  #buttons = c("csv","excel","pdf")
+                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
+                )
+              ),
+              lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
+                "}"
+              )
+            )
+          )
       })
     }
     else{
