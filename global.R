@@ -42,17 +42,30 @@ Data_Moyenne <- function(table,var1,var2){
 }
 
 anov <- function(tab,var1,var2){
+  output = list()
   if(length(var2) == 1){
     res.aov = aov(tab[[var1]] ~ tab[[var2[1]]], tab)
     x = summary(res.aov)
     rownames(x[[1]]) <- c(var2[1], "residuals")
+
+    tukey = TukeyHSD(res.aov)
+    names(tukey) <- c(var2[1])
+    
+    output[[1]] = x
+    output[[2]] = tukey
   }
   else if(length(var2) >= 2){
     res.aov = aov(tab[[var1]] ~ tab[[var2[1]]] * tab[[var2[2]]], tab)
     x = summary(res.aov)
     rownames(x[[1]]) <- c(var2[1], var2[2], paste(var2[1],"*",var2[2]), "residuals")
+    
+    tukey = TukeyHSD(res.aov)
+    names(tukey) <- c(var2[1], var2[2], paste(var2[1],"*",var2[2]))
+    
+    output[[1]] = x
+    output[[2]] = tukey
   }
-  return(x)
+  return(output)
 }
 
 anovplot <- function(tab,var1,var2){

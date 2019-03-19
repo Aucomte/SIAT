@@ -12,8 +12,9 @@ sidebar <- dashboardSidebar(
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
-    menuItem("Visualization", tabName = "Visu", icon = icon("eye")),
-    menuItem("Evolution", tabName = "Evolution", icon = icon("eye"))
+    menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
+    menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
+    menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
   )
 )
 
@@ -28,8 +29,6 @@ body <- dashboardBody(
         box(class = "titlebox", width = 12,
             withTags(
               div(class = "title", 
-               #"Symptoms Length Analysis Tool"
-               # hr(style='height: 3px; color: #FF4000; background-color: #FF4000; width: 50%; border: none;')
                img(style = 'width: 75%;', src = "SLATtransparent.png")
               )
             )
@@ -64,9 +63,11 @@ body <- dashboardBody(
                   br(),
                   li(b("Heatmap/Visu"),": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux ou trois variables choisies."),
                   br(),
-                  li(b("Visualization"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
+                  li(b("boxplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
                   br(),
-                  li(b("Evolution"), ": Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel.")
+                  li(b("barplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
+                  br(),
+                  li(b("Time Series"), ": Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel.")
                   )
               )
           )
@@ -175,6 +176,11 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,class = "box1",
+          withTags(
+              div(
+                h4("Anova :")
+              )
+            ),
             verbatimTextOutput(outputId = "anov")
         )
       ),
@@ -186,6 +192,16 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,class = "box1",
           downloadButton("downloadAnov", "Download Anova Plot")
+        )
+      ),
+      fluidRow(
+        box(width = 12 ,class = "box1",
+            withTags(
+              div(
+                h4("Tukey's test :")
+              )
+            ),
+            verbatimTextOutput(outputId = "Tukey")
         )
       )
     ),

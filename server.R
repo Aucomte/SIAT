@@ -353,7 +353,10 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
       output$anov <- renderPrint({
-        anov(sr$tableF,sr$respanov,sr$factanov)
+        anov(sr$tableF,sr$respanov,sr$factanov)[[1]]
+      })
+      output$Tukey <- renderPrint({ 
+        anov(sr$tableF,sr$respanov,sr$factanov)[[2]]
       })
       output$anovplot <- renderPlot({
         PlotAnov()
@@ -361,6 +364,9 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     }
     else{
       output$anov <- renderPrint({ 
+        "Can't print anything. Check your inputs."
+      })
+      output$Tukey <- renderPrint({ 
         "Can't print anything. Check your inputs."
       })
       output$anovplot <-  renderPlot({ 
