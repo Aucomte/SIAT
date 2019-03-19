@@ -91,9 +91,9 @@ body <- dashboardBody(
       fluidRow(
         box(width=12, class = "box1",
           column(width = 6,
-           #downloadButton("downloadData", label = "Download a test file"),
-           #bsPopover("downloadData", "Example Data Set", content = "A CSV file. Separator is Semicolon. Decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
-           #HTML("<br><br>"),
+           downloadButton("downloadData", label = "Download a test file"),
+           bsPopover("downloadData", "Example Data Set", content = "A CSV file. Separator is Semicolon. Decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
+           HTML("<br><br>"),
             fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
               helper(icon = "question",
                      type = "markdown",
