@@ -143,7 +143,7 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   else if (row == FALSE && col == TRUE){
     dend = "col"
   }
-  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=45)
+  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
   return(p)
 }
 
@@ -184,7 +184,7 @@ heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
     dend = "col"
   }
   
-  p = gplots::heatmap.2(x, key = FALSE, dendrogram = dend, col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=45)
+  p = gplots::heatmap.2(x, key = FALSE, dendrogram = dend, col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
   return(p)
 }
 
@@ -221,7 +221,7 @@ heatplot2 <- function(tab,var1,var2,var3,var4){
   p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                 axis.title.x = element_text(size = 14),
                 axis.text = element_text(size = 12), 
-                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+                axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   return(p)
 }
 
@@ -279,7 +279,7 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
   p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                 axis.title.x = element_text(size = 14),
                 axis.text = element_text(size = 12), 
-                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+                axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   
   return(p)
 
@@ -303,7 +303,7 @@ NiceGraph <-  function(tab,var1,var2,var3,var4){
   p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                 axis.title.x = element_text(size = 14),
                 axis.text = element_text(size = 12), 
-                axis.text.x = element_text(angle = 45, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+                axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   
   return(p)
 }
@@ -333,6 +333,10 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
     p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
     p <- p + labs(y=var1, x =paste(var2, "x", var3), fill = var4)
     p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+    p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+                  axis.title.x = element_text(size = 14),
+                  axis.text = element_text(size = 12), 
+                  axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   }
   else {
     p<- ggplot(data=data_moyenne, aes(x=data_moyenne[[var2]], y=as.numeric(as.character(data_moyenne$Mean)), fill = data_moyenne[[var4]])) 
@@ -340,6 +344,10 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
     p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
     p <- p + labs(y=var1, x=var2, fill=var4)
     p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+    p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+                  axis.title.x = element_text(size = 14),
+                  axis.text = element_text(size = 12), 
+                  axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   }
   return(p)
 }

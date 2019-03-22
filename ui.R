@@ -224,7 +224,7 @@ body <- dashboardBody(
               checkboxInput("center", "center variable", FALSE)
             ),
             column(width = 6,
-              pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(1,2,3,4,5))
+              pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(2))
             )
         )
       ),
