@@ -338,7 +338,6 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   
   varF = c(var2, var3)
   datatable = Data_Moyenne(data,var1,varF)
-  
   x = matrix(1,nrow=length(unique(datatable[,var2])),ncol=length(unique(datatable[,var3])))
   
   colnames(x) = (unique(datatable[,var3]))

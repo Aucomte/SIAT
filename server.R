@@ -118,7 +118,6 @@ server <-function(input,output,session){
     sr$dec = input$dec
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.table, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
-      
       sr$table = as.data.frame(myCSV())
     }
   })
@@ -127,56 +126,57 @@ server <-function(input,output,session){
   })
   observeEvent(input$responseVar0, {
     sr$resp0 = input$responseVar0
+      if(sr$booTable == 1) {
+        if(is.numeric(sr$table[[sr$resp0]])){
+          updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+          
+          updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+          
+          updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+          
+          updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
+          
+          updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[2])
+          
+          updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+          
+          updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factorBar1", choices = c("None", sr$outVar), selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
+          updateSelectInput(session, inputId = "factorBar3", choices = c("None", sr$outVar), selected = "None")
+          
+          updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
+        }
+      }
   })
   
   observeEvent(c(
     input$file1,
-    input$sep),
-    {
+    input$sep),{
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
         sr$outVar = colnames(myCSV())
-        
         updateSelectInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
-        
-        updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
-        
-        updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
-        
-        updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
-        
-        updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
-        
-        updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[2])
-        
-        updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
-        
-        updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "factorBar1", choices = c("None", sr$outVar), selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
-        updateSelectInput(session, inputId = "factorBar3", choices = c("None", sr$outVar), selected = "None")
-        
-        updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$outVar[length(sr$outVar)])
-        updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = sr$outVar[1])
-        updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
-      }
-    })
-      
+    }
+  })
+ 
   #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     output$DataSet <- DT::renderDataTable(
       DT::datatable(
