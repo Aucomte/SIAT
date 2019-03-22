@@ -322,12 +322,25 @@ normality <- function(data, var1){
 }
 
 vizBarplot <- function(tab, var1, var2, var3, var4){
-  varF = c(var1, var2, var3, var4)
+  if (var3 == 'None'){
+    var3 = NULL
+  }
+  varF = c(var2, var3, var4)
   data_moyenne = Data_Moyenne(tab, var1, varF)
-  p<- ggplot(data=data_moyenne, aes(x=data_moyenne[,"cellules"]:data_moyenne[,"varietes"], y=as.numeric(as.character(data_moyenne[,"moyenne"])), fill = data_moyenne[,"souches"])) + geom_bar(stat="identity", position=position_dodge())
-  p <- p + geom_errorbar(aes(ymin=as.numeric(as.character(data_moyenne[,"moyenne"]))-as.numeric(as.character(data_moyenne[,"ecartype"])), ymax=as.numeric(as.character(data_moyenne[,"moyenne"]))+as.numeric(as.character(data_moyenne[,"ecartype"]))), width=.2, position=position_dodge(.9))
-  p <- p + labs(y="longueurs des lesions", x ="cellules x varietes", fill = "souches")
-  p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+  if (!is.null(var3)){
+    p <- ggplot(data=data_moyenne, aes(x=data_moyenne[,var2]:data_moyenne[,var3], y=data_moyenne$Mean, fill = data_moyenne[,var4])) 
+    p <- p + geom_bar(stat="identity", position=position_dodge2(preserve="single"))
+    p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
+    p <- p + labs(y=var1, x =paste(var2, "x", var3), fill = var4)
+    p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+  }
+  else {
+    p<- ggplot(data=data_moyenne, aes(x=data_moyenne[[var2]], y=as.numeric(as.character(data_moyenne$Mean)), fill = data_moyenne[[var4]])) 
+    p <- p + geom_bar(stat="identity", position=position_dodge2(preserve="single"))
+    p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
+    p <- p + labs(y=var1, x=var2, fill=var4)
+    p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+  }
   return(p)
 }
 

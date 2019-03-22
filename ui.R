@@ -13,7 +13,7 @@ sidebar <- dashboardSidebar(
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
-   # menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
+    menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
   )
 )
@@ -368,7 +368,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            plotlyOutput(outputId = "BarPlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
+            plotOutput(outputId = "BarPlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )  
       ),
       fluidRow(

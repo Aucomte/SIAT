@@ -70,7 +70,6 @@ server <-function(input,output,session){
     factorBar1 = NULL,
     factorBar2 = NULL,
     factorBar3 = NULL,
-    factorBar4 = NULL,
     
     # panel 8 : Time
     
@@ -153,9 +152,9 @@ server <-function(input,output,session){
           updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
           
           updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorBar1", choices = c("None", sr$outVar), selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
           updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorBar3", choices = c("None", sr$outVar), selected = "None")
+          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[2])
           
           updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
@@ -634,8 +633,52 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     },
     contentType = 'image/png'
   )
+  # panel 7 : Barplot
   
-  # panel 7 : Time
+  outBarPlot <- function(){
+    x = vizBarplot(sr$tableF,sr$responseVarBar,sr$factorBar1,sr$factorBar2,sr$factorBar3)
+    return(x)
+  }
+  
+  observeEvent(input$responseVarBar,{
+    sr$responseVarBar = input$responseVarBar
+  })
+  observeEvent(input$factorBar1,{
+    sr$factorBar1 = input$factorBar1
+  })
+  observeEvent(input$factorBar2,{
+    sr$factorBar2 = input$factorBar2
+  })
+  observeEvent(input$factorBar3,{
+    sr$factorBar3 = input$factorBar3
+  })
+  observeEvent(input$factorBar4,{
+    sr$factorBar4 = input$factorBar4
+  })
+  
+  observe({
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
+      output$BarPlot <- renderPlot({
+        vizBarplot(sr$tableF,sr$responseVarBar,sr$factorBar1,sr$factorBar2,sr$factorBar3)
+      })
+    }
+    else{
+      output$BarPlot <- renderPlot({
+        NULL
+      })
+    }
+  })
+  output$downloadBarplot <- downloadHandler(
+    filename = "outBarPlot.png",
+    content = function(file) {
+      png(file)
+      print(outBarPlot())
+      dev.off()
+    },
+    contentType = 'image/png'
+  )
+  
+  # panel 8 : Time
   
   outTime <- function(){
     x = GraphTime(sr$tableF,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
