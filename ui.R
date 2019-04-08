@@ -11,10 +11,11 @@ sidebar <- dashboardSidebar(
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
-    menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
+    #menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
+    #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
 
@@ -107,7 +108,7 @@ body <- dashboardBody(
                                 c(Comma=',',
                                   Semicolon=';',
                                   Tab='\t'),
-                                ';')
+                                selected = ';')
               ),
             column(width = 3,
               radioButtons('dec', 'decimal',
@@ -268,7 +269,6 @@ body <- dashboardBody(
              pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
              pickerInput(inputId='factorH1', label ='Choose the first factor', ""),
              pickerInput(inputId='factorH2', label ='Choose the second factor', ""),
-             
              column(width=3,
                 HTML("Clusterisation : ")
              ),
@@ -282,26 +282,61 @@ body <- dashboardBody(
         ),
       fluidRow(
         box(width = 12,
-          plotOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
+          plotlyOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
       ),
       fluidRow(
         box(width = 12, class = "box1",
-           sliderInput(inputId="thresSR", label = "Threshold of sensibility/resistance", value = 12, min=0, max=20, step=1)
-          )
-        ),
+            div("Subdivise your dataset in several categories of resistance"),
+            HTML("<br>"),
+            column(width=6,
+              pickerInput(inputId='categories', label ='Number of categories', selected = 2, choices = c(2,3,4,5,6))
+            ),
+            column(width = 6, class = "box1",
+                conditionalPanel(
+                  condition = "input.categories == 2",
+                  sliderInput(inputId="thresSR21", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1)
+                ),
+                conditionalPanel(
+                  condition = "input.categories == 3",
+                  sliderInput(inputId="thresSR31", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR32", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1)
+                ),
+                conditionalPanel(
+                  condition = "input.categories == 4",
+                  sliderInput(inputId="thresSR41", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR42", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR43", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1)
+                ),
+                conditionalPanel(
+                  condition = "input.categories == 5",
+                  sliderInput(inputId="thresSR51", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR52", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR53", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR54", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1)
+                ),
+                conditionalPanel(
+                  condition = "input.categories == 6",
+                  sliderInput(inputId="thresSR61", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR62", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR63", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR64", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1),
+                  sliderInput(inputId="thresSR65", label = "Threshold between the categories 5 & 6", value = 12, min=0, max=20, step=1)
+                )
+            )
+        )
+      ),
       fluidRow(
         box(width = 12,
-            column(width = 6,
-                HTML("
-                 <br>
-                 <p align='left'>
-                 <img src='legendSR.png' width='20%' height='20%'>
-                 </p>
-                ")
-            ),
             column(width = 12,
-              plotOutput(outputId = "heatplotSR", height = "700px") %>% withSpinner(color="#0dc5c1")
+                plotlyOutput(outputId = "heatplotSR", height = "700px") %>% withSpinner(color="#0dc5c1")
+            )
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            column(width = 12,
+              DTOutput(outputId = "tabsouches")
             )
         )
       )
@@ -409,6 +444,15 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
             downloadButton("downloadEvol", "Download Plot Time")
+        )
+      )
+    ),
+    tabItem(
+      tabName = "RMD",
+      fluidRow(
+        box(width = 12, class = "box1",
+            downloadButton('downloadRMD', 'Download Report'),
+            downloadButton('save', 'Save Workspace')
         )
       )
     )

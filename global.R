@@ -27,23 +27,27 @@ library(gplots)
 
 library(ade4)
 library(factoextra)
+library(rmarkdown)
+library(knitr)
+library(heatmaply)
+
 
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
 
 Data_Moyenne <- function(table,var1,var2){
-  datatable = table %>% group_by(.dots = as.character(var2)) %>%
-    summarise(nb = n(),
-              Mean = mean(.data[[var1]]),
-              Sd = sd(.data[[var1]])
-    )
+  
+    datatable = table %>% group_by(.dots = as.character(var2)) %>%
+      summarise(nb = n(),
+                Mean = mean(.data[[var1]]),
+                Sd = sd(.data[[var1]])
+      )
   datatable = as.data.frame(datatable)
-
   return(datatable)
 }
 
 #--------------------------------------------------------------------------------------------------------------
-#anova
+#anova 
 
 anov <- function(tab,var1,var2){
   output = list()
@@ -105,7 +109,9 @@ return(pca.res)
 # ---------------------------------------------------------------------------------------------------
 # HEATMAPS
 
-heatplot <- function(tab,var1,var2,var3,row,col){
+heatplot <- function(tab,var1,var2,var3,row,col,S){
+  
+  HEAT = list()
   
   varF = c(var2, var3)
   datatable = Data_Moyenne(tab,var1,varF)
@@ -113,9 +119,9 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   MAX = max(datatable$Mean)
   MIN = min(datatable$Mean)
   MID = (MAX + MIN) / 2
-  
+
   x = matrix(1,nrow=length(unique(datatable[,var2])),ncol=length(unique(datatable[,var3])))
-  
+
   colnames(x) = (unique(datatable[,var3]))
   rownames(x) = (unique(datatable[,var2]))
 
@@ -129,100 +135,75 @@ heatplot <- function(tab,var1,var2,var3,row,col){
     }
   }
   x=data.matrix(x)
-  
-  color.palette  <- colorRampPalette(c("white", "orange", "red"))
-  if (row == TRUE && col == TRUE){
-    dend = "both"
-  }
-  else if (row == FALSE && col == FALSE){
-    dend = "none"
-  }
-  else if (row == TRUE && col == FALSE){
-    dend = "row"
-  }
-  else if (row == FALSE && col == TRUE){
-    dend = "col"
-  }
-  p = gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
-  return(p)
-}
 
-heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
+  #color.palette  <- colorRampPalette(c("white", "orange", "red"))
 
-  varF = c(var2, var3)
-  data_moyenne = Data_Moyenne(tab,var1,varF)
-  
-  data_moyenne$Mean[data_moyenne$Mean <= SR] = 0
-  data_moyenne$Mean[data_moyenne$Mean > SR] = 1
-  
-  x = matrix(1,nrow=length(unique(data_moyenne[,var2])),ncol=length(unique(data_moyenne[,var3])))
-  
-  colnames(x) = (unique(data_moyenne[,var3]))
-  rownames(x) = (unique(data_moyenne[,var2]))
-  
-  for(i in 1:nrow(x)){
-    for(j in 1:ncol(x)){
-      for(ligne in 1:nrow(data_moyenne)){
-        if((colnames(x)[j] == data_moyenne[ligne,var3]) && (rownames(x)[i] == data_moyenne[ligne,var2])){
-          x[i,j] = as.numeric(as.character(data_moyenne$Mean[ligne]))
-        }
+    #p <- gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
+    p = heatmaply(x, Colv = col, Rowv = row)
+    HEAT$h1 = p
+    xh2 = x
+    for(i in 1:length(S)){
+      xh2[xh2 <= as.numeric(S[i])] = paste("C",i,sep="")
+    }
+    xh2[x > S[i]] = paste("C",length(S)+1,sep="")
+
+    xh2[xh2 == "C1"] = 1
+    xh2[xh2 == "C2"] = 2
+    xh2[xh2 == "C3"] = 3
+    xh2[xh2 == "C4"] = 4
+    xh2[xh2 == "C5"] = 5
+    xh2[xh2 == "C6"] = 6
+    
+    xh3=data.frame()
+    for (i in 1:nrow(xh2)){
+      for (j in 1:ncol(xh2)){
+        xh3[i,j] = as.numeric(as.integer(xh2[i,j]))
       }
     }
-  }
-  x=data.matrix(x)
-  
-  if (row == TRUE && col == TRUE){
-    dend = "both"
-  }
-  else if (row == FALSE && col == FALSE){
-    dend = "none"
-  }
-  else if (row == TRUE && col == FALSE){
-    dend = "row"
-  }
-  else if (row == FALSE && col == TRUE){
-    dend = "col"
-  }
-  
-  p = gplots::heatmap.2(x, key = FALSE, dendrogram = dend, col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
-  return(p)
-}
-
-heatplot2 <- function(tab,var1,var2,var3,var4){
-  if(!is.null(var4)){
-    if (var4 == "None"){
-      var4 = NULL
+    rownames(xh3)=rownames(xh2)
+    colnames(xh3)=colnames(xh2)
+    
+    if(length(S) ==1){
+       kolor = c("white","red")
     }
-  }
-  varF = c(var2, var3, var4)
-  data_moyenne = Data_Moyenne(tab,var1,varF)
-  
-  MAX = max(data_moyenne$Mean)
-  MIN = min(data_moyenne$Mean)
-  MID = (MAX + MIN) / 2
-  
-  jBuPuFun <- colorRampPalette(brewer.pal(n = 9, "BuPu"))
-  paletteSize <- 256
-  jBuPuPalette <- jBuPuFun(paletteSize)
-  
-  p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
-  if(var4 != "None" && var4 !="" && !is.null(var4)){
-    p <- p + facet_grid( . ~ data_moyenne[[varF[3]]])
-  }
-  p <- p +  geom_text(aes(data_moyenne[[varF[1]]], data_moyenne[[varF[2]]], label = round(data_moyenne$Mean,digits=2)), color = "black", size = 4)
-  p <- p + labs(x = varF[1], y=varF[2])
-  p <- p +  scale_fill_gradient2(low = jBuPuPalette[1],
-                                 mid = jBuPuPalette[paletteSize/2],
-                                 high = jBuPuPalette[paletteSize],
-                                 midpoint = MID,
-                                 limit = c(MIN,MAX),
-                                 space = "Lab",
-                                 name = var1)
-  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
-                axis.title.x = element_text(size = 14),
-                axis.text = element_text(size = 12), 
-                axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
-  return(p)
+    if(length(S) ==2){
+      kolor = c("white", "yellow", "red")
+    }
+    if(length(S) ==3){
+      kolor = c("white", "yellow", "orange", "red")
+    }
+    if(length(S) ==4){
+      kolor = c("white", "yellow", "orange", "red", "green")
+    }
+    if(length(S) ==5){
+      kolor = c("white", "yellow", "orange", "red", "green", "blue")
+    }
+    
+    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor)
+    HEAT$h2 = p2
+    
+    #dataframe of cluster
+    
+    groups = unique(xh3)
+    if(nrow(groups)>1){
+      rownames(groups) = c(1:nrow(groups))
+    }
+    xh4 = data.frame()
+    for(i in 1:nrow(xh3)){
+      
+      for(n in 1:nrow(groups)){
+          if(all(xh3[i,] == groups[n,])){
+            xh4[i,1] = paste("group",rownames(groups)[n],sep="")
+          }
+      }
+      for (j in 1:ncol(xh3)){
+        xh4[i,j+1] = xh3[i,j]
+      }
+    }
+    rownames(xh4)=rownames(xh3)
+    colnames(xh4)=c("groups",colnames(xh3))
+    HEAT$tab = xh4
+  return(HEAT)
 }
 
 maxMean <- function(tab,var1,var2,var3){
@@ -232,11 +213,13 @@ maxMean <- function(tab,var1,var2,var3){
   return(x)
 }
 
+
+
 #---------------------------------------------------------------------------------------------------------------------
 #evolution
 
 GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
-
+  
   if(var4 == "None"){
     var4 = NULL
   }
@@ -244,11 +227,11 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
     var2 = NULL
     var3 = NULL
   }
-
+  
   varF = c(var2, var3, var4)
   
   allmoy = Data_Moyenne(tab,var1,c(tim,varF))
-
+  
   if(timeselecter == "dmy"){
     allmoy[,tim] = dmy(allmoy[,tim])
   }
@@ -282,7 +265,7 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
                 axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
   
   return(p)
-
+  
 }
 
 
@@ -390,4 +373,83 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   
   return(ade)
 }
+
+
+
+
+
+# heatplotSR <- function(tab,SR,var1,var2,var3,row,col){
+#   varF = c(var2, var3)
+#   data_moyenne = Data_Moyenne(tab,var1,varF)
+#   data_moyenne$Mean[data_moyenne$Mean <= SR] = 0
+#   data_moyenne$Mean[data_moyenne$Mean > SR] = 1
+#   
+#   x = matrix(1,nrow=length(unique(data_moyenne[,var2])),ncol=length(unique(data_moyenne[,var3])))
+#   
+#   colnames(x) = (unique(data_moyenne[,var3]))
+#   rownames(x) = (unique(data_moyenne[,var2]))
+#   
+#   for(i in 1:nrow(x)){
+#     for(j in 1:ncol(x)){
+#       for(ligne in 1:nrow(data_moyenne)){
+#         if((colnames(x)[j] == data_moyenne[ligne,var3]) && (rownames(x)[i] == data_moyenne[ligne,var2])){
+#           x[i,j] = as.numeric(as.character(data_moyenne$Mean[ligne]))
+#         }
+#       }
+#     }
+#   }
+#   x=data.matrix(x)
+#   
+#   if (row == TRUE && col == TRUE){
+#     dend = "both"
+#   }
+#   else if (row == FALSE && col == FALSE){
+#     dend = "none"
+#   }
+#   else if (row == TRUE && col == FALSE){
+#     dend = "row"
+#   }
+#   else if (row == FALSE && col == TRUE){
+#     dend = "col"
+#   }
+#   p = gplots::heatmap.2(x, key = FALSE, dendrogram = dend, col=c("yellow","red"),  breaks=c(-1,0.9,1.2), trace = "none", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
+#   return(p)
+# }
+# 
+# heatplot2 <- function(tab,var1,var2,var3,var4){
+#   if(!is.null(var4)){
+#     if (var4 == "None"){
+#       var4 = NULL
+#     }
+#   }
+#   varF = c(var2, var3, var4)
+#   data_moyenne = Data_Moyenne(tab,var1,varF)
+#   
+#   MAX = max(data_moyenne$Mean)
+#   MIN = min(data_moyenne$Mean)
+#   MID = (MAX + MIN) / 2
+#   
+#   jBuPuFun <- colorRampPalette(brewer.pal(n = 9, "BuPu"))
+#   paletteSize <- 256
+#   jBuPuPalette <- jBuPuFun(paletteSize)
+#   
+#   p <- ggplot(data = data_moyenne, aes(x=data_moyenne[[varF[1]]], y=data_moyenne[[varF[2]]], fill=data_moyenne$Mean)) + geom_tile()
+#   if(var4 != "None" && var4 !="" && !is.null(var4)){
+#     p <- p + facet_grid( . ~ data_moyenne[[varF[3]]])
+#   }
+#   p <- p +  geom_text(aes(data_moyenne[[varF[1]]], data_moyenne[[varF[2]]], label = round(data_moyenne$Mean,digits=2)), color = "black", size = 4)
+#   p <- p + labs(x = varF[1], y=varF[2])
+#   p <- p +  scale_fill_gradient2(low = jBuPuPalette[1],
+#                                  mid = jBuPuPalette[paletteSize/2],
+#                                  high = jBuPuPalette[paletteSize],
+#                                  midpoint = MID,
+#                                  limit = c(MIN,MAX),
+#                                  space = "Lab",
+#                                  name = var1)
+#   p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+#                 axis.title.x = element_text(size = 14),
+#                 axis.text = element_text(size = 12), 
+#                 axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+#   return(p)
+# }
 

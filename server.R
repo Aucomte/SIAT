@@ -48,7 +48,8 @@ server <-function(input,output,session){
     factH2 = NULL,
     dendocol = TRUE,
     dendorow = TRUE,
-    slidethresSH = NULL,
+    categories = 2,
+    S = NULL,
     
     # panel 5-2 : Heatmap2
     
@@ -87,8 +88,8 @@ server <-function(input,output,session){
   #download file test
   output$downloadData <- downloadHandler(
     filename = "dataExemple.csv",
-    content = function(file) {
-      file.copy("www/dataExemple.csv", file)
+    content = function(filename) {
+      file.copy("www/dataExemple.csv", filename)
     },
     contentType = "csv"
   )
@@ -123,28 +124,29 @@ server <-function(input,output,session){
   observeEvent(input$file1, {
     sr$booTable = 1
   })
-  observeEvent(input$responseVar0, {
+  observeEvent(c(input$responseVar0, input$dec, input$sep), {
     sr$resp0 = input$responseVar0
       if(sr$booTable == 1) {
         if(is.numeric(sr$table[[sr$resp0]])){
           updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = "")
           
           updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
           
           updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = "")
+          updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = "")
+          updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
           
-          updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
+          # updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
+          # updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = "")
+          # updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = "")
+          # updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
           
           updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = sr$outVar[2])
+          updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = "")
+          updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = "")
           
           updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
@@ -154,12 +156,12 @@ server <-function(input,output,session){
           updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
           updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[2])
+          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[1])
           
           updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = "None")
+          updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
           updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
         }
       }
@@ -356,7 +358,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   output$downloadAnov <- downloadHandler(
     filename = "outputAnova.png",
     content = function(file) {
-      png(file)
+      png(file, width = 2000, height = 2000, res = 300)
       print(PlotAnov())
       dev.off()
     },
@@ -473,8 +475,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   output$downloadACPind <- downloadHandler(
     filename = "outputACPind.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outind())
       dev.off()
     },
@@ -482,8 +484,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   )
   output$downloadACPVar <- downloadHandler(
     filename = "outputACPvar.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outvar())
       dev.off()
     },
@@ -491,8 +493,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   )
   output$downloadACPVP <- downloadHandler(
     filename = "outputACPVP.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outvp())
       dev.off()
     },
@@ -500,8 +502,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   )
   output$downloadACPBoth <- downloadHandler(
     filename = "outputACPBoth.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outboth())
       dev.off()
     },
@@ -525,28 +527,82 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$column, {
     sr$dendocol = input$column
   })
-  observeEvent(input$thresSR, {
-    sr$slidethresSR = input$thresSR
+  observeEvent(input$categories, {
+    sr$categories = input$categories
+  })
+  observeEvent(input$thresSR21, {
+    sr$slidethresSH21 = input$thresSR21
   })
   observe({
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-       updateSliderInput(session, inputId = "thresSR", value = maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2)/2, min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-        output$heatplot <- renderPlot({
-          heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+        
+        #update des sliders
+        if(sr$categories == 2){
+          updateSliderInput(session, inputId = "thresSR21", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          sr$S = c(input$thresSR21)
+        }
+        else if(sr$categories == 3){
+            updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+            updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+            sr$S = c(input$thresSR31,input$thresSR32)
+        }
+        else if(sr$categories == 4){
+          updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR42", min=input$thresSR41, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR43", min=input$thresSR42, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          sr$S = c(input$thresSR41,input$thresSR42,input$thresSR43)
+        }
+        else if(sr$categories == 5){
+          updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR52", min=input$thresSR51, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR53", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR54", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          sr$S = c(input$thresSR51,input$thresSR52,input$thresSR53,input$thresSR54)
+        }
+        else if(sr$categories == 6){
+          updateSliderInput(session, inputId = "thresSR61", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR62", min=input$thresSR61, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR63", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR64", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR65", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          sr$S = c(input$thresSR61,input$thresSR62,input$thresSR63,input$thresSR64,input$thresSR65)
+        }
+        out = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+        output$heatplot <- renderPlotly({
+          out$h1
         })
-        output$heatplotSR <- renderPlot({
-          heatplotSR(sr$tableF,sr$slidethresSR,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+        output$heatplotSR <- renderPlotly({
+          out$h2
        })
+        output$tabsouches <- DT::renderDataTable(
+          DT::datatable(
+            out$tab, 
+            filter = list(position = 'top', clear = TRUE, plain = FALSE), 
+            options = list(
+              scrollX = TRUE,
+              dom = 'Blfrtip',
+              lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
+                "}"
+              )
+            )
+          )
+        )
       }
     }
     else{
-      output$heatplot <- renderPlot({
+      output$heatplot <- renderPlotly({
         NULL
       })
-      output$heatplotSR <- renderPlot({
+      output$heatplotSR <- renderPlotly({
         NULL
       })
+      output$tabsouches <- DT::renderDataTable(
+        NULL
+      )
     }
   })
   
@@ -585,8 +641,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   output$downloadHeat2 <- downloadHandler(
     filename = "outputHeat.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outheat2())
       dev.off()
     },
@@ -626,8 +682,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   output$downloadVisu <- downloadHandler(
     filename = "outputVisu.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outVisu())
       dev.off()
     },
@@ -670,8 +726,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   output$downloadBarplot <- downloadHandler(
     filename = "outBarPlot.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outBarPlot())
       dev.off()
     },
@@ -717,12 +773,31 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   output$downloadEvol <- downloadHandler(
     filename = "outputTime.png",
-    content = function(file) {
-      png(file)
+    content = function(filename) {
+      png(filename)
       print(outTime())
       dev.off()
     },
     contentType = 'image/png'
   )
+  
+  ## Panel REPORT
+  
+  output$downloadRMD <- downloadHandler(
+    filename = "reportRMD.html",
+    content = function(filename) {
+      rmarkdown::render("www/report.Rmd")
+      file.copy("www/report.html", filename, overwrite = TRUE)
+    }
+  )
+  
+  output$save <- downloadHandler(
+    filename = "save",
+    content = function(filename) {
+      save.image(filename)
+    }
+  )
+  
 }
+
 
