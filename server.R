@@ -52,12 +52,22 @@ server <-function(input,output,session){
     S = NULL,
     outheat = NULL,
     
-    # panel 5-2 : Heatmap2
-    
-    respheat2 = NULL,
-    factH12 = NULL,
-    factH22 = NULL,
-    factH32 = NULL,
+    # seuils
+    thresSR21 = NULL,
+    thresSR31= NULL,
+    thresSR32= NULL,
+    thresSR41= NULL,
+    thresSR42= NULL,
+    thresSR43= NULL,
+    thresSR51= NULL,
+    thresSR52= NULL,
+    thresSR53= NULL,
+    thresSR54= NULL,
+    thresSR61= NULL,
+    thresSR62= NULL,
+    thresSR63= NULL,
+    thresSR64= NULL,
+    thresSR65= NULL,
     
     # panel 6 : Boxplot
     
@@ -139,11 +149,6 @@ server <-function(input,output,session){
           updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = "")
           updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = "")
           updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
-          
-          # updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
-          # updateSelectInput(session, inputId = "factorH12", choices = sr$outVar, selected = "")
-          # updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = "")
-          # updateSelectInput(session, inputId = "factorH32", choices = c("None", sr$outVar), selected = "None")
           
           updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = "")
@@ -531,33 +536,73 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$categories, {
     sr$categories = input$categories
   })
-
-  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),ignoreInit = TRUE, {
+  observeEvent(input$thresSR21, {
+    sr$thresSR21 = input$thresSR21
+  })
+  observeEvent(input$thresSR21, {
+    sr$thresSR21 = input$thresSR21
+  })
+  observeEvent(input$thresSR32, {
+    sr$thresSR32 = input$thresSR32
+  })
+  observeEvent(input$thresSR41, {
+    sr$thresSR41 = input$thresSR41
+  })
+  observeEvent(input$thresSR42, {
+    sr$thresSR42 = input$thresSR42
+  })
+  observeEvent(input$thresSR43, {
+    sr$thresSR43 = input$thresSR43
+  })
+  observeEvent(input$thresSR51, {
+    sr$thresSR51 = input$thresSR51
+  })
+  observeEvent(input$thresSR52, {
+    sr$thresSR52 = input$thresSR52
+  })
+  observeEvent(input$thresSR53, {
+    sr$thresSR53 = input$thresSR53
+  })
+  observeEvent(input$thresSR54, {
+    sr$thresSR54 = input$thresSR54
+  })
+  observeEvent(input$thresSR61, {
+    sr$thresSR61 = input$thresSR61
+  })
+  observeEvent(input$thresSR62, {
+    sr$thresSR62 = input$thresSR62
+  })
+  observeEvent(input$thresSR63, {
+    sr$thresSR63 = input$thresSR63
+  })
+  observeEvent(input$thresSR64, {
+    sr$thresSR64 = input$thresSR64
+  })
+  observeEvent(input$thresSR65, {
+    sr$thresSR65 = input$thresSR65
+  })
+  
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$categories), {
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        
         #update des sliders
         if(sr$categories == 2){
           updateSliderInput(session, inputId = "thresSR21", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          sr$S = c(input$thresSR21)
         }
         else if(sr$categories == 3){
           updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
           updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-          sr$S = c(input$thresSR31,input$thresSR32)
         }
         else if(sr$categories == 4){
           updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
           updateSliderInput(session, inputId = "thresSR42", min=input$thresSR41, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
           updateSliderInput(session, inputId = "thresSR43", min=input$thresSR42, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-          sr$S = c(input$thresSR41,input$thresSR42,input$thresSR43)
         }
         else if(sr$categories == 5){
           updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
           updateSliderInput(session, inputId = "thresSR52", min=input$thresSR51, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
           updateSliderInput(session, inputId = "thresSR53", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
           updateSliderInput(session, inputId = "thresSR54", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-          sr$S = c(input$thresSR51,input$thresSR52,input$thresSR53,input$thresSR54)
         }
         else if(sr$categories == 6){
           updateSliderInput(session, inputId = "thresSR61", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
@@ -565,93 +610,73 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
           updateSliderInput(session, inputId = "thresSR63", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
           updateSliderInput(session, inputId = "thresSR64", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
           updateSliderInput(session, inputId = "thresSR65", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          sr$S = c(input$thresSR61,input$thresSR62,input$thresSR63,input$thresSR64,input$thresSR65)
         }
-        sr$outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
       }
     }
   })
-  observe({
+  observeEvent(c(sr$categories, 
+                 sr$thresSR21, 
+                 sr$thresSR21, 
+                 sr$thresSR32,
+                 sr$thresSR41,
+                 sr$thresSR42,
+                 sr$thresSR43,
+                 sr$thresSR51,
+                 sr$thresSR52,
+                 sr$thresSR53,
+                 sr$thresSR54,
+                 sr$thresSR61,
+                 sr$thresSR62,
+                 sr$thresSR63,
+                 sr$thresSR64,
+                 sr$thresSR65), {
+                 if(sr$categories == 2){
+                   sr$S = c(sr$thresSR21)
+                 }
+                 else if(sr$categories == 3){
+                   sr$S = c(sr$thresSR31,sr$thresSR32)
+                 }
+                 else if(sr$categories == 4){
+                   sr$S = c(sr$thresSR41,sr$thresSR42,sr$thresSR43)
+                 }
+                 else if(sr$categories == 5){
+                   sr$S = c(sr$thresSR51,sr$thresSR52,sr$thresSR53,sr$thresSR54)
+                 }
+                 else if(sr$categories == 6){
+                   sr$S = c(sr$thresSR61,sr$thresSR62,sr$thresSR63,sr$thresSR64,sr$thresSR65)
+                 }
+  })
+  
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),ignoreInit = TRUE, {
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        output$heatplot <- renderPlotly({
-          sr$outheat$h1
-        })
-        output$heatplotSR <- renderPlotly({
-          sr$outheat$h2
-        })
-        output$tabsouches <- DT::renderDataTable(
-          DT::datatable(
-            sr$outheat$tab,
-            filter = list(position = 'top', clear = TRUE, plain = FALSE),
-            options = list(
-              scrollX = TRUE,
-              dom = 'Blfrtip',
-              lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
-              initComplete = JS(
-                "function(settings, json) {",
-                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
-                "}"
-              )
-            )
+        sr$outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+        }
+      }
+    })
+    output$heatplot <- renderPlotly({
+      sr$outheat$h1
+    })
+    output$heatplotSR <- renderPlotly({
+      sr$outheat$h2
+    })
+    output$tabsouches <- DT::renderDataTable(
+      DT::datatable(
+        sr$outheat$tab,
+        filter = list(position = 'top', clear = TRUE, plain = FALSE),
+        options = list(
+          scrollX = TRUE,
+          dom = 'Blfrtip',
+          lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+          initComplete = JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
+            "}"
           )
-        )  
-      }
-    }
-    else{
-      output$heatplot <- renderPlotly({
-        NULL
-      })
-      output$heatplotSR <- renderPlotly({
-        NULL
-      })
-      output$tabsouches <- DT::renderDataTable(
-        NULL
+        )
       )
-    }
-  })
-  # panel 5-2 : Heatmap2
-  
-  outheat2 <- function(){
-    x = heatplot2(sr$tableF,sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
-    return(x)
-  }
-  
-  observeEvent(input$responseVarHeat2, {
-    sr$respheat2 = input$responseVarHeat2
-  })
-  observeEvent(input$factorH12, {
-    sr$factH12 = input$factorH12
-  })
-  observeEvent(input$factorH22, {
-    sr$factH22 = input$factorH22
-  })
-  observeEvent(input$factorH32, {
-    sr$factH32 = input$factorH32
-  })
-  observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
-      if(!is.null(sr$factH12) && sr$factH12 != "" && !is.null(sr$factH22) && sr$factH22 != "" && !is.null(sr$factH32) && sr$factH32 != ""){
-        output$heatplot2 <- renderPlot({
-          heatplot2(sr$tableF,sr$respheat2,sr$factH12,sr$factH22, sr$factH32)
-        })
-      }
-    }
-    else{
-      output$heatplot2 <- renderPlot({
-        NULL
-      })
-    }
-  })
-  output$downloadHeat2 <- downloadHandler(
-    filename = "outputHeat.png",
-    content = function(filename) {
-      png(filename)
-      print(outheat2())
-      dev.off()
-    },
-    contentType = 'image/png'
-  )
+    )  
+
   
   # panel 6 : Visu
   
