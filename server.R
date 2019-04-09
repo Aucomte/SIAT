@@ -541,44 +541,54 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$thresSR21, {
     sr$thresSR21 = input$thresSR21
   })
-  observeEvent(input$thresSR21, {
-    sr$thresSR21 = input$thresSR21
+  observeEvent(input$thresSR31, {
+    sr$thresSR31 = input$thresSR31
+    updateSliderInput(session, inputId = "thresSR32", min=sr$thresSR31)
   })
   observeEvent(input$thresSR32, {
     sr$thresSR32 = input$thresSR32
   })
   observeEvent(input$thresSR41, {
     sr$thresSR41 = input$thresSR41
+    updateSliderInput(session, inputId = "thresSR42", min=sr$thresSR41)
   })
   observeEvent(input$thresSR42, {
     sr$thresSR42 = input$thresSR42
+    updateSliderInput(session, inputId = "thresSR43", min=sr$thresSR42)
   })
   observeEvent(input$thresSR43, {
     sr$thresSR43 = input$thresSR43
   })
   observeEvent(input$thresSR51, {
     sr$thresSR51 = input$thresSR51
+    updateSliderInput(session, inputId = "thresSR52", min=sr$thresSR51)
   })
   observeEvent(input$thresSR52, {
     sr$thresSR52 = input$thresSR52
+    updateSliderInput(session, inputId = "thresSR53", min=sr$thresSR52)
   })
   observeEvent(input$thresSR53, {
     sr$thresSR53 = input$thresSR53
+    updateSliderInput(session, inputId = "thresSR54", min=sr$thresSR53)
   })
   observeEvent(input$thresSR54, {
     sr$thresSR54 = input$thresSR54
   })
   observeEvent(input$thresSR61, {
     sr$thresSR61 = input$thresSR61
+    updateSliderInput(session, inputId = "thresSR62", min=sr$thresSR61)
   })
   observeEvent(input$thresSR62, {
     sr$thresSR62 = input$thresSR62
+    updateSliderInput(session, inputId = "thresSR63", min=sr$thresSR62)
   })
   observeEvent(input$thresSR63, {
     sr$thresSR63 = input$thresSR63
+    updateSliderInput(session, inputId = "thresSR64", min=sr$thresSR63)
   })
   observeEvent(input$thresSR64, {
     sr$thresSR64 = input$thresSR64
+    updateSliderInput(session, inputId = "thresSR65", min=sr$thresSR64)
   })
   observeEvent(input$thresSR65, {
     sr$thresSR65 = input$thresSR65
@@ -593,25 +603,25 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
         }
         else if(sr$categories == 3){
           updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR32", min=sr$thresSR31, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 4){
           updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
-          updateSliderInput(session, inputId = "thresSR42", min=input$thresSR41, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR43", min=input$thresSR42, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR42", min=sr$thresSR41, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR43", min=sr$thresSR42, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 5){
           updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR52", min=input$thresSR51, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR53", min=input$thresSR52, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
-          updateSliderInput(session, inputId = "thresSR54", min=input$thresSR53, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR52", min=srthresSR51, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR53", min=sr$thresSR52, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR54", min=sr$thresSR53, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 6){
           updateSliderInput(session, inputId = "thresSR61", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR62", min=input$thresSR61, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR63", min=input$thresSR62, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
-          updateSliderInput(session, inputId = "thresSR64", min=input$thresSR63, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
-          updateSliderInput(session, inputId = "thresSR65", min=input$thresSR64, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR62", min=sr$thresSR61, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR63", min=sr$thresSR62, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR64", min=sr$thresSR63, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR65", min=sr$thresSR64, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
         }
       }
     }
