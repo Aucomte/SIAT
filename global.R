@@ -32,6 +32,8 @@ library(knitr)
 library(heatmaply)
 
 
+#install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","shinyjqui","shinyFiles","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade4","factoextra","rmarkdown","knitr","heatmaply"))
+
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
 
@@ -185,9 +187,7 @@ heatplot <- function(tab,var1,var2,var3,row,col,S){
     #dataframe of cluster
     
     groups = unique(xh3)
-    if(nrow(groups)>1){
-      rownames(groups) = c(1:nrow(groups))
-    }
+    rownames(groups) = c(1:nrow(groups))
     xh4 = data.frame()
     for(i in 1:nrow(xh3)){
       

@@ -50,6 +50,7 @@ server <-function(input,output,session){
     dendorow = TRUE,
     categories = 2,
     S = NULL,
+    outheat = NULL,
     
     # panel 5-2 : Heatmap2
     
@@ -124,7 +125,7 @@ server <-function(input,output,session){
   observeEvent(input$file1, {
     sr$booTable = 1
   })
-  observeEvent(c(input$responseVar0, input$dec, input$sep), {
+  observeEvent(c(input$responseVar0, input$dec, input$sep), ignoreInit = TRUE, {
     sr$resp0 = input$responseVar0
       if(sr$booTable == 1) {
         if(is.numeric(sr$table[[sr$resp0]])){
@@ -150,13 +151,13 @@ server <-function(input,output,session){
           
           updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[2])
           updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
           
           updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
           updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[1])
+          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[2])
           
           updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
@@ -169,7 +170,7 @@ server <-function(input,output,session){
   
   observeEvent(c(
     input$file1,
-    input$sep),{
+    input$sep), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
@@ -530,10 +531,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$categories, {
     sr$categories = input$categories
   })
-  observeEvent(input$thresSR21, {
-    sr$slidethresSH21 = input$thresSR21
-  })
-  observe({
+
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),ignoreInit = TRUE, {
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         
@@ -543,9 +542,9 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
           sr$S = c(input$thresSR21)
         }
         else if(sr$categories == 3){
-            updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-            updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-            sr$S = c(input$thresSR31,input$thresSR32)
+          updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          sr$S = c(input$thresSR31,input$thresSR32)
         }
         else if(sr$categories == 4){
           updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
@@ -568,17 +567,23 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
           updateSliderInput(session, inputId = "thresSR65", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
           sr$S = c(input$thresSR61,input$thresSR62,input$thresSR63,input$thresSR64,input$thresSR65)
         }
-        out = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+        sr$outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+      }
+    }
+  })
+  observe({
+    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
+      if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         output$heatplot <- renderPlotly({
-          out$h1
+          sr$outheat$h1
         })
         output$heatplotSR <- renderPlotly({
-          out$h2
-       })
+          sr$outheat$h2
+        })
         output$tabsouches <- DT::renderDataTable(
           DT::datatable(
-            out$tab, 
-            filter = list(position = 'top', clear = TRUE, plain = FALSE), 
+            sr$outheat$tab,
+            filter = list(position = 'top', clear = TRUE, plain = FALSE),
             options = list(
               scrollX = TRUE,
               dom = 'Blfrtip',
@@ -590,7 +595,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
               )
             )
           )
-        )
+        )  
       }
     }
     else{
@@ -605,7 +610,6 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       )
     }
   })
-  
   # panel 5-2 : Heatmap2
   
   outheat2 <- function(){
