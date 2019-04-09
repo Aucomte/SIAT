@@ -582,7 +582,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$thresSR65 = input$thresSR65
   })
   
-  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$categories), {
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$categories), {
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         #update des sliders
@@ -647,7 +647,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
                  }
   })
   
-  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),ignoreInit = TRUE, {
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),{
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         sr$outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
