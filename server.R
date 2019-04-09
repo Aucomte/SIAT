@@ -50,7 +50,9 @@ server <-function(input,output,session){
     dendorow = TRUE,
     categories = 2,
     S = NULL,
-    outheat = NULL,
+    outheatH1 = NULL,
+    outheatH2 = NULL,
+    outheattab = NULL,
     
     # seuils
     thresSR21 = NULL,
@@ -587,29 +589,29 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         #update des sliders
         if(sr$categories == 2){
-          updateSliderInput(session, inputId = "thresSR21", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR21", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
         }
         else if(sr$categories == 3){
-          updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR31", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR32", min=input$thresSR31, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 4){
-          updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-          updateSliderInput(session, inputId = "thresSR42", min=input$thresSR41, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR43", min=input$thresSR42, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR41", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR42", min=input$thresSR41, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR43", min=input$thresSR42, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 5){
-          updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR52", min=input$thresSR51, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR53", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
-          updateSliderInput(session, inputId = "thresSR54", min=input$thresSR52, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR52", min=input$thresSR51, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR53", min=input$thresSR52, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR54", min=input$thresSR53, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
         else if(sr$categories == 6){
-          updateSliderInput(session, inputId = "thresSR61", min=0, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR62", min=input$thresSR61, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR63", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)           
-          updateSliderInput(session, inputId = "thresSR64", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1)
-          updateSliderInput(session, inputId = "thresSR65", min=input$thresSR62, max=maxMean(sr$table,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR61", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR62", min=input$thresSR61, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR63", min=input$thresSR62, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
+          updateSliderInput(session, inputId = "thresSR64", min=input$thresSR63, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
+          updateSliderInput(session, inputId = "thresSR65", min=input$thresSR64, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
         }
       }
     }
@@ -650,19 +652,23 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),{
     if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        sr$outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+        outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
+        sr$outheatH1= outheat$h1
+        sr$outheatH2 = outheat$h2
+        sr$outheattab = outheat$tab
+        
         }
       }
     })
     output$heatplot <- renderPlotly({
-      sr$outheat$h1
+      sr$outheatH1
     })
     output$heatplotSR <- renderPlotly({
-      sr$outheat$h2
+      sr$outheatH2
     })
     output$tabsouches <- DT::renderDataTable(
       DT::datatable(
-        sr$outheat$tab,
+        sr$outheattab,
         filter = list(position = 'top', clear = TRUE, plain = FALSE),
         options = list(
           scrollX = TRUE,
@@ -676,7 +682,6 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
         )
       )
     )  
-
   
   # panel 6 : Visu
   

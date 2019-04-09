@@ -11,7 +11,7 @@ sidebar <- dashboardSidebar(
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
-    #menuItem("Heatmap/Visu", tabName = "Heatmap2", icon = icon("eye")),
+    menuItem("Heatmap/categories", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
@@ -284,81 +284,63 @@ body <- dashboardBody(
         box(width = 12,
           plotlyOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
-      ),
-      fluidRow(
-        box(width = 12, class = "box1",
-            div("Subdivise your dataset in several categories of resistance"),
-            HTML("<br>"),
-            column(width=6,
-              pickerInput(inputId='categories', label ='Number of categories', selected = 2, choices = c(2,3,4,5,6))
-            ),
-            column(width = 6, class = "box1",
-                conditionalPanel(
-                  condition = "input.categories == 2",
-                  sliderInput(inputId="thresSR21", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1)
-                ),
-                conditionalPanel(
-                  condition = "input.categories == 3",
-                  sliderInput(inputId="thresSR31", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR32", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1)
-                ),
-                conditionalPanel(
-                  condition = "input.categories == 4",
-                  sliderInput(inputId="thresSR41", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR42", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR43", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1)
-                ),
-                conditionalPanel(
-                  condition = "input.categories == 5",
-                  sliderInput(inputId="thresSR51", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR52", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR53", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR54", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1)
-                ),
-                conditionalPanel(
-                  condition = "input.categories == 6",
-                  sliderInput(inputId="thresSR61", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR62", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR63", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR64", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1),
-                  sliderInput(inputId="thresSR65", label = "Threshold between the categories 5 & 6", value = 12, min=0, max=20, step=1)
-                )
-            )
-        )
-      ),
-      fluidRow(
-        box(width = 12,
-            column(width = 12,
-                plotlyOutput(outputId = "heatplotSR", height = "700px") %>% withSpinner(color="#0dc5c1")
-            )
-        )
-      ),
-      fluidRow(
-        box(width = 12,
-            column(width = 12,
-              DTOutput(outputId = "tabsouches")
-            )
-        )
       )
     ),
     tabItem(
       tabName = "Heatmap2",
       fluidRow(
         box(width = 12, class = "box1",
-            pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
-            pickerInput(inputId='factorH12', label ='Choose the first factor', ""),
-            pickerInput(inputId='factorH22', label ='Choose the second factor', ""),
-            pickerInput(inputId='factorH32', label ='Choose the third factor', "") 
+            div("Subdivise your dataset in several categories of resistance"),
+            HTML("<br>"),
+            column(width=6,
+                   pickerInput(inputId='categories', label ='Number of categories', selected = 2, choices = c(2,3,4,5,6))
+            ),
+            column(width = 6, class = "box1",
+                   conditionalPanel(
+                     condition = "input.categories == 2",
+                     sliderInput(inputId="thresSR21", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1)
+                   ),
+                   conditionalPanel(
+                     condition = "input.categories == 3",
+                     sliderInput(inputId="thresSR31", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR32", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1)
+                   ),
+                   conditionalPanel(
+                     condition = "input.categories == 4",
+                     sliderInput(inputId="thresSR41", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR42", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR43", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1)
+                   ),
+                   conditionalPanel(
+                     condition = "input.categories == 5",
+                     sliderInput(inputId="thresSR51", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR52", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR53", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR54", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1)
+                   ),
+                   conditionalPanel(
+                     condition = "input.categories == 6",
+                     sliderInput(inputId="thresSR61", label = "Threshold between the categories 1 & 2", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR62", label = "Threshold between the categories 2 & 3", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR63", label = "Threshold between the categories 3 & 4", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR64", label = "Threshold between the categories 4 & 5", value = 12, min=0, max=20, step=1),
+                     sliderInput(inputId="thresSR65", label = "Threshold between the categories 5 & 6", value = 12, min=0, max=20, step=1)
+                   )
+            )
         )
       ),
       fluidRow(
         box(width = 12,
-            plotOutput(outputId = "heatplot2", height = "700px") %>% withSpinner(color="#0dc5c1")
+            column(width = 12,
+                   plotlyOutput(outputId = "heatplotSR", height = "700px") %>% withSpinner(color="#0dc5c1")
+            )
         )
       ),
       fluidRow(
         box(width = 12,
-            downloadButton("downloadHeat2", "Download Plot Heatmap")
+            column(width = 12,
+                   DTOutput(outputId = "tabsouches")
+            )
         )
       )
     ),
