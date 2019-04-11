@@ -32,9 +32,6 @@ library(rmarkdown)
 library(knitr)
 library(heatmaply)
 
-
-#install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","shinyjqui","shinyFiles","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade4","factoextra","rmarkdown","knitr","heatmaply"))
-
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
 
@@ -112,10 +109,8 @@ return(pca.res)
 # ---------------------------------------------------------------------------------------------------
 # HEATMAPS
 
-heatplot <- function(tab,var1,var2,var3,row,col,S){
-  
-  HEAT = list()
-  
+heatplot <- function(tab,var1,var2,var3,row,col){
+
   varF = c(var2, var3)
   datatable = Data_Moyenne(tab,var1,varF)
   
@@ -138,14 +133,16 @@ heatplot <- function(tab,var1,var2,var3,row,col,S){
     }
   }
   x=data.matrix(x)
+  kolor = c("#FFFFFF","#CCCCFF","#9999FF","#330099","#000033")
+  p = heatmaply(x, Colv = col, Rowv = row, colors=kolor,  draw_cellnote = TRUE)
+  
+  HEAT = list()
+  HEAT$plot = p
+  HEAT$tab = x
+  return(HEAT)
+}
 
-  #color.palette  <- colorRampPalette(c("white", "orange", "red"))
-
-    #p <- gplots::heatmap.2(x, dendrogram = dend, trace = "none", col=color.palette, cellnote = round(x,1), notecol="black", cexCol=.9, cexRow = .9, margins = c(6, 6), srtCol=90)
-    kolor = c("#FFFFFF","#CCCCFF","#9999FF","#330099","#000033")
-    p = heatmaply(x, Colv = col, Rowv = row, colors=kolor)
-   
-    HEAT$h1 = p
+heatplot2 <- function(x,row,col,S){ 
     xh2 = x
     for(i in 1:length(S)){
       xh2[xh2 <= as.numeric(S[i])] = paste("C",i,sep="")
@@ -159,12 +156,17 @@ heatplot <- function(tab,var1,var2,var3,row,col,S){
     xh2[xh2 == "C5"] = 5
     xh2[xh2 == "C6"] = 6
     
+    print(xh2)
+    
     xh3=data.frame()
     for (i in 1:nrow(xh2)){
       for (j in 1:ncol(xh2)){
         xh3[i,j] = as.numeric(as.integer(xh2[i,j]))
       }
     }
+    
+    print(xh3)
+    
     rownames(xh3)=rownames(xh2)
     colnames(xh3)=colnames(xh2)
     
@@ -184,9 +186,8 @@ heatplot <- function(tab,var1,var2,var3,row,col,S){
       kolor = c("white", "yellow", "orange", "red", "green", "blue")
     }
     
-    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor)
-    HEAT$h2 = p2
-    
+    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor,  draw_cellnote = TRUE)
+
     #dataframe of cluster
     
     groups = unique(xh3)
@@ -205,6 +206,9 @@ heatplot <- function(tab,var1,var2,var3,row,col,S){
     }
     rownames(xh4)=rownames(xh3)
     colnames(xh4)=c("groups",colnames(xh3))
+    
+    HEAT = list()
+    HEAT$plot = p2
     HEAT$tab = xh4
   return(HEAT)
 }

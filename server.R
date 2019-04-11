@@ -16,6 +16,7 @@ server <-function(input,output,session){
     tableF = NULL,
     resp0 = NULL,
     sep = ";",
+    dec = ",",
     outVar = NULL,
     filtered_data = NULL,
     selected_row = NULL,
@@ -52,6 +53,7 @@ server <-function(input,output,session){
     outheatH1 = NULL,
     outheatH2 = NULL,
     outheattab = NULL,
+    outheatx = NULL,
     
     # seuils
     thresSR21 = NULL,
@@ -126,6 +128,13 @@ server <-function(input,output,session){
   observeEvent(input$sep, {
     sr$sep = input$sep
   })
+  observeEvent(input$dec, {
+    sr$dec = input$dec
+    if(sr$booTable == 1) {
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      sr$table = as.data.frame(myCSV())
+    }
+  })
   observeEvent(input$file1, {
     sr$booTable = 1
   })
@@ -169,7 +178,7 @@ server <-function(input,output,session){
     input$file1,
     input$sep), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read_delim, delim = sr$sep)
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, sep = sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
         sr$outVar = colnames(myCSV())
         updateSelectInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
@@ -242,34 +251,50 @@ server <-function(input,output,session){
   #-------------------------------------------------------------------------------------------------------
   observeEvent(c(sr$resp0,sr$table,sr$filtered_data), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
-        if(sr$resp0!="" && !is.null(sr$resp0)){
-          #création de la table filtrée
-            sr$tableF = sr$table[sr$filtered_data,]
-            
-             if(sr$log == 1){
-               isolate({
-                 sr$tableF[[sr$resp0]] = log(sr$table[sr$filtered_data,][[sr$resp0]])
-               })
-              }
-            else{
-              isolate({
-                sr$tableF[[sr$resp0]] = sr$table[sr$filtered_data,][[sr$resp0]]
-                })
-            }
-          output$ShapiroWilk <- renderPrint({
-            normality(sr$tableF, sr$resp0)
+      if(!is.null(sr$resp0) && (sr$resp0 != "") && is.numeric(sr$table[[sr$resp0]])){
+        
+        #création de la table filtrée
+        
+        sr$tableF = sr$table[sr$filtered_data,]
+        
+        if(sr$log == 1){
+          isolate({
+            sr$tableF[[sr$resp0]] = log(sr$table[sr$filtered_data,][[sr$resp0]])
           })
-        if(!is.null(sr$resp0) && (sr$resp0 != "")){
-            output$CheckPoint <- renderPrint({
-              "Looks like everything is fine now ! :)"
-            })
+        }
+        else{
+          isolate({
+            sr$tableF[[sr$resp0]] = sr$table[sr$filtered_data,][[sr$resp0]]
+          })
+        }
+        output$ShapiroWilk <- renderPrint({
+          normality(sr$tableF, sr$resp0)
+        })
+      }
+      else{
+        output$ShapiroWilk <- renderText({
+          "Check your inputs variables please"
+        })
+      }
+      
+      if(!is.null(sr$resp0) && (sr$resp0 != "")){
+        if(is.numeric(sr$table[[sr$resp0]])){
+          output$CheckPoint <- renderPrint({
+            "Looks like everything is fine now ! :)"
+          })
         }
         else{
           output$CheckPoint <- renderText({
-  "First of all, choose your separator until your columns look good
-  Then, you need to choose a quantitative response variable (ex: Lenght)"
+            "The Response Variable is not numeric !
+Change the decimal parameter or the response Variable!"
           })
         }
+      }
+      else{
+        output$CheckPoint <- renderText({
+          "First of all, choose your separator until your columns look good
+Then, you need to choose a quantitative response variable (ex: Lenght)"
+        })
       }
     }
     else{
@@ -585,7 +610,7 @@ server <-function(input,output,session){
         }
         else if(sr$categories == 5){
           updateSliderInput(session, inputId = "thresSR51", min=0, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
-          updateSliderInput(session, inputId = "thresSR52", min=srthresSR51, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
+          updateSliderInput(session, inputId = "thresSR52", min=sr$thresSR51, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1) 
           updateSliderInput(session, inputId = "thresSR53", min=sr$thresSR52, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)           
           updateSliderInput(session, inputId = "thresSR54", min=sr$thresSR53, max=maxMean(sr$tableF,sr$respheat,sr$factH1,sr$factH2), step=1)
         }
@@ -632,17 +657,25 @@ server <-function(input,output,session){
                  }
   })
   
-  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),{
+  observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol),{
     if(sr$booTable==1){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
-        sr$outheatH1= outheat$h1
-        sr$outheatH2 = outheat$h2
-        sr$outheattab = outheat$tab
-        
+        outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol)
+          sr$outheatH1= outheat$plot
+          sr$outheatx = outheat$tab
         }
       }
     })
+  observeEvent(c(sr$outheatx, sr$dendorow, sr$dendocol, sr$S),{
+    if(sr$booTable==1){
+      if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
+        outheat2 = heatplot2(sr$outheatx, sr$dendorow, sr$dendocol, sr$S)
+          sr$outheatH2 = outheat2$plot
+          sr$outheattab = outheat2$tab
+      }
+    }
+  })
+  
     output$heatplot <- renderPlotly({
       sr$outheatH1
     })

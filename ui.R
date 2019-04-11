@@ -107,6 +107,12 @@ body <- dashboardBody(
                                 c(Semicolon=';',
                                   Tab='\t'),
                                 selected = ';')
+              ),
+            column(width = 3,
+             radioButtons('dec', 'decimal',
+                          c(Comma=',',
+                            Dot='.'),
+                          ',')
               )
           )
         )
