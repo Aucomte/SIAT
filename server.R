@@ -16,7 +16,6 @@ server <-function(input,output,session){
     tableF = NULL,
     resp0 = NULL,
     sep = ";",
-    dec = ",",
     outVar = NULL,
     filtered_data = NULL,
     selected_row = NULL,
@@ -127,20 +126,12 @@ server <-function(input,output,session){
   observeEvent(input$sep, {
     sr$sep = input$sep
   })
-  observeEvent(input$dec, {
-    sr$dec = input$dec
-    if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.table, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
-      sr$table = as.data.frame(myCSV())
-    }
-  })
   observeEvent(input$file1, {
     sr$booTable = 1
   })
-  observeEvent(c(input$responseVar0, input$dec, input$sep), ignoreInit = TRUE, {
+  observeEvent(c(input$responseVar0, input$sep), ignoreInit = TRUE, {
     sr$resp0 = input$responseVar0
       if(sr$booTable == 1) {
-        if(is.numeric(sr$table[[sr$resp0]])){
           updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = "")
           
@@ -171,7 +162,6 @@ server <-function(input,output,session){
           updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = "None")
           updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
           updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
-        }
       }
   })
   
@@ -179,7 +169,7 @@ server <-function(input,output,session){
     input$file1,
     input$sep), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
-      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
+      myCSV <- reactiveFileReader(100, session, input$file1$datapath, read_delim, delim = sr$sep)
       sr$table = as.data.frame(myCSV())
         sr$outVar = colnames(myCSV())
         updateSelectInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
@@ -250,52 +240,36 @@ server <-function(input,output,session){
     })
     
   #-------------------------------------------------------------------------------------------------------
-  observe({
+  observeEvent(c(sr$resp0,sr$table,sr$filtered_data), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
-      if(!is.null(sr$resp0) && (sr$resp0 != "") && is.numeric(sr$table[[sr$resp0]])){
-        
-        #création de la table filtrée
-        
-        sr$tableF = sr$table[sr$filtered_data,]
-        
-           if(sr$log == 1){
-             isolate({
-               sr$tableF[[sr$resp0]] = log(sr$table[sr$filtered_data,][[sr$resp0]])
-             })
+        if(sr$resp0!="" && !is.null(sr$resp0)){
+          #création de la table filtrée
+            sr$tableF = sr$table[sr$filtered_data,]
+            
+             if(sr$log == 1){
+               isolate({
+                 sr$tableF[[sr$resp0]] = log(sr$table[sr$filtered_data,][[sr$resp0]])
+               })
+              }
+            else{
+              isolate({
+                sr$tableF[[sr$resp0]] = sr$table[sr$filtered_data,][[sr$resp0]]
+                })
             }
-          else{
-            isolate({
-              sr$tableF[[sr$resp0]] = sr$table[sr$filtered_data,][[sr$resp0]]
-              })
-          }
-        output$ShapiroWilk <- renderPrint({
-          normality(sr$tableF, sr$resp0)
-        })
-      }
-      else{
-        output$ShapiroWilk <- renderText({
-          "Check your inputs variables please"
-        })
-      }
-      
-      if(!is.null(sr$resp0) && (sr$resp0 != "")){
-        if(is.numeric(sr$table[[sr$resp0]])){
-          output$CheckPoint <- renderPrint({
-            "Looks like everything is fine now ! :)"
+          output$ShapiroWilk <- renderPrint({
+            normality(sr$tableF, sr$resp0)
           })
+        if(!is.null(sr$resp0) && (sr$resp0 != "")){
+            output$CheckPoint <- renderPrint({
+              "Looks like everything is fine now ! :)"
+            })
         }
         else{
           output$CheckPoint <- renderText({
-"The Response Variable is not numeric !
-Change the decimal parameter or the response Variable!"
+  "First of all, choose your separator until your columns look good
+  Then, you need to choose a quantitative response variable (ex: Lenght)"
           })
         }
-      }
-      else{
-        output$CheckPoint <- renderText({
-"First of all, choose your separator until your columns look good
-Then, you need to choose a quantitative response variable (ex: Lenght)"
-        })
       }
     }
     else{
@@ -304,7 +278,6 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       })
     }
   })
-  
   
   # panel 2 : Moyenne / SD
   
@@ -315,7 +288,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$fact1 = input$factors1
   })
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$resp1]])){
+    if(sr$booTable==1){
       output$moyenne <- renderDT({
         datatable(
           Data_Moyenne(sr$tableF,sr$resp1,sr$fact1),
@@ -342,11 +315,11 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
           )
       })
     }
-    else{
-      output$moyenne <- renderDT({ 
-        NULL
-      })
-    }
+     else{
+       output$moyenne <- renderDT({ 
+         NULL
+       })
+     }
   })
   
   # panel 3 : Anova
@@ -373,7 +346,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     contentType = 'image/png'
   )
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respanov]])){
+    if(sr$booTable==1){
       output$anov <- renderPrint({
         anov(sr$tableF,sr$respanov,sr$factanov)[[1]]
       })
@@ -435,7 +408,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$axis = input$axis
   })
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respacp]]) && length(unique(sr$table[[sr$individual]])) > 1 && length(unique(sr$table[[sr$variable]])) > 1){
+    if(sr$booTable==1 && length(unique(sr$table[[sr$individual]])) > 1 && length(unique(sr$table[[sr$variable]])) > 1){
       if(length(unique(sr$tableF[[sr$individual]])) > 1 && length(unique(sr$tableF[[sr$variable]])) > 1){
         out = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
         output$indPlot <- renderPlot({
@@ -595,7 +568,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   
   observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$categories), {
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
+    if(sr$booTable==1){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         #update des sliders
         if(sr$categories == 2){
@@ -660,7 +633,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   
   observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S),{
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$respheat]])){
+    if(sr$booTable==1){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         outheat = heatplot(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol, sr$S)
         sr$outheatH1= outheat$h1
@@ -713,7 +686,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$factorPG3 = input$factorPG3
   })
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarPG]])){
+    if(sr$booTable==1){
       output$PrettyG <- renderPlotly({
         NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
       })
@@ -757,7 +730,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
+    if(sr$booTable==1){
       output$BarPlot <- renderPlot({
         vizBarplot(sr$tableF,sr$responseVarBar,sr$factorBar1,sr$factorBar2,sr$factorBar3)
       })
@@ -804,7 +777,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     sr$factorT4 = input$factorT4
   })
   observe({
-    if(sr$booTable==1 && is.numeric(sr$table[[sr$responseVarT]])){
+    if(sr$booTable==1){
       output$TimePlot <- renderPlotly({
         GraphTime(sr$tableF,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
       })

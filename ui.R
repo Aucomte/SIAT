@@ -11,7 +11,6 @@ sidebar <- dashboardSidebar(
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap/Cluster", tabName = "Heatmap", icon = icon("eye")),
-    menuItem("Heatmap/categories", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
@@ -105,17 +104,10 @@ body <- dashboardBody(
           column(width = 6,
             column(width = 3,
               radioButtons('sep', 'Separator',
-                                c(Comma=',',
-                                  Semicolon=';',
+                                c(Semicolon=';',
                                   Tab='\t'),
                                 selected = ';')
-              ),
-            column(width = 3,
-              radioButtons('dec', 'decimal',
-                               c(Comma=',',
-                                 Dot='.'),
-                                ',')
-            )
+              )
           )
         )
       ),
@@ -284,10 +276,7 @@ body <- dashboardBody(
         box(width = 12,
           plotlyOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
         )
-      )
-    ),
-    tabItem(
-      tabName = "Heatmap2",
+      ),
       fluidRow(
         box(width = 12, class = "box1",
             div("Subdivise your dataset in several categories of resistance"),
