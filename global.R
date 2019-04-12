@@ -32,6 +32,8 @@ library(rmarkdown)
 library(knitr)
 library(heatmaply)
 
+library(multcompView)
+
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
 
@@ -39,6 +41,7 @@ Data_Moyenne <- function(table,var1,var2){
   
     datatable = table %>% group_by(.dots = as.character(var2)) %>%
       summarise(nb = n(),
+                Median = median(.data[[var1]]),
                 Mean = mean(.data[[var1]]),
                 Sd = sd(.data[[var1]])
       )
@@ -59,8 +62,14 @@ anov <- function(tab,var1,var2){
     tukey = TukeyHSD(res.aov)
     names(tukey) <- c(var2[1])
     
+    #ll.letters <- multcompLetters(tukey[[1]][,4], threshold = 0.05)[[1]]
+    #ll.letters <- data.frame(MeanComparison = names(ll.letters), Group = as.character(ll.letters), stringsAsFactors = FALSE)
+    #ll.letters <- ll.letters[order(-xtfrm(ll.letters$MeanComparison)), ]
+    #dfLetters <-   ll.letters
+    
     output[[1]] = x
     output[[2]] = tukey
+    #output[[3]] = dfLetters
   }
   else if(length(var2) >= 2){
     res.aov = aov(tab[[var1]] ~ tab[[var2[1]]] * tab[[var2[2]]], tab)
@@ -70,8 +79,15 @@ anov <- function(tab,var1,var2){
     tukey = TukeyHSD(res.aov)
     names(tukey) <- c(var2[1], var2[2], paste(var2[1],"*",var2[2]))
     
+    # ll.letters <- multcompLetters(tukey[[1]][,4], threshold = 0.05)[[1]]
+    # ll.letters <- data.frame(MeanComparison = names(ll.letters), Group = as.character(ll.letters), stringsAsFactors = FALSE)
+    # ll.letters <- ll.letters[order(-xtfrm(ll.letters$MeanComparison)), ]
+    # dfLetters <-   ll.letters
+    
     output[[1]] = x
     output[[2]] = tukey
+    #output[[3]] = dfLetters
+    
   }
   return(output)
 }

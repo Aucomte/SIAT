@@ -196,12 +196,18 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12 ,class = "box1",
-            withTags(
-              div(
-                h4("Tukey's test :")
-              )
-            ),
-            verbatimTextOutput(outputId = "Tukey")
+          withTags(
+            div(
+              h4("Tukey's test :")
+            )
+          ),
+          column(width = 12,
+             verbatimTextOutput(outputId = "Tukey")
+          )
+          # ,
+          # column(width = 6,
+          #     DTOutput(outputId = "TukLetter")
+          # )
         )
       )
     ),

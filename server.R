@@ -380,6 +380,35 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       output$Tukey <- renderPrint({ 
         anov(sr$tableF,sr$respanov,sr$factanov)[[2]]
       })
+      output$TukLetter <- renderDT({
+        datatable(
+          anov(sr$tableF,sr$respanov,sr$factanov)[[3]],
+            extensions = 'Buttons', 
+            options = list(
+              dom = 'Blfrtip', 
+              buttons = list(
+                'copy', 
+                'print',
+                list(
+                  extend = "collection", 
+                  text = "Download entire dataset",
+                  #buttons = c("csv","excel","pdf")
+                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
+                )
+              ),
+              lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
+                "}"
+              )
+            )
+          )
+      })
+
+      renderPrint({ 
+        anov(sr$tableF,sr$respanov,sr$factanov)[[3]]
+      })
       output$anovplot <- renderPlot({
         PlotAnov()
       })
