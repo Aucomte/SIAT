@@ -289,7 +289,17 @@ body <- dashboardBody(
         tabName = "Heatmap2",
         fluidRow(
           box(width = 12, class = "box1",
-              div("Subdivise your dataset in several categories of resistance"),
+              column(width=4,
+                     HTML("Clusterisation : ")
+              ),
+              column(width=4,
+                     checkboxInput("column2", "col", TRUE)
+              ),
+              column(width=4,
+                     checkboxInput("row2", "row", TRUE)
+              ),
+              HTML("<br>"),
+              div("Subdivise your dataset in several categories of resistance:"),
               HTML("<br>"),
               column(width=6,
                      pickerInput(inputId='categories', label ='Number of categories', selected = 2, choices = c(2,3,4,5,6))

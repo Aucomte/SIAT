@@ -48,6 +48,8 @@ server <-function(input,output,session){
     factH2 = NULL,
     dendocol = TRUE,
     dendorow = TRUE,
+    dendocol2 = TRUE,
+    dendorow2 = TRUE,
     categories = 2,
     S = NULL,
     outheatH1 = NULL,
@@ -533,6 +535,12 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$column, {
     sr$dendocol = input$column
   })
+  observeEvent(input$row2, {
+    sr$dendorow2 = input$row2
+  })
+  observeEvent(input$column2, {
+    sr$dendocol2 = input$column2
+  })
   observeEvent(input$categories, {
     sr$categories = input$categories
   })
@@ -654,10 +662,12 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
                  input$submitCAT3,
                  input$submitCAT4,
                  input$submitCAT5,
-                 input$submitCAT6), {
+                 input$submitCAT6, 
+                 sr$dendorow2, 
+                 sr$dendocol2), {
     if(sr$booTable==1){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        outheat2 = heatplot2(sr$outheatx, sr$dendorow, sr$dendocol, sr$S)
+        outheat2 = heatplot2(sr$outheatx, sr$dendorow2, sr$dendocol2, sr$S)
           sr$outheatH2 = outheat2$plot
           sr$outheattab = outheat2$tab
       }
