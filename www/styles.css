@@ -66,6 +66,10 @@
     background-color: #f0f0f5;
     outline: none;
 }
+.action-button{
+  background-color: #3d3d5c;
+  color: #ffffff;
+}
 
 /* logo */
 .skin-yellow .main-header .logo {
@@ -91,7 +95,7 @@
 .skin-yellow .main-sidebar .sidebar .sidebar-menu .active a{
 					  background-color: #3C3C3C;
 					  color: white;
-                      border-left-color: #3C3C3C; 
+            border-left-color: #3C3C3C; 
 					  }
 
 /* other links in the sidebarmenu */

@@ -145,28 +145,46 @@ heatplot <- function(tab,var1,var2,var3,row,col){
 heatplot2 <- function(x,row,col,S){ 
     xh2 = x
     for(i in 1:length(S)){
-      xh2[xh2 <= as.numeric(S[i])] = paste("C",i,sep="")
+      for (k in 1:nrow(xh2)){
+        for(y in 1:ncol(xh2)){
+          if(x[k,y] <= as.numeric(S[i]) & (xh2[k,y] == x[k,y])){
+            xh2[k,y] = paste("C",i,sep="")
+          }
+        }
+      }
+    }      
+    for (k in 1:nrow(xh2)){
+      for(y in 1:ncol(xh2)){
+        if(xh2[k,y] == "C1"){
+          xh2[k,y] = 1
+        }
+        else if(xh2[k,y] == "C2"){
+          xh2[k,y] = 2
+        }
+        else if(xh2[k,y] == "C3"){
+          xh2[k,y] = 3
+        }
+        else if(xh2[k,y] == "C4"){
+          xh2[k,y] = 4
+        }
+        else if(xh2[k,y] == "C5"){
+          xh2[k,y] = 5
+        }
+        else if(xh2[k,y] == "C6"){
+          xh2[k,y] = 6
+        }
+        else{
+          xh2[k,y] = length(S)+1
+        }
+      }
     }
-    xh2[x > S[i]] = paste("C",length(S)+1,sep="")
 
-    xh2[xh2 == "C1"] = 1
-    xh2[xh2 == "C2"] = 2
-    xh2[xh2 == "C3"] = 3
-    xh2[xh2 == "C4"] = 4
-    xh2[xh2 == "C5"] = 5
-    xh2[xh2 == "C6"] = 6
-    
-    print(xh2)
-    
     xh3=data.frame()
     for (i in 1:nrow(xh2)){
       for (j in 1:ncol(xh2)){
         xh3[i,j] = as.numeric(as.integer(xh2[i,j]))
       }
     }
-    
-    print(xh3)
-    
     rownames(xh3)=rownames(xh2)
     colnames(xh3)=colnames(xh2)
     
@@ -186,7 +204,7 @@ heatplot2 <- function(x,row,col,S){
       kolor = c("white", "yellow", "orange", "red", "green", "blue")
     }
     
-    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor,  draw_cellnote = TRUE)
+    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, draw_cellnote = TRUE)
 
     #dataframe of cluster
     

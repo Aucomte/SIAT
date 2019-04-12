@@ -624,37 +624,21 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       }
     }
   })
-  observeEvent(c(sr$categories, 
-                 sr$thresSR21, 
-                 sr$thresSR21, 
-                 sr$thresSR32,
-                 sr$thresSR41,
-                 sr$thresSR42,
-                 sr$thresSR43,
-                 sr$thresSR51,
-                 sr$thresSR52,
-                 sr$thresSR53,
-                 sr$thresSR54,
-                 sr$thresSR61,
-                 sr$thresSR62,
-                 sr$thresSR63,
-                 sr$thresSR64,
-                 sr$thresSR65), {
-                 if(sr$categories == 2){
-                   sr$S = c(sr$thresSR21)
-                 }
-                 else if(sr$categories == 3){
-                   sr$S = c(sr$thresSR31,sr$thresSR32)
-                 }
-                 else if(sr$categories == 4){
-                   sr$S = c(sr$thresSR41,sr$thresSR42,sr$thresSR43)
-                 }
-                 else if(sr$categories == 5){
-                   sr$S = c(sr$thresSR51,sr$thresSR52,sr$thresSR53,sr$thresSR54)
-                 }
-                 else if(sr$categories == 6){
-                   sr$S = c(sr$thresSR61,sr$thresSR62,sr$thresSR63,sr$thresSR64,sr$thresSR65)
-                 }
+
+  observeEvent(input$submitCAT2,{
+    sr$S = c(sr$thresSR21)
+  })
+  observeEvent(input$submitCAT3,{
+    sr$S = c(sr$thresSR31,sr$thresSR32)
+  })
+  observeEvent(input$submitCAT4,{
+    sr$S = c(sr$thresSR41,sr$thresSR42,sr$thresSR43)
+  })
+  observeEvent(input$submitCAT5,{
+    sr$S = c(sr$thresSR51,sr$thresSR52,sr$thresSR53,sr$thresSR54)
+  })
+  observeEvent(input$submitCAT6,{
+    sr$S = c(sr$thresSR61,sr$thresSR62,sr$thresSR63,sr$thresSR64,sr$thresSR65)
   })
   
   observeEvent(c(sr$tableF,sr$respheat,sr$factH1,sr$factH2, sr$dendorow, sr$dendocol),{
@@ -666,7 +650,11 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
         }
       }
     })
-  observeEvent(c(sr$outheatx, sr$dendorow, sr$dendocol, sr$S),{
+  observeEvent(c(input$submitCAT2,
+                 input$submitCAT3,
+                 input$submitCAT4,
+                 input$submitCAT5,
+                 input$submitCAT6), {
     if(sr$booTable==1){
       if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
         outheat2 = heatplot2(sr$outheatx, sr$dendorow, sr$dendocol, sr$S)
