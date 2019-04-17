@@ -15,7 +15,7 @@ sidebar <- dashboardSidebar(
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
-    ,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
+    #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
 
