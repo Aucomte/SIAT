@@ -91,6 +91,9 @@ body <- dashboardBody(
     tabItem(
       tabName ="Table",
       fluidRow(
+        box(width=12, class = "box2",
+            "Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
+        ),
         box(width=12, class = "box1",
           column(width = 6,
            downloadButton("downloadData", label = "Download a test file"),
@@ -154,6 +157,9 @@ body <- dashboardBody(
     tabItem(
       tabName ="Mean",
       fluidRow(
+        box(width=12, class = "box2",
+            "Cet onglet permet d'explorer le jeu de données en calculant le nombre de points, la moyenne et l'écartype de la variable réponse quantitative choisie en fonction d'une variable ou d'un groupe de variables."
+        ),
         box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
           pickerInput(inputId='factors1', label ='Choose the factors', "", multiple = TRUE)
@@ -169,6 +175,9 @@ body <- dashboardBody(
     tabItem(
       tabName ="Anova",
       fluidRow(
+        box(width=12, class = "box2",
+            "Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum."     
+        ),
         box(width = 12,class = "box1",
             pickerInput(inputId='responseVar', label ='Choose the response variable', ""),
             pickerInput(inputId='factors', label ='Choose the factors', "", multiple = TRUE)
@@ -215,6 +224,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "ACP",
       fluidRow(
+        box(width=12, class = "box2",
+          "Analyse en Composantes Principales. Méthode  factorielle  de  réduction  de  dimension. L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables."
+        ),
         box(width = 12, class = "box1",
             pickerInput(inputId='respacp', label ='Choose the response variable', ""),
             column(width = 6,
@@ -270,6 +282,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "Heatmap",
         fluidRow(
+          box(width=12, class = "box2",
+             "Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation présente dans cet onglet permet de fixer un seuil de sensibilité / résistance en fonction des longueurs de lésion. Cette représentation offre alors en sortie une heatmap binaire de résistance / sensibilité."
+             ),
           box(width = 12, class = "box1",
              pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
              pickerInput(inputId='factorH1', label ='Choose the first factor', ""),
@@ -294,6 +309,9 @@ body <- dashboardBody(
       tabItem(
         tabName = "Heatmap2",
         fluidRow(
+          box(width=12, class = "box2",
+             "Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies."
+             ),
           box(width = 12, class = "box1",
               pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
               pickerInput(inputId='factorH21', label ='Choose the first factor', ""),
@@ -383,6 +401,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "Visu",
       fluidRow(
+        box(width=12, class = "box2",
+           "Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."
+           ),
         box(width=12, class = "box1",
           pickerInput(inputId='responseVarPG', label ='Choose the response variable', ""),
           pickerInput(inputId='factorPG1', label ='Choose the first factor', ""),
@@ -404,6 +425,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "barplot",
       fluidRow(
+        box(width=12, class = "box2",
+           "Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis." 
+           ),
         box(width=12, class = "box1",
           column(width = 12,
             pickerInput(inputId='responseVarBar', label ='Choose the response variable', "")
@@ -433,6 +457,9 @@ body <- dashboardBody(
     tabItem(
       tabName = "Evolution",
         fluidRow(
+          box(width=12, class = "box2",
+              "Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel."
+          ),
           box(width = 12, class = "box1",
             column(width = 6,
               pickerInput(inputId='responseVarT', label ='Choose the response variable (y)', "")
