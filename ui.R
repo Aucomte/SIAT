@@ -14,7 +14,7 @@ sidebar <- dashboardSidebar(
     menuItem("Qualitative Analysis", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
-    menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
+    menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye"))
     #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
