@@ -11,7 +11,7 @@ sidebar <- dashboardSidebar(
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
-    menuItem("Cluster", tabName = "Heatmap2", icon = icon("eye")),
+    menuItem("Qualitative Analysis", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
