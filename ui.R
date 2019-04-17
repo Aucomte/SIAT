@@ -15,7 +15,7 @@ sidebar <- dashboardSidebar(
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Time Series", tabName = "Evolution", icon = icon("eye"))
-    #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
+    ,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
 
@@ -295,20 +295,27 @@ body <- dashboardBody(
         tabName = "Heatmap2",
         fluidRow(
           box(width = 12, class = "box1",
-              column(width=4,
+              pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
+              pickerInput(inputId='factorH21', label ='Choose the first factor', ""),
+              pickerInput(inputId='factorH22', label ='Choose the second factor', ""),
+              column(width=3,
                      HTML("Clusterisation : ")
               ),
-              column(width=4,
-                     checkboxInput("column2", "col", TRUE)
+              column(width=3,
+                     checkboxInput("column", "col", TRUE)
               ),
-              column(width=4,
-                     checkboxInput("row2", "row", TRUE)
-              ),
+              column(width=3,
+                     checkboxInput("row", "row", TRUE)
+              )  
+          )
+        ),
+        fluidRow(
+          box(width = 12, class = "box1",
               HTML("<br>"),
               div("Subdivise your dataset in several categories of resistance:"),
               HTML("<br>"),
               column(width=6,
-                     pickerInput(inputId='categories', label ='Number of categories', selected = 2, choices = c(2,3,4,5,6))
+                     sliderInput(inputId="categories", label = 'Number of categories', value = 2, min=2, max=6, step=1)
               ),
               column(width = 6, class = "box1",
                      conditionalPanel(

@@ -311,7 +311,7 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
 #visu
 
 NiceGraph <-  function(tab,var1,var2,var3,var4){
-  
+  print(tab)
   p <- ggplot(data=tab, aes(x=tab[,var2], y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
   p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
   if(var4 != "None" && !is.null(var4) && var4 !=""){
@@ -320,12 +320,12 @@ NiceGraph <-  function(tab,var1,var2,var3,var4){
   }
   p <- p + labs(y=var1, x =var2, colour = var3)
   p + theme_minimal()
-  
-  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+
+  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)),
                 axis.title.x = element_text(size = 14),
-                axis.text = element_text(size = 12), 
+                axis.text = element_text(size = 12),
                 axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
-  
+
   return(p)
 }
 

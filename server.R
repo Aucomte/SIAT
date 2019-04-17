@@ -57,6 +57,11 @@ server <-function(input,output,session){
     outheattab = NULL,
     outheatx = NULL,
     
+    #2
+    respheat2 = NULL,
+    factH21 = NULL,
+    factH22 = NULL,
+    
     # seuils
     thresSR21 = NULL,
     thresSR31= NULL,
@@ -103,9 +108,9 @@ server <-function(input,output,session){
   #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   #download file test
   output$downloadData <- downloadHandler(
-    filename = "dataExemple.csv",
+    filename = "DataTest.csv",
     content = function(filename) {
-      file.copy("www/dataExemple.csv", filename)
+      file.copy("www/DataTest2.csv", filename)
     },
     contentType = "csv"
   )
@@ -152,7 +157,12 @@ server <-function(input,output,session){
           updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = "")
           updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = "")
-          updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
+          #updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
+          
+          updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
+          updateSelectInput(session, inputId = "factorH21", choices = sr$outVar, selected = "")
+          updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = "")
+          #updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
           
           updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
           updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = "")
@@ -558,6 +568,17 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$factorH2, {
     sr$factH2 = input$factorH2
   })
+  
+  observeEvent(input$responseVarHeat2, {
+    sr$respheat2 = input$responseVarHeat2
+  })
+  observeEvent(input$factorH21, {
+    sr$factH21 = input$factorH21
+  })
+  observeEvent(input$factorH22, {
+    sr$factH22 = input$factorH22
+  })
+  
   observeEvent(input$row, {
     sr$dendorow = input$row
   })
@@ -691,12 +712,11 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
                  input$submitCAT3,
                  input$submitCAT4,
                  input$submitCAT5,
-                 input$submitCAT6, 
-                 sr$dendorow2, 
-                 sr$dendocol2), {
+                 input$submitCAT6), {
     if(sr$booTable==1){
-      if(!is.null(sr$factH1) && !is.null(sr$factH2) && sr$factH1 != "" && sr$factH2 != ""){
-        outheat2 = heatplot2(sr$outheatx, sr$dendorow2, sr$dendocol2, sr$S)
+      if(!is.null(sr$factH21) && !is.null(sr$factH22) && sr$factH21 != "" && sr$factH22 != ""){
+        outheat = heatplot(sr$tableF,sr$respheat2,sr$factH21,sr$factH22, sr$dendorow, sr$dendocol)
+        outheat2 = heatplot2(outheat$tab, sr$dendorow2, sr$dendocol2, sr$S)
           sr$outheatH2 = outheat2$plot
           sr$outheattab = outheat2$tab
       }
