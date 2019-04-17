@@ -413,7 +413,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-          plotlyOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
+          plotOutput(outputId = "PrettyG", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )
       ),
       fluidRow(

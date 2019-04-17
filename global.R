@@ -11,8 +11,8 @@ require(shinyhelper)
 
 require(colourpicker) #couleur selecteur
 require(shinyFeedback) #met des warning aux inputs
-require(shinyjqui) #redimentionner tableau image etc / créé une div
-require(shinyFiles) #géner des directory
+#require(shinyjqui) #redimentionner tableau image etc / créé une div
+#require(shinyFiles) #géner des directory
 
 library(readr)
 library(data.table)
@@ -32,7 +32,7 @@ library(rmarkdown)
 library(knitr)
 library(heatmaply)
 
-library(multcompView)
+#library(multcompView)
 
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
@@ -311,10 +311,9 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
 #visu
 
 NiceGraph <-  function(tab,var1,var2,var3,var4){
-  print(tab)
-
   tab = as.data.frame(tab)
-  print(tab)
+  print(tab[,var2])
+  print(tab[,var3])
   p <- ggplot(data=tab, aes(x=tab[,var2], y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
   p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
   if(var4 != "None" && !is.null(var4) && var4 !=""){
