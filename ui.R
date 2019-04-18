@@ -14,7 +14,7 @@ sidebar <- dashboardSidebar(
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
-    menuItem("Qualitative Analysis", tabName = "Heatmap2", icon = icon("eye"))
+    menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye"))
     #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
@@ -37,24 +37,24 @@ body <- dashboardBody(
         box(width = 12, class = "resumebox",
             withTags(
               div(class = "resume",
-              "This is a web application developped in order to visualize and analyze the mesure of symptom intensity as a quantitative variable in function of several experimental factors."
+              "Effortlessly visualize and analyze the mesure of symptom intensity as a quantitative response variable in connection to several experimental factors."
               )
             )
         ),
         box(width = 12,
           withTags(
             div(class = "home",
-                h2("A short introduction to the application ?"),
+                h2("Quickly get a sense of what is in your disease assay data."),
                 br(),
-                p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value. You can provide files using one of several field separators. and  Avant toute chose vous devez aller dans l'onglet Input Table et upload votre jeu de données en format CSV (format long). "),
-              
-                h3("Description des differents onglets:"),
+                p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). From there you can use the tools accessible on the left handside menu to filter, aggregate, visualize and transform you data in an intutitive and user-friendly fashion."),
+                h3("A short description of the data analysis tools:"),
+#### NEED TO REORDER THE ITEMS TO MATCH THE ORDER OF THE THUMBS
                 ul(
-                  li(b("Home"),": Il s'agit de la page sur laquelle vous êtes déjà."),
+                  li(b("Home"),": This is page you are currently reading with an overview of SLAT."),
                   br(),
-                  li(b("Input table"), ": Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."),
+                  li(b("Input table"), ": This is where to upload your data set with values organized in a long or 'tidy' format (https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html). You can provide files containing one of several field and decimal separators. It is then possible to filter your data and export it. Downstream analysis steps with the various tools will be performed on this filtered data."),
                   br(),
-                  li(b("Mean/Sd"), ": Cet onglet permet d'explorer le jeu de données en calculant le nombre de points, la moyenne et l'écartype de la variable réponse quantitative choisie en fonction d'une variable ou d'un groupe de variables."),
+                  li(b("Mean/Sd"), ": This enables the computation of standard aggregate values (mean, standard deviation, count of observations) of the quantitative response variable as a function of the levels of one or several experimental factors."),
                   br(),
                   li(b("Anova"), ": Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum."),
                   br(),
@@ -62,13 +62,13 @@ body <- dashboardBody(
                   br(),
                   li(b("Heatmap/Cluster"), ": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation présente dans cet onglet permet de fixer un seuil de sensibilité / résistance en fonction des longueurs de lésion. Cette représentation offre alors en sortie une heatmap binaire de résistance / sensibilité."),
                   br(),
-                  li(b("Heatmap/Visu"),": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux ou trois variables choisies."),
+                  li(b("Categorical Analysis"),": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux ou trois variables choisies."),
                   br(),
                   li(b("boxplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
                   br(),
                   li(b("barplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
                   br(),
-                  li(b("Time Series"), ": Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel.")
+                  li(b("Plot Time Series"), ": Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel.")
                   )
               )
           )
