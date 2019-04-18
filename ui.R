@@ -8,13 +8,13 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
-    menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
-    menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
-    menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
-    menuItem("Qualitative Analysis", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
-    menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye"))
+    menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
+    menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
+    menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
+    menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
+    menuItem("Qualitative Analysis", tabName = "Heatmap2", icon = icon("eye"))
     #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
@@ -37,16 +37,16 @@ body <- dashboardBody(
         box(width = 12, class = "resumebox",
             withTags(
               div(class = "resume",
-              "This is an application web developped in order to visualize and analyze the mesure of symptom intensity as quantitative variable in function of several experimental factors."
+              "This is a web application developped in order to visualize and analyze the mesure of symptom intensity as a quantitative variable in function of several experimental factors."
               )
             )
         ),
         box(width = 12,
           withTags(
             div(class = "home",
-                h2("Comment utiliser cette application ?"),
+                h2("A short introduction to the application ?"),
                 br(),
-                p("Avant toute chose vous devez aller dans l'onglet Input Table et upload votre jeu de données en format CSV (format long). Reglez les parametres Separator, response variable et decimal. Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets!"),
+                p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value. You can provide files using one of several field separators. and  Avant toute chose vous devez aller dans l'onglet Input Table et upload votre jeu de données en format CSV (format long). "),
               
                 h3("Description des differents onglets:"),
                 ul(
@@ -92,7 +92,7 @@ body <- dashboardBody(
       tabName ="Table",
       fluidRow(
         box(width=12, class = "box2",
-            "Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
+            "Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Reglez les parametres Separator, response variable et decimal.\n Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets! Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
         ),
         box(width=12, class = "box1",
           column(width = 6,
