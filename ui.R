@@ -13,7 +13,7 @@ sidebar <- dashboardSidebar(
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
-    menuItem("ACP", tabName = "ACP", icon = icon("calculator")),
+    menuItem("PCA", tabName = "ACP", icon = icon("calculator")),
     menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye"))
     #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
@@ -46,7 +46,7 @@ body <- dashboardBody(
             div(class = "home",
                 h2("Quickly get a sense of what is in your disease assay data."),
                 br(),
-                p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). From there you can use the tools accessible on the left handside menu to filter, aggregate, visualize and transform you data in an intutitive and user-friendly fashion."),
+                p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). From there you can use the tools accessible on the left handside menu to filter, aggregate, visualize, transform and export your data in an intutitive and user-friendly fashion."),
                 h3("A short description of the data analysis tools:"),
 #### NEED TO REORDER THE ITEMS TO MATCH THE ORDER OF THE THUMBS
                 ul(
@@ -54,21 +54,21 @@ body <- dashboardBody(
                   br(),
                   li(b("Input table"), ": This is where to upload your data set with values organized in a long or 'tidy' format (https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html). You can provide files containing one of several field and decimal separators. It is then possible to filter your data and export it. Downstream analysis steps with the various tools will be performed on this filtered data."),
                   br(),
-                  li(b("Mean/Sd"), ": This enables the computation of standard aggregate values (mean, standard deviation, count of observations) of the quantitative response variable as a function of the levels of one or several experimental factors."),
+                  li(b("Mean/Sd"), ": This enables the computation of standard aggregate values (mean, standard deviation, count of observations) of the quantitative response variable conditioned on the levels of one or several experimental factors."),
                   br(),
-                  li(b("Anova"), ": Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum."),
+                  li(b("Anova"), ": Allows to conduct Analysis of variance to identify experimental factors significantly  affecting the magnitude of symptoms. Also performs Tukey multiple comparisons of means."),
                   br(),
-                  li(b("ACP"), ": Analyse en Composantes Principales. Méthode  factorielle  de  réduction  de  dimension. L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables."),
+                  li(b("PCA"), ": Principal component analysis, a dimension reduction technique for multivariate datasets. This is usefull for example to identify clusters of isolates with similar virulence patterns or conversely identify groups of host genotypes with related susceptibility profiles."),
                   br(),
-                  li(b("Heatmap/Cluster"), ": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation présente dans cet onglet permet de fixer un seuil de sensibilité / résistance en fonction des longueurs de lésion. Cette représentation offre alors en sortie une heatmap binaire de résistance / sensibilité."),
+                  li(b("Heatmap"), ": For very large data sets, it may be usefull to display averrage symptom measures in the compact form of a heatmap with levels of experimental variables as rows and columns. It also enables hierarchical (?) clustering of factor levels in rows and columns."),
                   br(),
-                  li(b("Categorical Analysis"),": Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux ou trois variables choisies."),
+                  li(b("Categorical Analysis"),": In phytopathology, people often convert quantitative symptom measures into an ordinal scale representing a disease index. This index is then used to group pathogen isolates in 'races' based on identical disease index profiles on a set of plant host genotypes. This tool enable to perform this convertion, to visualize the results and export a table of races."),
                   br(),
-                  li(b("boxplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
+                  li(b("boxplot"), ": Plot individual datapoints on a box and whisker plot and conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)"),
                   br(),
-                  li(b("barplot"), ": Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."),
+                  li(b("barplot"), ": Plot symptom averrage and standard deviation conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)."),
                   br(),
-                  li(b("Plot Time Series"), ": Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel.")
+                  li(b("Plot Time Series"), ": Plot symptom averrage and standard deviation as a function of a time variable (e.g. date of the experiment). The plot can be further conditioned on other experimental variables.")
                   )
               )
           )
