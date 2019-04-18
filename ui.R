@@ -92,7 +92,7 @@ body <- dashboardBody(
       tabName ="Table",
       fluidRow(
         box(width=12, class = "box2",
-            "Onglet dans lequel on doit upload le jeu de données avec lequel effectuer l'analyse. Reglez les parametres Separator, response variable et decimal.\n Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets! Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
+            "Upload your data file using the 'Browse...' button. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). Specify the type of field and decimal separators used to represent data in your file. Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools.   Reglez les parametres Separator, response variable et decimal.\n Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets! Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
         ),
         box(width=12, class = "box1",
           column(width = 6,
