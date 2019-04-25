@@ -48,7 +48,6 @@ body <- dashboardBody(
                 br(),
                 p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). From there you can use the tools accessible on the left handside menu to filter, aggregate, visualize, transform and export your data in an intutitive and user-friendly fashion."),
                 h3("A short description of the data analysis tools:"),
-#### NEED TO REORDER THE ITEMS TO MATCH THE ORDER OF THE THUMBS
                 ul(
                   li(b("Home"),": This is page you are currently reading with an overview of SLAT."),
                   br(),
@@ -56,19 +55,19 @@ body <- dashboardBody(
                   br(),
                   li(b("Mean/Sd"), ": This enables the computation of standard aggregate values (mean, standard deviation, count of observations) of the quantitative response variable conditioned on the levels of one or several experimental factors."),
                   br(),
-                  li(b("Anova"), ": Allows to conduct Analysis of variance to identify experimental factors significantly  affecting the magnitude of symptoms. Also performs Tukey multiple comparisons of means."),
-                  br(),
-                  li(b("PCA"), ": Principal component analysis, a dimension reduction technique for multivariate datasets. This is usefull for example to identify clusters of isolates with similar virulence patterns or conversely identify groups of host genotypes with related susceptibility profiles."),
-                  br(),
-                  li(b("Heatmap"), ": For very large data sets, it may be usefull to display averrage symptom measures in the compact form of a heatmap with levels of experimental variables as rows and columns. It also enables hierarchical (?) clustering of factor levels in rows and columns."),
-                  br(),
-                  li(b("Categorical Analysis"),": In phytopathology, people often convert quantitative symptom measures into an ordinal scale representing a disease index. This index is then used to group pathogen isolates in 'races' based on identical disease index profiles on a set of plant host genotypes. This tool enable to perform this convertion, to visualize the results and export a table of races."),
-                  br(),
                   li(b("boxplot"), ": Plot individual datapoints on a box and whisker plot and conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)"),
                   br(),
                   li(b("barplot"), ": Plot symptom averrage and standard deviation conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)."),
                   br(),
-                  li(b("Plot Time Series"), ": Plot symptom averrage and standard deviation as a function of a time variable (e.g. date of the experiment). The plot can be further conditioned on other experimental variables.")
+                  li(b("Heatmap"), ": For very large data sets, it may be usefull to display averrage symptom measures in the compact form of a heatmap with levels of experimental variables as rows and columns. It also enables clustering of factor levels in rows and columns."),
+                  br(),
+                  li(b("Plot Time Series"), ": Plot symptom averrage and standard deviation as a function of a time variable (e.g. date of the experiment). The plot can be further conditioned on other experimental variables."),
+                  br(),
+                  li(b("Anova"), ": Allows to conduct Analysis of variance to identify experimental factors significantly  affecting the magnitude of symptoms. Also performs Tukey multiple comparisons of means."),
+                  br(),
+                  li(b("PCA"), ": Principal component analysis, a dimension reduction technique for multivariate datasets. This is usefull for example to identify clusters of isolates with similar virulence patterns or conversely identify groups of host genotypes with related susceptibility profiles."),
+                  br(),
+                  li(b("Categorical Analysis"),": In phytopathology, people often convert quantitative symptom measures into an ordinal scale representing a disease index. This index is then used to group pathogen isolates in 'races' based on identical disease index profiles on a set of plant host genotypes. This tool enable to perform this convertion, to visualize the results and export a table of races.")
                   )
               )
           )
@@ -92,7 +91,7 @@ body <- dashboardBody(
       tabName ="Table",
       fluidRow(
         box(width=12, class = "box2",
-            "Upload your data file using the 'Browse...' button. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). Specify the type of field and decimal separators used to represent data in your file. Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools.   Reglez les parametres Separator, response variable et decimal.\n Une fois que la datatable s'affiche correctement et qu'il n'y a plus de message d'erreurs vous pouvez commencer à aller sur les autres onglets! Les données peuvent ensuite être filtrées en fonction des valeurs dans les colonnes. Les analyses dans les autres onglets seront effectuées sur le jeu de données filtré. Le jeu de données filtré peut également être re-téléchargé."
+            "Upload your data file using the 'Browse...' button. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). Specify the type of field and decimal separators used to represent data in your file. Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools."
         ),
         box(width=12, class = "box1",
           column(width = 6,
@@ -158,11 +157,11 @@ body <- dashboardBody(
       tabName ="Mean",
       fluidRow(
         box(width=12, class = "box2",
-            "Cet onglet permet d'explorer le jeu de données en calculant le nombre de points, la moyenne et l'écartype de la variable réponse quantitative choisie en fonction d'une variable ou d'un groupe de variables."
+            "Calculate the number of lecture (nb), the median, the mean and the ecartype (Sd) of the chosen numeric value (symptom length) depending an experimental factor or a group of experimental factors."
         ),
         box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
-          pickerInput(inputId='factors1', label ='Choose the factors', "", multiple = TRUE)
+          pickerInput(inputId='factors1', label ='Choose the exprerimental factors', "", multiple = TRUE)
         )
       ),
       fluidRow(

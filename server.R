@@ -768,7 +768,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(c(sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3), ignoreInit = TRUE, {
     if(sr$booTable==1){
       output$PrettyG <- renderPlot({
-        outVisu()
+        NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
       })
     }
     else{
