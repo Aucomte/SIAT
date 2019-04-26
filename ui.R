@@ -91,12 +91,18 @@ body <- dashboardBody(
       tabName ="Table",
       fluidRow(
         box(width=12, class = "box2",
-            "Upload your data file using the 'Browse...' button. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). Specify the type of field and decimal separators used to represent data in your file. Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools."
+            "Upload your data file using the 'Browse...' button. 
+            It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). 
+            Specify the type of field and decimal separators used to represent data in your file. 
+            Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools."
         ),
         box(width=12, class = "box1",
           column(width = 6,
            downloadButton("downloadData", label = "Download a test file"),
-           bsPopover("downloadData", "Example Data Set", content = "A CSV file: the separator is tab and the decimal is Comma. The response variable is resultats. There is a Time factor dmy (date) and 3 other qualitative variables (cellules, varietes, souches)", placement = "bottom", trigger = "hover", options = NULL),
+           bsPopover("downloadData", "Example Data Set", content = "A CSV file: the separator is TAB and the decimal is DOT. 
+                     The response variable is Symptom_lenght. 
+                     There is a Time factor in format DMY (Date) and 3 other qualitative variables (Strain_name, Plant_genotype, Experiment_number)", 
+                     placement = "bottom", trigger = "hover", options = NULL),
            HTML("<br><br>"),
             fileInput("file1", "CSV File", accept=c("text/csv", "text/comma-separated-values,text/plain", ".csv")) %>%
               helper(icon = "question",
@@ -144,6 +150,11 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           DT::dataTableOutput(outputId = "DataSet")
+        )
+      ),
+      fluidRow(
+        box(width=12, class = "box2",
+            "You can a filter your dataset and download the filtered table below. All analysis will be done with the filtered dataset."
         )
       ),
       fluidRow(
@@ -224,7 +235,9 @@ body <- dashboardBody(
       tabName = "ACP",
       fluidRow(
         box(width=12, class = "box2",
-          "Analyse en Composantes Principales. Méthode  factorielle  de  réduction  de  dimension. L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables."
+          "Analyse en Composantes Principales. 
+          Méthode  factorielle  de  réduction  de  dimension. 
+          L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables."
         ),
         box(width = 12, class = "box1",
             pickerInput(inputId='respacp', label ='Choose the response variable', ""),
@@ -401,13 +414,18 @@ body <- dashboardBody(
       tabName = "Visu",
       fluidRow(
         box(width=12, class = "box2",
-           "Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."
+           "Boxplot : Visualize the distribution of the numeric variable depending several experimental factors."
            ),
         box(width=12, class = "box1",
-          pickerInput(inputId='responseVarPG', label ='Choose the response variable', ""),
-          pickerInput(inputId='factorPG1', label ='Choose the first factor', ""),
-          pickerInput(inputId='factorPG2', label ='Choose the second factor', ""),
-          pickerInput(inputId='factorPG3', label ='Choose the third factor', "")
+          pickerInput(inputId='responseVarPG', label ='Choose the response variable (y)', "") %>%
+            helper(icon = "question",
+                   type = "markdown",
+                   content = "Boxplot",
+                   colour = "red",
+                   size = "l"),
+          pickerInput(inputId='factorPG1', label ='Choose the first factor (x)', ""),
+          pickerInput(inputId='factorPG2', label ='Choose the second factor (fill)', ""),
+          pickerInput(inputId='factorPG3', label ='Choose the third factor (grid)', "")
         )
       ),
       fluidRow(
