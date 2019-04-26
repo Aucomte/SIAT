@@ -355,7 +355,8 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
     p <- p + geom_bar(stat="identity", position=position_dodge2(preserve="single"))
     p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
     p <- p + labs(y=var1, x =paste(var2, "x", var3), fill = var4)
-    p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+    #p <- p + scale_fill_brewer(palette="Paired") 
+    p <- p + theme_minimal()
     p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                   axis.title.x = element_text(size = 14),
                   axis.text = element_text(size = 12), 
@@ -366,7 +367,8 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
     p <- p + geom_bar(stat="identity", position=position_dodge2(preserve="single"))
     p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
     p <- p + labs(y=var1, x=var2, fill=var4)
-    p <- p + scale_fill_brewer(palette="Paired") + theme_minimal()
+    #p <- p + scale_fill_brewer(palette="Paired") 
+    p <- p + theme_minimal()
     p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                   axis.title.x = element_text(size = 14),
                   axis.text = element_text(size = 12), 
