@@ -37,7 +37,7 @@ body <- dashboardBody(
         box(width = 12, class = "resumebox",
             withTags(
               div(class = "resume",
-              "Effortlessly visualize and analyze the mesure of symptom intensity as a quantitative response variable in connection to several experimental factors."
+              "Effortlessly visualize and analyze a measure of symptom intensity as a quantitative response variable in connection to several experimental factors."
               )
             )
         ),
@@ -146,10 +146,12 @@ body <- dashboardBody(
           DT::dataTableOutput(outputId = "DataSet")
         )
       ),
+      # THERE IS SOMETHING WEIRD WHEN TRYING TO SPECIFY FILTERING VALUES FOR 'Experiment_number' IN THE EXAMPLE DATASET
       fluidRow(
         box(width = 12,
           DT::dataTableOutput(outputId = "filtered_DataSet")
         )
+        # WHAT DOES THE BUTTON 'Download entire dataset' MEAN? IT ALLOWS TO UPLOAD THE FILTERED DATA OR THE ORIGINAL DATA?
       )
     ),
     
@@ -157,8 +159,9 @@ body <- dashboardBody(
       tabName ="Mean",
       fluidRow(
         box(width=12, class = "box2",
-            "Calculate the number of lecture (nb), the median, the mean and the ecartype (Sd) of the chosen numeric value (symptom length) depending an experimental factor or a group of experimental factors."
+            "Calculate the number of observations (nb), the median, the mean and the standard deviation (Sd) of the chosen numeric value (e.g. symptom length) depending on an experimental factor or a group of experimental factors."
         ),
+        # I WOULD CHANGE 'nb' TO 'Count' AS COLUMN NAME
         box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
           pickerInput(inputId='factors1', label ='Choose the exprerimental factors', "", multiple = TRUE)
@@ -283,14 +286,14 @@ body <- dashboardBody(
       tabName = "Heatmap",
         fluidRow(
           box(width=12, class = "box2",
-             "Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies. Cela permet ensuite de clusteriser ces variables (par exemple clusteriser les souches). Une seconde représentation présente dans cet onglet permet de fixer un seuil de sensibilité / résistance en fonction des longueurs de lésion. Cette représentation offre alors en sortie une heatmap binaire de résistance / sensibilité."
+             "Heatmap visualization of averrage values of the response variable as a function of the levels of two experimental variables (rows and column). Can optionally order rows and column based on a hierarchical clustering approach (dendrogram added on top and/or on the side of the color matrix)."
              ),
           box(width = 12, class = "box1",
              pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
-             pickerInput(inputId='factorH1', label ='Choose the first factor', ""),
-             pickerInput(inputId='factorH2', label ='Choose the second factor', ""),
+             pickerInput(inputId='factorH1', label ='Choose the factor displayed in rows', ""),
+             pickerInput(inputId='factorH2', label ='Choose the factor displayed in columns', ""),
              column(width=3,
-                HTML("Clusterisation : ")
+                HTML("Add clusterization for: ")
              ),
              column(width=3,
                 checkboxInput("column", "col", TRUE)
@@ -303,6 +306,7 @@ body <- dashboardBody(
         fluidRow(
           box(width = 12,
             plotlyOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
+              # I WOULD TRY TO LIMIT THE NUMBER OF DECIMALS OF THE VALUES DSPLAYED ON THE HEAT MAP
           )
         )
       ),
@@ -461,27 +465,28 @@ body <- dashboardBody(
       tabName = "Evolution",
         fluidRow(
           box(width=12, class = "box2",
-              "Le but de cette page est de faire une sortie graphique montrant l'évolution des valeurs de longueur de lésion en fonction du temps (lorsque les analyse s'étalent sur plusieurs expériences). La visualisation peut néanmoins se faire également en fonction d'un parametre non temporel."
+              "This tool may be particularly usefull if there is a time variable in you data set (e.g. date of the experiment) and want to plot values along time on the x-axis. It plots aggregates of data values (Mean and standard variation?????) conditioned on one or several experimental variables."
           ),
           box(width = 12, class = "box1",
             column(width = 6,
               pickerInput(inputId='responseVarT', label ='Choose the response variable (y)', "")
             ),
             column(width = 3,
-              pickerInput(inputId='TimeFactor', label ='Choose the factor 1 (x)', "")
+              pickerInput(inputId='TimeFactor', label ='Choose the variable for the x-axis', "")
             ),
             column(width = 3,
-              radioButtons("Time", "Is factor1 a Time factor (ex : 10/02/2018)?", c("no", "dmy", "ymd"), selected="no")
+              radioButtons("Time", "Specify its time format (e.g. 27/02/2018 -> dmy)?", c("none", "dmy", "ymd"), selected="no")
             ),
             column(width = 4,
-              pickerInput(inputId='factorT2', label ='Choose the factor2 (grid x)', "")
+              pickerInput(inputId='factorT2', label ='Choose a factor for plots facetting (grid y)', "")
             ),
             column(width = 4,
-              pickerInput(inputId='factorT3', label ='Choose the factor3 (grid y)', "")
+              pickerInput(inputId='factorT3', label ='Choose a factor for plots facetting (grid x)', "")
             ),
             column(width = 4,
-              pickerInput(inputId='factorT4', label ='Choose the factor4 (z)', "")
-                   # UNABLE TO PLOT WITH ONLY ONE OF GRID_X or GRID_Y SPECIFIED
+              pickerInput(inputId='factorT4', label ='Choose a factor for grouping/coloring on each sub-plot (z)', "")
+                   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                   # !!!!! UNABLE TO PLOT WITH ONLY ONE OF GRID_X or GRID_Y SPECIFIED !!!!!!!
             )
         )
       ),
