@@ -211,6 +211,7 @@ body <- dashboardBody(
           ),
           column(width = 12,
              verbatimTextOutput(outputId = "Tukey")
+                 # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
           )
           # ,
           # column(width = 6,
@@ -401,13 +402,14 @@ body <- dashboardBody(
       tabName = "Visu",
       fluidRow(
         box(width=12, class = "box2",
-           "Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis."
+           "This page allows to plot individual data points together with 'standard' box and whisker representations and conditionned on exerimental factors."
            ),
         box(width=12, class = "box1",
           pickerInput(inputId='responseVarPG', label ='Choose the response variable', ""),
-          pickerInput(inputId='factorPG1', label ='Choose the first factor', ""),
-          pickerInput(inputId='factorPG2', label ='Choose the second factor', ""),
-          pickerInput(inputId='factorPG3', label ='Choose the third factor', "")
+          pickerInput(inputId='factorPG1', label ='Choose the factor for the x-axis', ""),
+            # I WOULD ALSO OFFER THE OPTION 'None' AS AVALUE IN THE LIST
+          pickerInput(inputId='factorPG2', label ='Choose a factor for coloring based on its levels', ""),
+          pickerInput(inputId='factorPG3', label ='Choose a third factor to generate one plot per level of this factor', "")
         )
       ),
       fluidRow(
@@ -425,20 +427,22 @@ body <- dashboardBody(
       tabName = "barplot",
       fluidRow(
         box(width=12, class = "box2",
-           "Le but de cette page est de faire une sortie graphique permettant de visualiser la distribution des longueurs de lésions en fonction de plusieurs facteurs choisis." 
+           "This tool plots aggregates of data values (Mean and standard variation?????) conditioned on one or several experimental variables." 
            ),
         box(width=12, class = "box1",
           column(width = 12,
             pickerInput(inputId='responseVarBar', label ='Choose the response variable', "")
            ),
           column(width=6,
-            pickerInput(inputId='factorBar1', label ='Choose the first factor', "")
+            pickerInput(inputId='factorBar1', label ='Choose the factor for the x-axis', "")
           ),
           column(width=6,
-            pickerInput(inputId='factorBar2', label ='Choose the second factor', "")
+            pickerInput(inputId='factorBar2', label ='Choose an additional factor for conditionning on the x-axis', "")
+                 # HERE THE BEHAVIOR IS DIFFERENT FROM THE 'Boxplot' tab. I WONDER IF IT IS DESIRABLE.
           ),
           column(width=12,
-            pickerInput(inputId='factorBar3', label ='Choose the third factor', "")
+            pickerInput(inputId='factorBar3', label ='Choose a factor for coloring based on its levels', "")
+                 # UNABLE TO SPECIFY THE VALUE 'NONE' HERE. NORMAL?
           )
         )
       ),
@@ -477,6 +481,7 @@ body <- dashboardBody(
             ),
             column(width = 4,
               pickerInput(inputId='factorT4', label ='Choose the factor4 (z)', "")
+                   # UNABLE TO PLOT WITH ONLY ONE OF GRID_X or GRID_Y SPECIFIED
             )
         )
       ),
