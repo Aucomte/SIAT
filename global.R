@@ -32,6 +32,8 @@ library(rmarkdown)
 library(knitr)
 library(heatmaply)
 
+##install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","readr","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade","factoextra","rmarkdown","knitr","heatmaply"))
+
 #library(multcompView)
 
 #FUNCTIONS
@@ -40,7 +42,7 @@ library(heatmaply)
 Data_Moyenne <- function(table,var1,var2){
   
     datatable = table %>% group_by(.dots = as.character(var2)) %>%
-      summarise(nb = n(),
+      summarise(Count = n(),
                 Median = median(.data[[var1]]),
                 Mean = mean(.data[[var1]]),
                 Sd = sd(.data[[var1]])
@@ -150,7 +152,7 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   }
   x=data.matrix(x)
   kolor = c("#FFFFFF","#CCCCFF","#9999FF","#330099","#000033")
-  p = heatmaply(x, Colv = col, Rowv = row, colors=kolor,  draw_cellnote = TRUE)
+  p = heatmaply(x, Colv = col, Rowv = row, colors=kolor,  draw_cellnote = TRUE, digits = 1)
   
   HEAT = list()
   HEAT$plot = p
@@ -289,7 +291,7 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
     p <- p + facet_grid(allmoy[,var2] ~ allmoy[,var3])
   }
   
-  p <- p + geom_point(size=(allmoy$nb/sum(allmoy$nb)*100), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
+  p <- p + geom_point(size=(allmoy$Count/sum(allmoy$Count)*100), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
   if(!is.null(var4)){
     p <- p + labs(color=var4 ,x=tim, y= var1)
   }
@@ -349,16 +351,17 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
   varF = c(var2, var3, var4)
   data_moyenne = Data_Moyenne(tab, var1, varF)
   if (!is.null(var3)){
-    p <- ggplot(data=data_moyenne, aes(x=data_moyenne[,var2]:data_moyenne[,var3], y=data_moyenne$Mean, fill = data_moyenne[,var4])) 
+    p <- ggplot(data=data_moyenne, aes(x=data_moyenne[,var2], y=data_moyenne$Mean, fill = data_moyenne[,var4])) 
     p <- p + geom_bar(stat="identity", position=position_dodge2(preserve="single"))
     p <- p + geom_errorbar(aes(ymin=data_moyenne$Mean-data_moyenne$Sd, ymax=data_moyenne$Mean+data_moyenne$Sd), width=.2, position = position_dodge(0.9))
-    p <- p + labs(y=var1, x =paste(var2, "x", var3), fill = var4)
+    p <- p + labs(y=var1, x =var2, fill = var4)
     #p <- p + scale_fill_brewer(palette="Paired") 
     p <- p + theme_minimal()
     p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                   axis.title.x = element_text(size = 14),
                   axis.text = element_text(size = 12), 
                   axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))
+    p <- p + facet_grid(data_moyenne[,var3] ~ .)
   }
   else {
     p<- ggplot(data=data_moyenne, aes(x=data_moyenne[[var2]], y=as.numeric(as.character(data_moyenne$Mean)), fill = data_moyenne[[var4]])) 

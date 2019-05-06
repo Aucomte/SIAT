@@ -162,7 +162,6 @@ body <- dashboardBody(
         box(width = 12,
           DT::dataTableOutput(outputId = "filtered_DataSet")
         )
-        # WHAT DOES THE BUTTON 'Download entire dataset' MEAN? IT ALLOWS TO UPLOAD THE FILTERED DATA OR THE ORIGINAL DATA?
       )
     ),
     
@@ -170,10 +169,9 @@ body <- dashboardBody(
       tabName ="Mean",
       fluidRow(
         box(width=12, class = "box2",
-            "Calculate the number of observations (nb), the median, the mean and the standard deviation (Sd) of the chosen numeric value (e.g. symptom length) depending on an experimental factor or a group of experimental factors."
+            "Calculate the number of observations (Count), the median, the mean and the standard deviation (Sd) of the chosen numeric value (e.g. symptom length) depending on an experimental factor or a group of experimental factors."
         ),
-        # I WOULD CHANGE 'nb' TO 'Count' AS COLUMN NAME
-        box(width = 12,class = "box1",
+          box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
           pickerInput(inputId='factors1', label ='Choose the exprerimental factors', "", multiple = TRUE)
         )
@@ -225,7 +223,7 @@ body <- dashboardBody(
           ),
           column(width = 12,
              verbatimTextOutput(outputId = "Tukey")
-                 # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
+             # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
           )
           # ,
           # column(width = 6,
@@ -239,9 +237,9 @@ body <- dashboardBody(
       tabName = "ACP",
       fluidRow(
         box(width=12, class = "box2",
-          "Analyse en Composantes Principales. 
-          Méthode  factorielle  de  réduction  de  dimension. 
-          L'utilisateur peut choisir les individus et les variables et l'ACP va permettre de visualiser les représentations graphiques optimales dans l'espace des individus et des variables."
+          "Principal component analysis :  
+           Dimensionality reduction method which transforms a large dataset into a smaller one with less variables that still contains most of the information. 
+           PCA permits to vizualise optimally individuals and variables with 2 dimentions."
         ),
         box(width = 12, class = "box1",
             pickerInput(inputId='respacp', label ='Choose the response variable', ""),
@@ -319,7 +317,6 @@ body <- dashboardBody(
         fluidRow(
           box(width = 12,
             plotlyOutput(outputId = "heatplot", height = "700px") %>% withSpinner(color="#0dc5c1")
-              # I WOULD TRY TO LIMIT THE NUMBER OF DECIMALS OF THE VALUES DSPLAYED ON THE HEAT MAP
           )
         )
       ),
@@ -327,12 +324,12 @@ body <- dashboardBody(
         tabName = "Heatmap2",
         fluidRow(
           box(width=12, class = "box2",
-             "Le but de cet onglet est de visualiser sous forme d'une heatmap les valeurs moyennes des longueurs de liaison en fonction de deux variables choisies."
+             "Heatmap visualization of the several categories of resistance + table of races for the factor displayed in row (If two rows are exactly in the same categories for every columns, they are in the same group/race). "
              ),
           box(width = 12, class = "box1",
               pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
-              pickerInput(inputId='factorH21', label ='Choose the first factor', ""),
-              pickerInput(inputId='factorH22', label ='Choose the second factor', ""),
+              pickerInput(inputId='factorH21', label ='Choose the factor displayed in rows', ""),
+              pickerInput(inputId='factorH22', label ='Choose the factor displayed in columns', ""),
               column(width=3,
                      HTML("Clusterisation : ")
               ),
@@ -452,20 +449,15 @@ body <- dashboardBody(
            "This tool plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables." 
            ),
         box(width=12, class = "box1",
-          column(width = 12,
-            pickerInput(inputId='responseVarBar', label ='Choose the response variable', "")
-           ),
-          column(width=6,
-            pickerInput(inputId='factorBar1', label ='Choose the factor for the x-axis', "")
-          ),
-          column(width=6,
-            pickerInput(inputId='factorBar2', label ='Choose an additional factor for conditionning on the x-axis', "")
-                 # HERE THE BEHAVIOR IS DIFFERENT FROM THE 'Boxplot' tab. I WONDER IF IT IS DESIRABLE.
-          ),
-          column(width=12,
-            pickerInput(inputId='factorBar3', label ='Choose a factor for coloring based on its levels', "")
-                 # UNABLE TO SPECIFY THE VALUE 'NONE' HERE. NORMAL?
-          )
+            pickerInput(inputId='responseVarBar', label ='Choose the response variable (y)', "")%>%
+              helper(icon = "question",
+                     type = "markdown",
+                     content = "Barplot",
+                     colour = "red",
+                     size = "l"),
+            pickerInput(inputId='factorBar1', label ='Choose the factor for the x-axis (x)', ""),
+            pickerInput(inputId='factorBar3', label ='Choose a factor for coloring based on its levels (fill)', ""),
+            pickerInput(inputId='factorBar2', label ='Choose a third factor to generate one plot per level of this factor (grid)', "")
         )
       ),
       fluidRow(
@@ -493,7 +485,7 @@ body <- dashboardBody(
               pickerInput(inputId='TimeFactor', label ='Choose the variable for the x-axis', "")
             ),
             column(width = 3,
-              radioButtons("Time", "Specify its time format (e.g. 27/02/2018 -> dmy)?", c("none", "dmy", "ymd"), selected="no")
+              radioButtons("Time", "Specify its time format (e.g. 27/02/2018 -> dmy)", c("not a time format", "dmy", "ymd"), selected = "not a time format")
             ),
             column(width = 4,
               pickerInput(inputId='factorT2', label ='Choose a factor for plots facetting (grid y)', "")
@@ -503,14 +495,12 @@ body <- dashboardBody(
             ),
             column(width = 4,
               pickerInput(inputId='factorT4', label ='Choose a factor for grouping/coloring on each sub-plot (z)', "")
-                   # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                   # !!!!! UNABLE TO PLOT WITH ONLY ONE OF GRID_X or GRID_Y SPECIFIED !!!!!!!
             )
         )
       ),
       fluidRow(
         box(width = 12,
-            plotlyOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
+            plotOutput(outputId = "TimePlot", height = "1000px") %>% withSpinner(color="#0dc5c1")
         )  
       ),
       fluidRow(

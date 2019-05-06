@@ -226,7 +226,7 @@ server <-function(input,output,session){
                 'print',
                 list(
                  extend = "collection", 
-                 text = "Download entire dataset",
+                 text = "Download filtered dataset",
                  #buttons = c("csv","excel","pdf")
                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
               )
@@ -858,12 +858,12 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   })
   observe({
     if(sr$booTable==1){
-      output$TimePlot <- renderPlotly({
+      output$TimePlot <- renderPlot({
         GraphTime(sr$tableF,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
       })
     }
     else{
-      output$TimePlot <- renderPlotly({
+      output$TimePlot <- renderPlot({
         NULL
       })
     }
