@@ -40,7 +40,8 @@ server <-function(input,output,session){
     center = FALSE,
     reduct = FALSE,
     axis = NULL,
-    
+    axisViz = "axis1 vs axis2",
+  
     # panel 5 : Heatmap
     
     respheat = NULL,
@@ -473,10 +474,14 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$axis,{
     sr$axis = input$axis
   })
+  observeEvent(input$axisViz,{
+    sr$axisViz = input$axisViz
+  })
+  
   observe({
     if(sr$booTable==1 && length(unique(sr$table[[sr$individual]])) > 1 && length(unique(sr$table[[sr$variable]])) > 1){
       if(length(unique(sr$tableF[[sr$individual]])) > 1 && length(unique(sr$tableF[[sr$variable]])) > 1){
-        out = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+        out = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis, sr$axisViz)
         output$indPlot <- renderPlot({
           out$ind
         })

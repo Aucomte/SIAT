@@ -381,7 +381,7 @@ vizBarplot <- function(tab, var1, var2, var3, var4){
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 #ACP
 
-adeACP <- function(data, var1, var2, var3, center, scale, nf){
+adeACP <- function(data, var1, var2, var3, center, scale, nf, axisViz){
   
   varF = c(var2, var3)
   datatable = Data_Moyenne(data,var1,varF)
@@ -401,13 +401,38 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf){
   }
   x=data.matrix(x)
   adePCA = dudi.pca(x, center = center, scale = scale, nf = nf, scannf = FALSE)
-  VP = fviz_eig(adePCA)
-  ind = fviz_pca_ind(adePCA)
-  var = fviz_pca_var(adePCA)
-  both = fviz_pca_biplot(adePCA, repel = TRUE,
-                  col.var = "#2E9FDF", 
-                  col.ind = "#696969"  
-  )
+  
+  if(axisViz == "axis1 vs axis2"){
+    VP = fviz_eig(adePCA)
+    ind = fviz_pca_ind(adePCA, axes = c(1, 2))
+    var = fviz_pca_var(adePCA, axes = c(1, 2))
+    both = fviz_pca_biplot(adePCA, repel = TRUE,
+                    axes = c(1, 2),
+                    col.var = "#2E9FDF", 
+                    col.ind = "#696969"  
+    )
+  }
+  else if(axisViz == "axis2 vs axis3"){
+    VP = fviz_eig(adePCA)
+    ind = fviz_pca_ind(adePCA, axes = c(2, 3))
+    var = fviz_pca_var(adePCA, axes = c(2, 3))
+    both = fviz_pca_biplot(adePCA, repel = TRUE,
+                           axes = c(2, 3),
+                           col.var = "#2E9FDF", 
+                           col.ind = "#696969"  
+    )
+  }
+  else if(axisViz == "axis1 vs axis3"){
+    VP = fviz_eig(adePCA)
+    ind = fviz_pca_ind(adePCA, axes = c(1, 3))
+    var = fviz_pca_var(adePCA, axes = c(1, 3))
+    both = fviz_pca_biplot(adePCA, repel = TRUE,
+                           axes = c(1, 3),
+                           col.var = "#2E9FDF", 
+                           col.ind = "#696969"  
+    )
+  }
+  
   ade = list()
   ade$VP = VP
   ade$ind = ind

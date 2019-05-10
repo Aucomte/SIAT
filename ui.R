@@ -256,7 +256,19 @@ body <- dashboardBody(
               checkboxInput("center", "center variable", FALSE)
             ),
             column(width = 6,
-              pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(2))
+              pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(2, 3))
+            )
+        )
+      ),
+      fluidRow(
+        box(width = 6, 
+            conditionalPanel(
+              condition = "input.axis == 3",
+                pickerInput(inputId='axisViz', label ='Axis to plot', selected = "axis1 vs axis2", choices = c("axis1 vs axis2", "axis1 vs axis3", "axis2 vs axis3"))
+            ),
+            conditionalPanel(
+              condition = "input.axis == 2",
+              pickerInput(inputId='axisViz', label ='Axis to plot', selected = "axis1 vs axis2", choices = c("axis1 vs axis2"))
             )
         )
       ),
