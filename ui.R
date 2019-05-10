@@ -173,7 +173,16 @@ body <- dashboardBody(
         ),
           box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
-          pickerInput(inputId='factors1', label ='Choose the exprerimental factors', "", multiple = TRUE)
+          pickerInput(inputId='factors1', 
+                      label ='Choose the exprerimental factors', 
+                      "", 
+                      multiple = TRUE,
+                      options = list(
+                        `actions-box` = TRUE,
+                        `deselect-all-text` = "Deselect all",
+                        `select-all-text` = "Select all"
+                      )
+                    )
         )
       ),
       fluidRow(
@@ -191,7 +200,11 @@ body <- dashboardBody(
         ),
         box(width = 12,class = "box1",
             pickerInput(inputId='responseVar', label ='Choose the response variable', ""),
-            pickerInput(inputId='factors', label ='Choose the factors', "", multiple = TRUE)
+            pickerInput(inputId='factors', label ='Choose the factors', "", multiple = TRUE,
+                        options =  list(
+                          "max-options" = 2
+                        )
+                      )
         )
       ),
       fluidRow(

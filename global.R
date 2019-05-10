@@ -40,7 +40,6 @@ library(heatmaply)
 #---------------------------------------------------------------------------------------------------------------
 
 Data_Moyenne <- function(table,var1,var2){
-  
     datatable = table %>% group_by(.dots = as.character(var2)) %>%
       summarise(Count = n(),
                 Median = median(.data[[var1]]),

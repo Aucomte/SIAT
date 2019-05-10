@@ -322,7 +322,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$responseVar1,{
     sr$resp1 = input$responseVar1
   })
-  observeEvent(input$factors1,{
+  observeEvent(input$factors1, ignoreNULL = FALSE, {
     sr$fact1 = input$factors1
   })
   observe({
