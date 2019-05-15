@@ -244,7 +244,7 @@ server <-function(input,output,session){
       }
     )
     
-    output$download1 <- downloadHandler(
+    output$Filtered_Table <- downloadHandler(
       filename = function() {
         paste("data-", Sys.Date(), ".csv", sep="")
       },
@@ -254,7 +254,7 @@ server <-function(input,output,session){
     )
     myModal <- function() {
       div(id = "test",
-         modalDialog(downloadButton("download1","Download as csv"),easyClose = TRUE, title = "Download Table")
+         modalDialog(downloadButton("Filtered_Table","Download as csv"), easyClose = TRUE, title = "Download Table")
       )
     }
     observeEvent(input$test, {
@@ -340,7 +340,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
                   extend = "collection", 
                   text = "Download entire dataset",
                   #buttons = c("csv","excel","pdf")
-                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
+                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test2', true, {priority: 'event'});}")
                 )
               ),
               lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
@@ -352,6 +352,24 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
             )
           )
       })
+      
+      output$Table_Moyenne <- downloadHandler(
+        filename = function() {
+          paste("data-", Sys.Date(), ".csv", sep="")
+        },
+        content = function(file) {
+          write.table(Data_Moyenne(sr$tableF,sr$resp1,sr$fact1), file, sep="\t", dec= ",", col.names = T, row.names = F)
+        }
+      )
+      myModal <- function() {
+        div(id = "test2",
+            modalDialog(downloadButton("Table_Moyenne","Download as csv"), easyClose = TRUE, title = "Download Table")
+        )
+      }
+      observeEvent(input$test2, {
+        showModal(myModal())
+      })
+      
     }
      else{
        output$moyenne <- renderDT({ 
@@ -390,31 +408,6 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       })
       output$Tukey <- renderPrint({ 
         anov(sr$tableF,sr$respanov,sr$factanov)[[2]]
-      })
-      output$TukLetter <- renderDT({
-        datatable(
-          anov(sr$tableF,sr$respanov,sr$factanov)[[3]],
-            extensions = 'Buttons', 
-            options = list(
-              dom = 'Blfrtip', 
-              buttons = list(
-                'copy', 
-                'print',
-                list(
-                  extend = "collection", 
-                  text = "Download entire dataset",
-                  #buttons = c("csv","excel","pdf")
-                  action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test', true, {priority: 'event'});}")
-                )
-              ),
-              lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
-              initComplete = JS(
-                "function(settings, json) {",
-                "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
-                "}"
-              )
-            )
-          )
       })
 
       renderPrint({ 
@@ -737,10 +730,20 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     output$tabsouches <- DT::renderDataTable(
       DT::datatable(
         sr$outheattab,
+        extensions = 'Buttons',
         filter = list(position = 'top', clear = TRUE, plain = FALSE),
         options = list(
-          scrollX = TRUE,
-          dom = 'Blfrtip',
+          dom = 'Blfrtip', 
+          buttons = list(
+            'copy', 
+            'print',
+            list(
+              extend = "collection", 
+              text = "Download table",
+              #buttons = c("csv","excel","pdf")
+              action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test3', true, {priority: 'event'});}")
+            )
+          ),
           lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
           initComplete = JS(
             "function(settings, json) {",
@@ -751,6 +754,23 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       )
     )  
   
+    output$Table_Race <- downloadHandler(
+      filename = function() {
+        paste("data-", Sys.Date(), ".csv", sep="")
+      },
+      content = function(file) {
+        write.table(sr$outheattab, file, sep="\t", dec= ",", col.names = T, row.names = T)
+      }
+    )
+    myModal <- function() {
+      div(id = "test3",
+          modalDialog(downloadButton("Table_Race","Download as csv"), easyClose = TRUE, title = "Download Table")
+      )
+    }
+    observeEvent(input$test3, {
+      showModal(myModal())
+    })
+    
   # panel 6 : Visu
   
   outVisu <- function(){

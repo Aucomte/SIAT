@@ -359,10 +359,10 @@ body <- dashboardBody(
                      HTML("Clusterisation : ")
               ),
               column(width=3,
-                     checkboxInput("column", "col", TRUE)
+                     checkboxInput("column2", "col", TRUE)
               ),
               column(width=3,
-                     checkboxInput("row", "row", TRUE)
+                     checkboxInput("row2", "row", TRUE)
               )  
           )
         ),
