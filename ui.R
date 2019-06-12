@@ -174,7 +174,7 @@ body <- dashboardBody(
           box(width = 12,class = "box1",
           pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
           pickerInput(inputId='factors1', 
-                      label ='Choose the exprerimental factors', 
+                      label ='Choose the experimental factors', 
                       "", 
                       multiple = TRUE,
                       options = list(
