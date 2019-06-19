@@ -1,0 +1,31 @@
+Package: LeAFtool
+Type: Package
+Title: LeAFtool: Lesion Area Finding tool
+Version: 1.0.0
+Date: 2019-04-24
+Authors@R: c(person("F. Bonnot", "Developer", role = c("aut"),
+                     email = "francois.bonnot@cirad.fr"),
+             person("S. Ravel", "Developer", role = c("aut", "cre"),
+	      	     email = "sebastien.ravel@cirad.fr"))
+Author: Sebastien RAVEL [aut, cre],
+  Francois BONNOT [aut],
+  Elisabeth FOURNIER [ctb]
+Maintainer: Sebastien RAVEL <sebastien.ravel@cirad.fr>
+Description: Main interface of Count Lesion Tools.
+Depends: R (>= 3.4.0), EBImage, shiny, shinydashboard, shinyFiles, DT, shinyjs, shinyFeedback, shinyhelper, colourpicker, shinyjqui, lattice, MASS, ggplot2, foreach, doParallel, RCurl, ParallelLogger
+License: LGPL-3 | file LICENSE
+Encoding: UTF-8
+RoxygenNote: 6.1.1
+LazyData: true
+biocViews: Software
+URL: https://github.com/sravel/images
+RemoteType: github
+RemoteHost: https://api.github.com
+RemoteRepo: images
+RemoteUsername: sravel
+RemoteRef: master
+RemoteSha: cdf1aab6402a48e2d78ce5247ee1c249807b40b3
+GithubRepo: images
+GithubUsername: sravel
+GithubRef: master
+GithubSHA1: cdf1aab6402a48e2d78ce5247ee1c249807b40b3
