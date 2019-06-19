@@ -1,38 +1,38 @@
 # packages needed for the Shiny application
-require(shiny)
-require(shinythemes)
-require(shinyBS)
-require(stringr)
-require(shinydashboard)
-require(shinyjs)
-require(shinyWidgets)
-require(DT)
-require(shinyhelper)
+library(shiny, quietly=TRUE, warn.conflicts = FALSE)
+library(shinythemes, quietly=TRUE, warn.conflicts = FALSE)
+library(shinyBS, quietly=TRUE, warn.conflicts = FALSE)
+library(stringr, quietly=TRUE, warn.conflicts = FALSE)
+library(shinydashboard, quietly=TRUE, warn.conflicts = FALSE)
+library(shinyjs, quietly=TRUE, warn.conflicts = FALSE)
+library(shinyWidgets, quietly=TRUE, warn.conflicts = FALSE)
+library(DT, quietly=TRUE, warn.conflicts = FALSE)
+library(shinyhelper, quietly=TRUE, warn.conflicts = FALSE)
 
-require(colourpicker) #couleur selecteur
-require(shinyFeedback) #met des warning aux inputs
+library(colourpicker, quietly=TRUE, warn.conflicts = FALSE) #couleur selecteur
+library(shinyFeedback, quietly=TRUE, warn.conflicts = FALSE) #met des warning aux inputs
 #require(shinyjqui) #redimentionner tableau image etc / créé une div
 #require(shinyFiles) #géner des directory
 
-library(readr)
-library(data.table)
-library(ggplot2)
-library(dplyr)
-library(lubridate)
-library(RColorBrewer)
-library(shinycssloaders)
-library(plotly)
+library(readr, quietly=TRUE, warn.conflicts = FALSE)
+library(data.table, quietly=TRUE, warn.conflicts = FALSE)
+library(ggplot2, quietly=TRUE, warn.conflicts = FALSE)
+library(dplyr, quietly=TRUE, warn.conflicts = FALSE)
+library(lubridate, quietly=TRUE, warn.conflicts = FALSE)
+library(RColorBrewer, quietly=TRUE, warn.conflicts = FALSE)
+library(shinycssloaders, quietly=TRUE, warn.conflicts = FALSE)
+library(plotly, quietly=TRUE, warn.conflicts = FALSE)
 
-library(ggvis) ##ggviz interactive plot
-library(gplots)
+library(ggvis, quietly=TRUE, warn.conflicts = FALSE) ##ggviz interactive plot
+library(gplots, quietly=TRUE, warn.conflicts = FALSE)
 
-library(ade4)
-library(factoextra)
-library(rmarkdown)
-library(knitr)
-library(heatmaply)
+library(ade4, quietly=TRUE, warn.conflicts = FALSE)
+library(factoextra, quietly=TRUE, warn.conflicts = FALSE)
+library(rmarkdown, quietly=TRUE, warn.conflicts = FALSE)
+library(knitr, quietly=TRUE, warn.conflicts = FALSE)
+library(heatmaply, quietly=TRUE, warn.conflicts = FALSE)
 
-##install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","readr","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade","factoextra","rmarkdown","knitr","heatmaply"))
+##install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","readr","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade4","factoextra","rmarkdown","knitr","heatmaply"))
 
 #library(multcompView)
 

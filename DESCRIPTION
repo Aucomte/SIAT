@@ -1,31 +1,27 @@
-Package: LeAFtool
+Package: SLAT
 Type: Package
-Title: LeAFtool: Lesion Area Finding tool
+Title: SLAT: Symptom Lenght Tool Analysis
 Version: 1.0.0
-Date: 2019-04-24
-Authors@R: c(person("F. Bonnot", "Developer", role = c("aut"),
-                     email = "francois.bonnot@cirad.fr"),
-             person("S. Ravel", "Developer", role = c("aut", "cre"),
-	      	     email = "sebastien.ravel@cirad.fr"))
-Author: Sebastien RAVEL [aut, cre],
-  Francois BONNOT [aut],
-  Elisabeth FOURNIER [ctb]
-Maintainer: Sebastien RAVEL <sebastien.ravel@cirad.fr>
-Description: Main interface of Count Lesion Tools.
-Depends: R (>= 3.4.0), EBImage, shiny, shinydashboard, shinyFiles, DT, shinyjs, shinyFeedback, shinyhelper, colourpicker, shinyjqui, lattice, MASS, ggplot2, foreach, doParallel, RCurl, ParallelLogger
+Date: 2019-06-19
+Authors@R: c(person("A. COMTE", "Developer", role = c("aut", "cre"),
+                     email = "aurore.comte@ird.fr"))
+Author: Aurore COMTE [aut, cre], Sebastien Cunnac [ctb], Sebastien Ravel [ctb]
+Maintainer: Aurore COMTE <aurore.comte@ird.fr>
+Description: Web application made whith shiny in order to visualize and analyze the mesure of symptom intensity as quantitative variable in function of experimental factors.
+Depends: R (>= 3.4.0), shiny,shinythemes,shinyBS,stringr,shinydashboard,shinyjs,shinyWidgets,DT,shinyhelper,colourpicker,shinyFeedback,readr,data.table,ggplot2,dplyr,lubridate,RColorBrewer,shinycssloaders,plotly,ggvis,gplots,ade4,factoextra,rmarkdown,knitr,heatmaply
 License: LGPL-3 | file LICENSE
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 LazyData: true
 biocViews: Software
-URL: https://github.com/sravel/images
+URL: https://github.com/Aucomte/symptomsLength
 RemoteType: github
 RemoteHost: https://api.github.com
 RemoteRepo: images
-RemoteUsername: sravel
+RemoteUsername: aucomte
 RemoteRef: master
-RemoteSha: cdf1aab6402a48e2d78ce5247ee1c249807b40b3
+RemoteSha: d666d21f86fb904181ac597da755d79f60a09fcf
 GithubRepo: images
-GithubUsername: sravel
+GithubUsername: aucomte
 GithubRef: master
-GithubSHA1: cdf1aab6402a48e2d78ce5247ee1c249807b40b3
+GithubSHA1: d666d21f86fb904181ac597da755d79f60a09fcf
