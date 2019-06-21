@@ -433,19 +433,19 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   # panel 4 : ACP
 
   outind <- function(){
-    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis, sr$axisViz)
     return(ACP$ind)
   }
   outvar <- function(){
-    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis, sr$axisViz)
     return(ACP$var)
   }
   outvp <- function(){
-    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis, sr$axisViz)
     return(ACP$VP)
   }
   outboth <- function(){
-    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis)
+    ACP = adeACP(sr$tableF, sr$respacp, sr$individual, sr$variable, sr$center, sr$reduct, sr$axis, sr$axisViz)
     return(ACP$both)
   }
   
