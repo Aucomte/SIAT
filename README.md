@@ -20,7 +20,7 @@ install_github("aucomte/SLAT")
 
 ```
 
-## Running LeAFtool with GUI
+## Running SLAT with GUI
 
   * To run the application SLAT
 
