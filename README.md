@@ -8,6 +8,7 @@
 
 Web application made whith shiny in order to visualize and analyze the mesure of symptom intensity as quantitative variable in function of experimental factors.
 
+[Shiny server hosting the application online](http://bioinfo-shiny.ird.fr:3838/AnalyseSymptoms/)
 
 ## Installation
 ### Regular installation
