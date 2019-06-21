@@ -12,7 +12,6 @@ Web application made whith shiny in order to visualize and analyze the mesure of
 ## Installation
 ### Regular installation
 
-
 # Install SLAT
 
 ```
@@ -29,3 +28,26 @@ install_github("aucomte/SLAT")
 library(SLAT)
 runSLAT()
 ```
+
+### Regular installation
+
+  * Main Program: Please copy and paste the following command to R console.
+  * Upgrading R and Rstudio to the latest version (R >= 3.5, Rstudio > 1.0.0) is strongly recommended.
+
+```
+# Dependecies that needs to be manually installed.
+# You may need to paste the following code line by line
+# and choose if previously installed packages should be updated (recommended).
+
+# list of packages required
+
+list.of.packages <- c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker",
+"shinyFeedback","readr","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade4",
+"factoextra","rmarkdown","knitr","heatmaply")
+
+#checking missing packages from list
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+
+# install missing ones
+if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
+
