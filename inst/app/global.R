@@ -276,6 +276,75 @@ heatplot2 <- function(x,row,col,S){
   return(HEAT)
 }
 
+ResistanceFrequency <- function(y, S){
+  
+  if (length(S)==1){
+    for (i in 1:nrow(y)){
+      for (j in 1:ncol(y)){
+        if (y[i,j] == "R"){
+          y[i,j] = "1"
+        }
+        else if (y[i,j] == "S"){
+          y[i,j] = "2"
+        }
+      }
+    }
+  }
+  
+  colnames(y) = c("races", colnames(y)[2:length(colnames(y))])
+  groupes = as.data.frame(y[1])
+  
+  Resistance = as.matrix(y[,c(2:length(colnames(y)))])
+  
+  Resistance2 = Resistance
+  R1Vect = list()
+  R2Vect = list()
+  R3Vect = list()
+  R4Vect = list()
+  R5Vect = list()
+  R6Vect = list()
+  for(i in 1:nrow(Resistance)){
+    R1 = sum(Resistance[i,]=="1") / ncol(Resistance) * 100
+    R2 = sum(Resistance[i,]=="2") / ncol(Resistance) * 100
+    R3 = sum(Resistance[i,]=="3") / ncol(Resistance) * 100
+    R4 = sum(Resistance[i,]=="4") / ncol(Resistance) * 100
+    R5 = sum(Resistance[i,]=="5") / ncol(Resistance) * 100
+    R6 = sum(Resistance[i,]=="6") / ncol(Resistance) * 100
+    R1Vect = c(R1Vect,R1)
+    R2Vect = c(R2Vect,R2)
+    R3Vect = c(R3Vect,R3)
+    R4Vect = c(R4Vect,R4)
+    R5Vect = c(R5Vect,R5)
+    R6Vect = c(R6Vect,R6)
+  }
+  Resistance2 = cbind(Resistance2, R1Vect, R2Vect, R3Vect, R4Vect , R5Vect , R6Vect)
+  Resistance2 = as.data.frame(Resistance2)
+  setDT(Resistance2, keep.rownames = "Ricelines")[]
+  
+  names = Resistance2[,1]
+  Percentage = c(R1Vect, R2Vect, R3Vect, R4Vect, R5Vect, R6Vect)
+  Type = c(rep("R1",length(R1Vect)),rep("R2",length(R2Vect)),rep("R3",length(R3Vect)),rep("R4",length(R4Vect)),rep("R5",length(R5Vect)),rep("R6",length(R6Vect)))
+  PercentageSens = c(R1Vect,R1Vect,R1Vect,R1Vect,R1Vect,R1Vect)
+
+  ResDF = cbind(rbind(names,names,names,names,names,names),Percentage,Type,PercentageSens)
+  ResDF2 <- as.data.frame(lapply(ResDF, unlist))
+
+  print(ResDF)
+  
+  p <- ggplot()
+  p <- p + geom_bar(aes(x=reorder(ResDF2[,1], ResDF2$PercentageSens), y = as.numeric(as.character(ResDF2$Percentage)), fill = factor(ResDF2$Type)), data = ResDF2, stat="identity")
+  p <- p + labs(x="Ricelines", y = "Percentage of resistance", fill="Resistance")
+  p <- p + theme_minimal()
+  p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
+                 axis.title.x = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
+                 axis.text = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
+                 axis.text.x = element_text(angle = 90, hjust = 1, margin = margin(t = 5, r = 5, b = 5, l = 5)),
+                 axis.text.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)))
+  return(p)
+}
+
+
+
 maxMean <- function(tab,var1,var2,var3){
   varF = c(var2, var3)
   data_moyenne = Data_Moyenne(tab,var1,varF)

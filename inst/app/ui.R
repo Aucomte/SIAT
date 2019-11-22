@@ -8,7 +8,7 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
-    menuItem("Boxplot", tabName = "Visu", icon = icon("eye")),
+    menuItem("Boxplot", tabName = "boxplot", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
@@ -423,7 +423,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            column(width = 12,
+            column(width = 6,
                    DTOutput(outputId = "tabsouches") 
                    # %>% formatStyle(
                    #   'groups',
@@ -433,12 +433,15 @@ body <- dashboardBody(
                    #     c("#ff9999","#ffb399","#ffcc99","#ffe699",	"#ffff99","#e6ff99","#ccff99","#b3ff99","#99ff99","#99ffb3","#99ffcc","#99ffe6","#99ffff","#99e6ff","#99ccff")
                    #     )
                    # )
+            ),
+            column(width = 6,
+                plotOutput(outputId = "FreqOfResistance", height = "700px") %>% withSpinner(color="#0dc5c1")
             )
         )
       )
     ),
     tabItem(
-      tabName = "Visu",
+      tabName = "boxplot",
       fluidRow(
         box(width=12, class = "box2",
             "This page allows to plot individual data points together with 'standard' box and whisker representations and conditionned on exerimental factors."
@@ -451,7 +454,6 @@ body <- dashboardBody(
                    colour = "red",
                    size = "l"),
           pickerInput(inputId='factorPG1', label ='Choose the factor for the x-axis (x)', ""),
-          # I WOULD ALSO OFFER THE OPTION 'None' AS AVALUE IN THE LIST
           pickerInput(inputId='factorPG2', label ='Choose a factor for coloring based on its levels (fill)', ""),
           pickerInput(inputId='factorPG3', label ='Choose a third factor to generate one plot per level of this factor (grid)', "")
         )

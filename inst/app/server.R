@@ -62,6 +62,7 @@ server <-function(input,output,session){
     respheat2 = NULL,
     factH21 = NULL,
     factH22 = NULL,
+    freqSR = NULL,
     
     # seuils
     thresSR21 = NULL,
@@ -717,10 +718,14 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
         outheat2 = heatplot2(outheat$tab, sr$dendorow2, sr$dendocol2, sr$S)
           sr$outheatH2 = outheat2$plot
           sr$outheattab = outheat2$tab
+          sr$freqSR = ResistanceFrequency(sr$outheattab, sr$S)
       }
     }
   })
   
+    output$FreqOfResistance <- renderPlot({
+      sr$freqSR
+    })
     output$heatplot <- renderPlotly({
       sr$outheatH1
     })
@@ -733,6 +738,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
         extensions = 'Buttons',
         filter = list(position = 'top', clear = TRUE, plain = FALSE),
         options = list(
+          scrollX = TRUE,
           dom = 'Blfrtip', 
           buttons = list(
             'copy', 
