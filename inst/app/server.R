@@ -149,41 +149,41 @@ server <-function(input,output,session){
   observeEvent(c(input$responseVar0, input$sep), ignoreInit = TRUE, {
     sr$resp0 = input$responseVar0
       if(sr$booTable == 1) {
-          updateSelectInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factors1", choices = sr$outVar, selected = "")
+        updatePickerInput(session, inputId = "responseVar1", choices = sr$outVar, selected = sr$resp0)
+        updatePickerInput(session, inputId = "factors1", choices = sr$outVar, selected = "")
           
-          updateSelectInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
+        updatePickerInput(session, inputId = "responseVar", choices = sr$outVar, selected = sr$resp0)
+        updatePickerInput(session, inputId = "factors", choices = sr$outVar, selected = sr$outVar[1])
           
-          updateSelectInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorH1", choices = sr$outVar, selected = "")
-          updateSelectInput(session, inputId = "factorH2", choices = sr$outVar, selected = "")
-          #updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
+        updatePickerInput(session, inputId = "responseVarHeat", choices = sr$outVar, selected = sr$resp0)
+        updatePickerInput(session, inputId = "factorH1", choices = sr$outVar, selected = "")
+        updatePickerInput(session, inputId = "factorH2", choices = sr$outVar, selected = "")
+          #updatePickerInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
           
-          updateSelectInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorH21", choices = sr$outVar, selected = "")
-          updateSelectInput(session, inputId = "factorH22", choices = sr$outVar, selected = "")
-          #updateSelectInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
+        updatePickerInput(session, inputId = "responseVarHeat2", choices = sr$outVar, selected = sr$resp0)
+        updatePickerInput(session, inputId = "factorH21", choices = sr$outVar, selected = "")
+          updatePickerInput(session, inputId = "factorH22", choices = sr$outVar, selected = "")
+          #updatePickerInput(session, inputId = "factorH3", choices = c("None", sr$outVar), selected = "None")
           
-          updateSelectInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "individual", choices = sr$outVar, selected = "")
-          updateSelectInput(session, inputId = "variable", choices = sr$outVar, selected = "")
+          updatePickerInput(session, inputId = "respacp", choices = sr$outVar, selected = sr$resp0)
+          updatePickerInput(session, inputId = "individual", choices = sr$outVar, selected = "")
+          updatePickerInput(session, inputId = "variable", choices = sr$outVar, selected = "")
           
-          updateSelectInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorPG2", choices = sr$outVar, selected = sr$outVar[2])
-          updateSelectInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "responseVarPG", choices = sr$outVar, selected = sr$resp0)
+          updatePickerInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
+          updatePickerInput(session, inputId = "factorPG2", choices = c("None",sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
           
-          updateSelectInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[2])
+          updatePickerInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
+          updatePickerInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
+          updatePickerInput(session, inputId = "factorBar2", choices = c("None", sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "factorBar3", choices = sr$outVar, selected = sr$outVar[2])
           
-          updateSelectInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
-          updateSelectInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
-          updateSelectInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
-          updateSelectInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "responseVarT", choices = sr$outVar, selected = sr$resp0)
+          updatePickerInput(session, inputId = "TimeFactor", choices = sr$outVar, selected = sr$outVar[1])
+          updatePickerInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
+          updatePickerInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
       }
   })
   
@@ -194,7 +194,7 @@ server <-function(input,output,session){
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, sep = sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV())
         sr$outVar = colnames(myCSV())
-        updateSelectInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
+        updatePickerInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
     }
   })
  

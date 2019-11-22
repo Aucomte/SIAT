@@ -173,7 +173,7 @@ heatplot2 <- function(x,row,col,S){
     for (k in 1:nrow(xh2)){
       for(y in 1:ncol(xh2)){
         if(xh2[k,y] == "C1"){
-          xh2[k,y] = 1
+           xh2[k,y] = 1
         }
         else if(xh2[k,y] == "C2"){
           xh2[k,y] = 2
@@ -197,9 +197,18 @@ heatplot2 <- function(x,row,col,S){
     }
 
     xh3=data.frame()
+    xh4=data.frame()
     for (i in 1:nrow(xh2)){
       for (j in 1:ncol(xh2)){
-        xh3[i,j] = as.numeric(as.integer(xh2[i,j]))
+        if(length(S) == 1){
+          if (xh2[i,j] == "1"){
+            xh4[i,j] = "R"
+          }
+          else{
+            xh4[i,j] = "S"
+          }
+        }
+          xh3[i,j] = as.numeric(as.integer(xh2[i,j]))
       }
     }
     rownames(xh3)=rownames(xh2)
@@ -220,31 +229,50 @@ heatplot2 <- function(x,row,col,S){
     if(length(S) ==5){
       kolor = c("white", "yellow", "orange", "red", "green", "blue")
     }
-    
-    p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, draw_cellnote = TRUE)
+    print(xh3)
+    if(length(S) == 1){
+      p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, cellnote = xh4, draw_cellnote = TRUE, hide_colorbar=TRUE)
+    }
+    else{
+      p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, draw_cellnote = TRUE)
+    }
+  
 
     #dataframe of cluster
     
     groups = unique(xh3)
     rownames(groups) = c(1:nrow(groups))
-    xh4 = data.frame()
+    xh5 = data.frame()
     for(i in 1:nrow(xh3)){
       
       for(n in 1:nrow(groups)){
           if(all(xh3[i,] == groups[n,])){
-            xh4[i,1] = paste("group",rownames(groups)[n],sep="")
+            xh5[i,1] = paste("group",rownames(groups)[n],sep="")
           }
       }
       for (j in 1:ncol(xh3)){
-        xh4[i,j+1] = xh3[i,j]
+        xh5[i,j+1] = xh3[i,j]
       }
     }
-    rownames(xh4)=rownames(xh3)
-    colnames(xh4)=c("groups",colnames(xh3))
+    rownames(xh5)=rownames(xh3)
+    colnames(xh5)=c("groups",colnames(xh3))
+    
+    if (length(S) == 1){
+      for (i in 1:nrow(xh5)){
+        for (j in 1:ncol(xh5)){
+          if (xh5[i,j] == "1"){
+            xh5[i,j] = "R"
+          }
+          else if (xh5[i,j] == "2"){
+            xh5[i,j] = "S"
+          }
+        }
+      }
+    }
     
     HEAT = list()
     HEAT$plot = p2
-    HEAT$tab = xh4
+    HEAT$tab = xh5
   return(HEAT)
 }
 
@@ -313,8 +341,10 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
 
 NiceGraph <-  function(tab,var1,var2,var3,var4){
   tab = as.data.frame(tab)
-  p <- ggplot(data=tab, aes(x=tab[,var2], y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
-  p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
+  p <- ggplot(data=tab, aes(x=reorder(tab[,var2], as.numeric(as.character(tab[,var1])),FUN = median), y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
+  if(var3 != "None" && !is.null(var3) && var3 !=""){
+    p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
+  }
   if(var4 != "None" && !is.null(var4) && var4 !=""){
     p <- p + facet_grid(tab[,var4] ~ .)
     p <- p + theme(legend.text = element_text(size = 12), legend.title = element_text(face = "bold",size = 12))
