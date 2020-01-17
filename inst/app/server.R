@@ -102,7 +102,8 @@ server <-function(input,output,session){
     TimeSelect = NULL,
     factorT2 = NULL,
     factorT3 = NULL,
-    factorT4 = NULL
+    factorT4 = NULL,
+    smoothing = "no"
   )
   
   # panel 1 : lecture de la table
@@ -878,6 +879,9 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$Time, {
     sr$TimeSelect = input$Time
   })
+  observeEvent(input$smoothing, {
+    sr$smoothing = input$smoothing
+  })
   observeEvent(input$factorT2, {
     sr$factorT2 = input$factorT2
   })
@@ -890,7 +894,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observe({
     if(sr$booTable==1){
       output$TimePlot <- renderPlot({
-        GraphTime(sr$tableF,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect)
+        GraphTime(sr$tableF,sr$TimeFactor,sr$responseVarT,sr$factorT2,sr$factorT3,sr$factorT4,sr$TimeSelect,sr$smoothing)
       })
     }
     else{

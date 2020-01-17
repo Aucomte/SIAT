@@ -229,7 +229,6 @@ heatplot2 <- function(x,row,col,S){
     if(length(S) ==5){
       kolor = c("white", "yellow", "orange", "red", "green", "blue")
     }
-    print(xh3)
     if(length(S) == 1){
       p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, cellnote = xh4, draw_cellnote = TRUE, hide_colorbar=TRUE)
     }
@@ -329,8 +328,6 @@ ResistanceFrequency <- function(y, S){
   ResDF = cbind(rbind(names,names,names,names,names,names),Percentage,Type,PercentageSens)
   ResDF2 <- as.data.frame(lapply(ResDF, unlist))
 
-  print(ResDF)
-  
   p <- ggplot()
   p <- p + geom_bar(aes(x=reorder(ResDF2[,1], ResDF2$PercentageSens), y = as.numeric(as.character(ResDF2$Percentage)), fill = factor(ResDF2$Type)), data = ResDF2, stat="identity")
   p <- p + labs(x="Ricelines", y = "Percentage of resistance", fill="Resistance")
@@ -355,7 +352,7 @@ maxMean <- function(tab,var1,var2,var3){
 #---------------------------------------------------------------------------------------------------------------------
 #evolution
 
-GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
+GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter, smoothing){
   
   if(var4 == "None"){
     var4 = NULL
@@ -394,9 +391,13 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter){
   else{
     p <- p + labs(x=tim, y= var1)
   }
-  p <- p + geom_smooth(se = FALSE)
-  
-  p = p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
+  if (smoothing == "smooth"){
+    p <- p + geom_smooth(se = FALSE)
+  }
+  else{
+    p <- p+ geom_line()
+  }
+  p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 30, r = 20, b = 0, l = 0)), 
                 axis.title.x = element_text(size = 14),
                 axis.text = element_text(size = 12), 
                 axis.text.x = element_text(angle = 90, margin = margin(t = 30, r = 20, b = 0, l = 0)))

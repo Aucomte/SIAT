@@ -349,7 +349,8 @@ body <- dashboardBody(
         tabName = "Heatmap2",
         fluidRow(
           box(width=12, class = "box2",
-             "Heatmap visualization of the several categories of resistance + table of races for the factor displayed in row (If two rows are exactly in the same categories for every columns, they are in the same group/race). "
+             "Visualization of the several categories of resistance : 
+Heatmap + table of races for the factor displayed in row (If two rows are exactly in the same categories for every columns, they are in the same group/race) + barplot of frequency of each category of resistance in function of the factor displayed in row. "
              ),
           box(width = 12, class = "box1",
               pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
@@ -514,15 +515,18 @@ body <- dashboardBody(
             column(width = 3,
               radioButtons("Time", "Specify its time format (e.g. 27/02/2018 -> dmy)", c("not a time format", "dmy", "ymd"), selected = "not a time format")
             ),
-            column(width = 4,
+            column(width = 3,
               pickerInput(inputId='factorT2', label ='Choose a factor for plots facetting (grid y)', "")
             ),
-            column(width = 4,
+            column(width = 3,
               pickerInput(inputId='factorT3', label ='Choose a factor for plots facetting (grid x)', "")
             ),
-            column(width = 4,
+            column(width = 3,
               pickerInput(inputId='factorT4', label ='Choose a factor for grouping/coloring on each sub-plot (z)', "")
-            )
+            ),
+            column(width = 3,
+              radioButtons("smoothing", "Smoothing", c("no", "smooth"), selected = "no")
+          )
         )
       ),
       fluidRow(
