@@ -27,6 +27,12 @@ server <-function(input,output,session){
     resp1 = NULL,
     fact1 = NULL,
     
+    # panel : mean plot
+    
+    response = NULL,
+    explicative = NULL,
+    groupi = 'None',
+  
     # panel 3 : Anova
     
     respanov = NULL,
@@ -175,6 +181,10 @@ server <-function(input,output,session){
           updatePickerInput(session, inputId = "factorPG1", choices = sr$outVar, selected = sr$outVar[1])
           updatePickerInput(session, inputId = "factorPG2", choices = c("None",sr$outVar), selected = "None")
           updatePickerInput(session, inputId = "factorPG3", choices = c("None", sr$outVar), selected = "None")
+          
+          updatePickerInput(session, inputId = "responseVarMP", choices = sr$outVar, selected = sr$resp0)
+          updatePickerInput(session, inputId = "factorMP1", choices = sr$outVar, selected = sr$outVar[1])
+          updatePickerInput(session, inputId = "factorMP2", choices = c("None",sr$outVar), selected = "None")
           
           updatePickerInput(session, inputId = "responseVarBar", choices = sr$outVar, selected = sr$resp0)
           updatePickerInput(session, inputId = "factorBar1", choices = sr$outVar, selected = sr$outVar[1])
@@ -380,6 +390,22 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
      }
   })
   
+  # panel : mean plot
+  
+  observeEvent(input$responseVarMP,{
+    sr$response = input$responseVarMP
+  })
+  observeEvent(input$factorMP1,{
+    sr$explicative = input$factorMP1
+  })
+  observeEvent(input$factorMP2,{
+    sr$groupi = input$factorMP2
+  })
+  
+  output$meanplot <- renderPlotly(
+    meanplot(sr$tableF,sr$response,sr$explicative,sr$groupi)
+  ) 
+
   # panel 3 : Anova
   
   observeEvent(input$responseVar,{
@@ -408,10 +434,52 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
       output$anov <- renderPrint({
         anov(sr$tableF,sr$respanov,sr$factanov)[[1]]
       })
-      output$Tukey <- renderPrint({ 
-        anov(sr$tableF,sr$respanov,sr$factanov)[[2]]
+      output$Tukey <- renderDT(
+        datatable(
+          tidy(anov(sr$tableF,sr$respanov,sr$factanov)[[2]]),
+          extensions = 'Buttons',
+          filter = list(position = 'top', clear = TRUE, plain = FALSE),
+          options = list(
+            scrollX = TRUE,
+            dom = 'Blfrtip', 
+            buttons = list(
+              'copy', 
+              'print',
+              list(
+                extend = "collection", 
+                text = "Download table",
+                #buttons = c("csv","excel","pdf")
+                action = DT::JS("function ( e, dt, node, config ) { Shiny.setInputValue('test4', true, {priority: 'event'});}")
+              )
+            ),
+            lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+            initComplete = JS(
+              "function(settings, json) {",
+              "$(this.api().table().header()).css({'background-color': '#3C3C3C', 'color': '#fff'});",
+              "}"
+            )
+          )
+        )
+      )
+      
+      output$Table_Tukey <- downloadHandler(
+        filename = function() {
+          paste("data-", Sys.Date(), ".csv", sep="")
+        },
+        content = function(file) {
+          write.table(tidy(anov(sr$tableF,sr$respanov,sr$factanov)[[2]]), file, sep="\t", dec= ",", col.names = T, row.names = T)
+        }
+      )
+      myModal <- function() {
+        div(id = "test4",
+            modalDialog(downloadButton("Table_Tukey","Download as csv"), easyClose = TRUE, title = "Download Table")
+        )
+      }
+      observeEvent(input$test4, {
+        showModal(myModal())
       })
-
+      
+      
       renderPrint({ 
         anov(sr$tableF,sr$respanov,sr$factanov)[[3]]
       })
@@ -733,8 +801,8 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
     output$heatplotSR <- renderPlotly({
       sr$outheatH2
     })
-    output$tabsouches <- DT::renderDataTable(
-      DT::datatable(
+    output$tabsouches <- renderDT(
+      datatable(
         sr$outheattab,
         extensions = 'Buttons',
         filter = list(position = 'top', clear = TRUE, plain = FALSE),

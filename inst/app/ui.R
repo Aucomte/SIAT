@@ -8,6 +8,7 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
+    #menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
     menuItem("Boxplot", tabName = "boxplot", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
@@ -191,7 +192,24 @@ body <- dashboardBody(
         )
       )
     ),
-    
+    tabItem(
+      tabName ="MeanPlot",
+      fluidRow(
+        box(width=12, class = "box2",
+            "Violin plots for group or condition comparisons in between-subjects."
+        ),
+        box(width = 12,class = "box1",
+            pickerInput(inputId='responseVarMP', label ='Choose the response variable (y)', ""),
+            pickerInput(inputId='factorMP1', label ='Choose the factor for the x-axis (x)', ""),
+            pickerInput(inputId='factorMP2', label ='Grouping variable', "")
+        )
+      ),
+      fluidRow(
+        box(width = 12,
+            plotlyOutput("meanplot")
+        )
+      )
+    ),
     tabItem(
       tabName ="Anova",
       fluidRow(
@@ -235,7 +253,7 @@ body <- dashboardBody(
             )
           ),
           column(width = 12,
-             verbatimTextOutput(outputId = "Tukey")
+             DTOutput(outputId = "Tukey")
              # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
           )
           # ,

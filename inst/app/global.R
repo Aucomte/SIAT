@@ -6,35 +6,32 @@ library(stringr, quietly=TRUE, warn.conflicts = FALSE)
 library(shinydashboard, quietly=TRUE, warn.conflicts = FALSE)
 library(shinyjs, quietly=TRUE, warn.conflicts = FALSE)
 library(shinyWidgets, quietly=TRUE, warn.conflicts = FALSE)
-library(DT, quietly=TRUE, warn.conflicts = FALSE)
 library(shinyhelper, quietly=TRUE, warn.conflicts = FALSE)
-
 library(colourpicker, quietly=TRUE, warn.conflicts = FALSE) #couleur selecteur
 library(shinyFeedback, quietly=TRUE, warn.conflicts = FALSE) #met des warning aux inputs
+library(shinycssloaders, quietly=TRUE, warn.conflicts = FALSE)
 #require(shinyjqui) #redimentionner tableau image etc / créé une div
 #require(shinyFiles) #géner des directory
 
-library(readr, quietly=TRUE, warn.conflicts = FALSE)
+library(DT, quietly=TRUE, warn.conflicts = FALSE)
 library(data.table, quietly=TRUE, warn.conflicts = FALSE)
+library(readr, quietly=TRUE, warn.conflicts = FALSE)
 library(ggplot2, quietly=TRUE, warn.conflicts = FALSE)
 library(dplyr, quietly=TRUE, warn.conflicts = FALSE)
 library(lubridate, quietly=TRUE, warn.conflicts = FALSE)
 library(RColorBrewer, quietly=TRUE, warn.conflicts = FALSE)
-library(shinycssloaders, quietly=TRUE, warn.conflicts = FALSE)
 library(plotly, quietly=TRUE, warn.conflicts = FALSE)
-
 library(ggvis, quietly=TRUE, warn.conflicts = FALSE) ##ggviz interactive plot
 library(gplots, quietly=TRUE, warn.conflicts = FALSE)
-
 library(ade4, quietly=TRUE, warn.conflicts = FALSE)
 library(factoextra, quietly=TRUE, warn.conflicts = FALSE)
 library(rmarkdown, quietly=TRUE, warn.conflicts = FALSE)
 library(knitr, quietly=TRUE, warn.conflicts = FALSE)
 library(heatmaply, quietly=TRUE, warn.conflicts = FALSE)
 
-##install.packages(c("shiny","shinythemes","shinyBS","stringr","shinydashboard","shinyjs","shinyWidgets","DT","shinyhelper","colourpicker","shinyFeedback","readr","data.table","ggplot2","dplyr","lubridate","RColorBrewer","shinycssloaders","plotly","ggvis","gplots","ade4","factoextra","rmarkdown","knitr","heatmaply"))
-
-#library(multcompView)
+##
+library(broom, quietly=TRUE, warn.conflicts = FALSE)
+library(ggstatsplot, quietly=TRUE, warn.conflicts = FALSE)
 
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
@@ -236,7 +233,6 @@ heatplot2 <- function(x,row,col,S){
       p2 = heatmaply(xh3, Colv = col, Rowv = row, colors = kolor, draw_cellnote = TRUE)
     }
   
-
     #dataframe of cluster
     
     groups = unique(xh3)
@@ -268,7 +264,6 @@ heatplot2 <- function(x,row,col,S){
         }
       }
     }
-    
     HEAT = list()
     HEAT$plot = p2
     HEAT$tab = xh5
@@ -539,4 +534,33 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf, axisViz){
   ade$both = both
   
   return(ade)
+}
+
+
+meanplot <- function(tab, response, explicative, groupi){
+  if(groupi == 'None'){
+    print(tab)
+    print(tab[as.character(explicative)])
+    p = ggbetweenstats(
+      data = tab,
+      x = as.character(tab[explicative]),
+      y = as.character(tab[as.character(response)]),
+      notch = TRUE, # show notched box plot
+      mean.plotting = TRUE, # whether mean for each group is to be displayed
+      mean.ci = TRUE, # whether to display confidence interval for means
+      mean.label.size = 2.5, # size of the label for mean
+      type = "parametric", # which type of test is to be run
+      k = 2, # number of decimal places for statistical results
+      ggtheme = ggthemes::theme_fivethirtyeight(), # choosing a different theme
+      ggstatsplot.layer = FALSE, # turn off ggstatsplot theme layer
+      package = "wesanderson", # package from which color palette is to be taken
+      palette = "Darjeeling1", # choosing a different color palette
+      messages = FALSE
+    )
+  }
+  else{
+    p = grouped_ggbetweenstats(
+    )
+  }
+  return(p)
 }
