@@ -8,14 +8,15 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
-    #menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
+    menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
     menuItem("Boxplot", tabName = "boxplot", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
     menuItem("PCA", tabName = "ACP", icon = icon("calculator")),
-    menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye"))
+    menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye")),
+    menuItem("Session Info", tabName = "SI", icon = icon("book-open"))
     #,menuItem("Generate Report", tabName = "RMD", icon = icon("book-open"))
   )
 )
@@ -128,7 +129,7 @@ body <- dashboardBody(
         )
       ),
       fluidRow(
-        box(width=12,class = "box1",
+        box(width=12, class = "box1",
           column(width = 6,
               HTML("
                   <b><u>Data Validation</u>:</b>
@@ -144,7 +145,7 @@ body <- dashboardBody(
         )
       ),
       fluidRow(
-        box(width=12,class = "box1",
+        box(width=12, class = "box1",
            checkboxInput("logTrans", "logarithmic transformation", FALSE)
           )
       ),
@@ -206,7 +207,7 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width = 12,
-            plotlyOutput("meanplot")
+            plotOutput(outputId="meanplot", height = "1000px")  %>% withSpinner(color="#0dc5c1")
         )
       )
     ),
@@ -556,6 +557,13 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
         box(width = 12,
             downloadButton("downloadEvol", "Download Plot Time")
         )
+      )
+    ),
+    tabItem(
+      tabName = "SI",
+       fluidRow(
+         verbatimTextOutput("urlText1"),
+         verbatimTextOutput("urlText2")
       )
     ),
     tabItem(

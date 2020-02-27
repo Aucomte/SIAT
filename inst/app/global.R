@@ -32,6 +32,7 @@ library(heatmaply, quietly=TRUE, warn.conflicts = FALSE)
 ##
 library(broom, quietly=TRUE, warn.conflicts = FALSE)
 library(ggstatsplot, quietly=TRUE, warn.conflicts = FALSE)
+library(purrr, quietly=TRUE, warn.conflicts = FALSE)
 
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------
@@ -539,13 +540,11 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf, axisViz){
 
 meanplot <- function(tab, response, explicative, groupi){
   if(groupi == 'None'){
-    print(tab)
-    print(tab[as.character(explicative)])
     p = ggbetweenstats(
       data = tab,
-      x = as.character(tab[explicative]),
-      y = as.character(tab[as.character(response)]),
-      notch = TRUE, # show notched box plot
+      x = !!explicative,
+      y = !!response,
+      notch = FALSE, # show notched box plot
       mean.plotting = TRUE, # whether mean for each group is to be displayed
       mean.ci = TRUE, # whether to display confidence interval for means
       mean.label.size = 2.5, # size of the label for mean
@@ -553,13 +552,15 @@ meanplot <- function(tab, response, explicative, groupi){
       k = 2, # number of decimal places for statistical results
       ggtheme = ggthemes::theme_fivethirtyeight(), # choosing a different theme
       ggstatsplot.layer = FALSE, # turn off ggstatsplot theme layer
-      package = "wesanderson", # package from which color palette is to be taken
-      palette = "Darjeeling1", # choosing a different color palette
       messages = FALSE
     )
   }
   else{
     p = grouped_ggbetweenstats(
+      data = tab,
+      x = !!explicative,
+      y = !!response,
+      grouping.var = {{groupi}}
     )
   }
   return(p)
