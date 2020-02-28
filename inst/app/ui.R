@@ -471,7 +471,7 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
       tabName = "boxplot",
       fluidRow(
         box(width=12, class = "box2",
-            "This page allows to plot individual data points together with 'standard' box and whisker representations and conditionned on exerimental factors."
+            "Plot individual data points together with 'standard' box and whisker representations and conditionned on experimental factors."
            ),
         box(width=12, class = "box1",
           pickerInput(inputId='responseVarPG', label ='Select the response variable (y)', "") %>%
@@ -483,7 +483,7 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
           pickerInput(inputId='factorPG1', label ='Select the factor for the x-axis (x)', ""),
 ##TODO: May be? Currently this will color the points based on the factor. But the expected behavior should be to color the boxplots, shouldn't it?
           pickerInput(inputId='factorPG2', label ='Select a factor for coloring based on its levels (fill)', ""),
-          pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor (grid)', "")
+          pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor in a grid', "")
         )
       ),
       fluidRow(
