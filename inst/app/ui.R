@@ -221,7 +221,6 @@ body <- dashboardBody(
       tabName ="Anova",
       fluidRow(
         box(width=12, class = "box2",
-##TODO: verify that this is true
             "Examine the influence of experimental factors on the continuous response variable (e.g. symptom intensity) using analysis of variance (ANOVA). If two experimental factors are selected (maximum) the model will automatically include an interaction term."     
         ),
         box(width = 12,class = "box1",
@@ -257,11 +256,11 @@ body <- dashboardBody(
         box(width = 12 ,class = "box1",
           withTags(
             div(
-              h4("Tukey's test :")
+              h4("Tukey HSD tests results: post hoc comparisons on each combination of factor levels in the model.")
             )
           ),
           column(width = 12,
-             DTOutput(outputId = "Tukey HSD tests results: post hoc comparisons on each combination of factor levels in the model.")
+                 DTOutput(outputId = "Tukey")
              # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
           )
           # ,
