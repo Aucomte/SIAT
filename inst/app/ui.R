@@ -8,12 +8,12 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "menu", icon = icon("home")),
     menuItem("Input Table", tabName = "Table", icon = icon("book-open")),
     menuItem("Mean/Sd", tabName = "Mean", icon = icon("calculator")),
-    menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
     menuItem("Boxplot", tabName = "boxplot", icon = icon("eye")),
     menuItem("Barplot", tabName = "barplot", icon = icon("eye")),
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
+    menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
     menuItem("PCA", tabName = "ACP", icon = icon("calculator")),
     menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Session Info", tabName = "SI", icon = icon("book-open"))
@@ -200,9 +200,19 @@ body <- dashboardBody(
             "Violin plots for group or condition comparisons in between-subjects."
         ),
         box(width = 12,class = "box1",
+          column(width =6,
             pickerInput(inputId='responseVarMP', label ='Choose the response variable (y)', ""),
             pickerInput(inputId='factorMP1', label ='Choose the factor for the x-axis (x)', ""),
             pickerInput(inputId='factorMP2', label ='Grouping variable', "")
+          ),
+          column(width =3,
+            radioButtons( "testType", "Test Type", choiceValues = c("np", "p", "r", "bf"), choiceNames = c("non parametric", "parametric", "robust", "bayes factor"), selected = "np"),
+            radioButtons( "PlotType", "Type of plot",choices =  c("box", "violin", "boxviolin"), selected = "box")
+          ),
+          column(width = 3,
+            radioButtons("MeanPlotting", "Mean Plotting", choiceNames = c("yes", "no"), choiceValues =  c(TRUE, FALSE), selected = FALSE),
+            radioButtons("Comparaison", "Pairwise Comparison", choiceNames = c("yes", "no"), choiceValues=  c(TRUE, FALSE), selected = TRUE)
+          )
         )
       ),
       fluidRow(
