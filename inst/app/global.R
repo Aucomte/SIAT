@@ -373,17 +373,16 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter, smoothing){
   else{
     p <- ggplot(allmoy, aes(x = allmoy[,tim], y = allmoy$Mean))
   }
-##TODO: May want to change this behavior  
+  
   if(!is.null(var2) && !is.null(var3)){
     p <- p + facet_grid(allmoy[,var2] ~ allmoy[,var3])
   } else if (!is.null(var2) && is.null(var3)) {
-    p <- p + facet_wrap(allmoy[,var2])
+    p <- p + facet_grid(allmoy[,var2] ~ .)
   } else if  (is.null(var2) && !is.null(var3)) {
-    p <- p + facet_wrap(allmoy[,var3])
+    p <- p + facet_grid(. ~ allmoy[,var3])
   } else {
     p <- p
   }
-  
   
   p <- p + geom_point(size=(allmoy$Count/sum(allmoy$Count)*100), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
   if(!is.null(var4)){
