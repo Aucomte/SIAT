@@ -481,6 +481,7 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
                    colour = "red",
                    size = "l"),
           pickerInput(inputId='factorPG1', label ='Select the factor for the x-axis (x)', ""),
+##TODO: May be? Currently this will color the points based on the factor. But the expected behavior should be to color the boxplots, shouldn't it?
           pickerInput(inputId='factorPG2', label ='Select a factor for coloring based on its levels (fill)', ""),
           pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor (grid)', "")
         )
