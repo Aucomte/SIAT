@@ -326,7 +326,7 @@ ResistanceFrequency <- function(y, S){
 
   p <- ggplot()
   p <- p + geom_bar(aes(x=reorder(ResDF2[,1], ResDF2$PercentageSens), y = as.numeric(as.character(ResDF2$Percentage)), fill = factor(ResDF2$Type)), data = ResDF2, stat="identity")
-  p <- p + labs(x="Ricelines", y = "Percentage of resistance", fill="Resistance")
+  p <- p + labs(x="Row variable", y = "Percentage frequency of occurrence", fill="Category")
   p <- p + theme_minimal()
   p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
                  axis.title.x = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
@@ -335,6 +335,7 @@ ResistanceFrequency <- function(y, S){
                  axis.text.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)))
   return(p)
 }
+
 
 
 
