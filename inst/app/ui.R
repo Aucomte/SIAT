@@ -202,13 +202,23 @@ body <- dashboardBody(
       tabName ="MeanPlot",
 ##TODO: Update as necessary according to the final interface
       fluidRow(
-        box(width=12, class = "box2",
-            "Violin plots for group or condition comparisons in between-subjects."
-        ),
+         box(width=12, class = "box2",
+        "Violin plots for group or condition comparisons in between-subjects."
+         ),
         box(width = 12,class = "box1",
-            pickerInput(inputId='responseVarMP', label ='Select the response variable (y)', ""),
-            pickerInput(inputId='factorMP1', label ='Select the factor for the x-axis (x)', ""),
-            pickerInput(inputId='factorMP2', label ='Grouping variable', "")
+            column(width =6,
+                   pickerInput(inputId='responseVarMP', label ='Select the response variable (y)', ""),
+                   pickerInput(inputId='factorMP1', label ='Select the factor for the x-axis (x)', ""),
+                   pickerInput(inputId='factorMP2', label ='Grouping variable for facetting', "")
+            ),
+            column(width =3,
+                   radioButtons( "testType", "Test Type", choiceValues = c("np", "p", "r", "bf"), choiceNames = c("non parametric", "parametric", "robust", "bayes factor"), selected = "np"),
+                   radioButtons( "PlotType", "Type of plot",choices =  c("box", "violin", "boxviolin"), selected = "box")
+            ),
+            column(width = 3,
+                   radioButtons("MeanPlotting", "Mean Plotting", choiceNames = c("yes", "no"), choiceValues =  c(TRUE, FALSE), selected = FALSE),
+                   radioButtons("Comparaison", "Pairwise Comparison", choiceNames = c("yes", "no"), choiceValues=  c(TRUE, FALSE), selected = TRUE)
+            )
         )
       ),
       fluidRow(
