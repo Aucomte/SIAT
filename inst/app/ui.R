@@ -343,7 +343,6 @@ body <- dashboardBody(
         )
       )
     ),
-##TODO: Continue from there on
     tabItem(
       tabName = "Heatmap",
         fluidRow(
@@ -371,17 +370,19 @@ body <- dashboardBody(
           )
         )
       ),
+##TODO: keep working from here
       tabItem(
         tabName = "Heatmap2",
         fluidRow(
           box(width=12, class = "box2",
-             "Visualization of the several categories of resistance : 
-Heatmap + table of races for the factor displayed in row (If two rows are exactly in the same categories for every columns, they are in the same group/race) + barplot of frequency of each category of resistance in function of the factor displayed in row. "
+             p("Convert your symptom intensity data into a qualitative index for plant pathogen race analysis: 
+             Pathogen races (also referred to as physiological races or pathotypes) are defined by their profile of pathogenicity on a defined set of differential host cultivars (i.e. a set of host genotypes that each carry a distinct profile of resistance genes). Oftentimes, pathogenicity is defined as an ordered categorical variable (ordinal) with levels depicting disease outcome (e.g. Resistant < Moderately Susceptible < Susceptible)"),
+             p("This tool takes mean symptom measures and convert them into categories defined by the user. This categorical data is then plotted as a Heatmap where it is straightforward to observe the clustering of virulence profiles into races. Furthermore, unique pathogenicity profiles (i.e. races) in the data set are computed and assigned to each strain in the table summarizing the output data. Finally, the categories distribution for each individual (levels of the variable displayed in row) is displayed in the stacked barplot.")
              ),
           box(width = 12, class = "box1",
               pickerInput(inputId='responseVarHeat2', label ='Select the response variable', ""),
-              pickerInput(inputId='factorH21', label ='Select the factor displayed in rows', ""),
-              pickerInput(inputId='factorH22', label ='Select the factor displayed in columns', ""),
+              pickerInput(inputId='factorH21', label ='Select the factor displayed in rows (e.g. Strain)', ""),
+              pickerInput(inputId='factorH22', label ='Select the factor displayed in columns (e.g. Plant line)', ""),
               column(width=3,
                      HTML("Clusterisation : ")
               ),
@@ -471,7 +472,7 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
       tabName = "boxplot",
       fluidRow(
         box(width=12, class = "box2",
-            "Plot individual data points together with 'standard' box and whisker representations and conditionned on experimental factors."
+            "Plot individual data points together with 'standard' box and whisker representations, conditionned on experimental factors."
            ),
         box(width=12, class = "box1",
           pickerInput(inputId='responseVarPG', label ='Select the response variable (y)', "") %>%
@@ -530,7 +531,7 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
       tabName = "Evolution",
         fluidRow(
           box(width=12, class = "box2",
-              "This tool may be particularly usefull if there is a time variable in you data set (e.g. date of the experiment) and want to plot values along time on the x-axis. It plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables."
+              "This tool may be particularly usefull if there is a time variable in you data set (e.g. date of the experiment) and you want to plot values along time on the x-axis. It plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables."
           ),
           box(width = 12, class = "box1",
             column(width = 6,
