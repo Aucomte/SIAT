@@ -32,6 +32,10 @@ server <-function(input,output,session){
     response = NULL,
     explicative = NULL,
     groupi = 'None',
+    TestType = "np",
+    PlotType = "box",
+    MeanPlotting = FALSE,
+    Comparison =TRUE,
   
     # panel 3 : Anova
     
@@ -401,10 +405,22 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$factorMP2,{
     sr$groupi = input$factorMP2
   })
+  observeEvent(input$testType,{
+    sr$testType = input$testType
+  })
+  observeEvent(input$MeanPlotting,{
+    sr$MeanPlotting = input$MeanPlotting
+  })
+  observeEvent(input$PlotType,{
+    sr$PlotType = input$PlotType
+  })
+  observeEvent(input$Comparaison,{
+    sr$Comparaison = input$Comparaison
+  })
   
   output$meanplot <- renderPlot(
-    meanplot(sr$tableF,sr$response,sr$explicative,sr$groupi)
-  ) 
+    meanplot(sr$tableF,sr$response,sr$explicative,sr$groupi,sr$testType,sr$MeanPlotting,sr$PlotType,sr$Comparaison)
+  )
 
   # panel 3 : Anova
   

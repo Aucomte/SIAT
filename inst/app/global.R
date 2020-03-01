@@ -543,21 +543,28 @@ adeACP <- function(data, var1, var2, var3, center, scale, nf, axisViz){
 }
 
 
-meanplot <- function(tab, response, explicative, groupi){
+meanplot <- function(tab, response, explicative, groupi, test_type, MeanPlotting, PlotType, do_comps){
+
   if(groupi == 'None'){
     p = ggbetweenstats(
       data = tab,
       x = !!explicative,
       y = !!response,
-      notch = FALSE, # show notched box plot
-      mean.plotting = TRUE, # whether mean for each group is to be displayed
-      mean.ci = TRUE, # whether to display confidence interval for means
-      mean.label.size = 2.5, # size of the label for mean
-      type = "parametric", # which type of test is to be run
-      k = 2, # number of decimal places for statistical results
-      ggtheme = ggthemes::theme_fivethirtyeight(), # choosing a different theme
-      ggstatsplot.layer = FALSE, # turn off ggstatsplot theme layer
-      messages = FALSE
+      
+      nboot = 10,
+      mean.label.size = 5,
+      type = test_type,
+      conf.level = 0.95,
+      pairwise.comparisons = {{as.logical(do_comps)}},
+      p.adjust.method = "fdr",
+      package = "pals",
+      palette = "alphabet",
+      sample.size.label = FALSE,
+      mean.plotting = {{as.logical(MeanPlotting)}},
+      plot.type = PlotType,
+      mean.ci = TRUE,
+      ggplot.component = theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
     )
   }
   else{
@@ -565,7 +572,21 @@ meanplot <- function(tab, response, explicative, groupi){
       data = tab,
       x = !!explicative,
       y = !!response,
-      grouping.var = {{groupi}}
+      grouping.var = {{groupi}},
+      
+      nboot = 10,
+      type = test_type,
+      mean.label.size = 5,
+      conf.level = 0.95,
+      pairwise.comparisons = {{as.logical(do_comps)}},
+      p.adjust.method = "fdr",
+      package = "pals",
+      palette = "alphabet",
+      sample.size.label = FALSE,
+      mean.plotting = {{as.logical(MeanPlotting)}},
+      plot.type = PlotType,
+      mean.ci = TRUE,
+      ggplot.component = theme(axis.text.x = element_text(angle = 90, hjust = 1))
     )
   }
   return(p)
