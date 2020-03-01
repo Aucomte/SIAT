@@ -207,9 +207,9 @@ body <- dashboardBody(
          ),
         box(width = 12,class = "box1",
             column(width =6,
-                   pickerInput(inputId='responseVarMP', label ='Select the response variable (y)', ""),
-                   pickerInput(inputId='factorMP1', label ='Select the factor for the x-axis (x)', ""),
-                   pickerInput(inputId='factorMP2', label ='Grouping variable for facetting', "")
+                   pickerInput(inputId='responseVarMP', label ='Choose the response variable (y)', ""),
+                   pickerInput(inputId='factorMP1', label ='Choose the factor for the x-axis (x)', ""),
+                   pickerInput(inputId='factorMP2', label ='Grouping variable', "")
             ),
             column(width =3,
                    radioButtons( "testType", "Test Type", choiceValues = c("np", "p", "r", "bf"), choiceNames = c("non parametric", "parametric", "robust", "bayes factor"), selected = "np"),
