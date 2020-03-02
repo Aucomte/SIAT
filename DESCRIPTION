@@ -8,7 +8,7 @@ Authors@R: c(person("A. COMTE", "Developer", role = c("aut", "cre"),
 Author: Aurore COMTE [aut, cre], Sebastien Cunnac [ctb], Sebastien Ravel [ctb]
 Maintainer: Aurore COMTE <aurore.comte@ird.fr>
 Description: Web application made whith shiny in order to visualize and analyze the mesure of symptom intensity as quantitative variable in function of experimental factors.
-Depends: R (>= 3.4.0), shiny,shinythemes,shinyBS,stringr,shinydashboard,shinyjs,shinyWidgets,DT,shinyhelper,colourpicker,shinyFeedback,readr,data.table,ggplot2,dplyr,lubridate,RColorBrewer,shinycssloaders,plotly,ggvis,gplots,ade4,factoextra,rmarkdown,knitr,heatmaply
+Depends: R (>= 3.4.0), shiny,shinythemes,shinyBS,stringr,shinydashboard,shinyjs,shinyWidgets,DT,shinyhelper,colourpicker,shinyFeedback,readr,data.table,ggplot2,dplyr,lubridate,RColorBrewer,shinycssloaders,plotly,ggvis,gplots,ade4,factoextra,rmarkdown,knitr,heatmaply,broom,ggstatsplot,purrr
 License: LGPL-3 | file LICENSE
 Encoding: UTF-8
 RoxygenNote: 6.1.1
