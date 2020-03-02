@@ -1,7 +1,7 @@
 
-# Symptoms Length Analysis Tool
+# Symptoms Intensity Analysis Tool
 
-![LeAFtool Logo](/inst/app/www/SLATtransparent.png)
+![LeAFtool Logo](/inst/app/www/SIATtransparent.png)
 
 
 ## About this package
@@ -13,21 +13,21 @@ Web application made whith shiny in order to visualize and analyze the mesure of
 ## Installation
 ### Regular installation
 
-# Install SLAT
+# Install SIAT
 
 ```
 library(devtools)
-install_github("aucomte/SLAT")
+install_github("aucomte/SIAT")
 
 ```
 
-## Running SLAT with GUI
+## Running SIAT with GUI
 
-  * To run the application SLAT
+  * To run the application SIAT
 
 ```
-library(SLAT)
-runSLAT()
+library(SIAT)
+runSIAT()
 ```
 
 ### Regular installation
