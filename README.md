@@ -26,7 +26,7 @@ Web application made whith shiny in order to visualize and analyze the mesure of
   * Upgrading R and Rstudio to the latest version (R >= 3.5, Rstudio > 1.0.0) is strongly recommended.
 
 ``` ruby
-#### Install or update LeAFtool
+#### Install or update SIAT
 install.packages("remotes")
 remotes::install_github("aucomte/SIAT")
 
