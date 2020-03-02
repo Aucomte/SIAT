@@ -1,7 +1,6 @@
 
 #header <- dashboardHeader(title = "Symptoms Length Analysis Tool", titleWidth = 380)
 header <- dashboardHeader(title = img(style = 'width: 80%;', src = "SIATlogo2.png", class = 'img-responsive'), titleWidth = 500)
-
 sidebar <- dashboardSidebar(
   width = 180,
   sidebarMenu(
@@ -598,6 +597,6 @@ body <- dashboardBody(
 )
 
 shinyUI(
-  dashboardPage(title = "symptom", skin = "yellow", header, sidebar, body)
+  dashboardPage(title = "SIAT", skin = "yellow", header, sidebar, body)
 )
 
