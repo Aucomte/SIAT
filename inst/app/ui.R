@@ -46,6 +46,7 @@ body <- dashboardBody(
         box(width = 12,
           withTags(
             div(class = "home",
+##TODO: if possible homogenize font type across the box
                 h2("Quickly get a sense of what is in your disease assay data."),
                 br(),
                 p("First of all, go to the 'Input Table' thumbnail to upload a file with your data set. It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). From there you can use the tools accessible on the left handside menu to filter, aggregate, visualize, transform and export your data in an intutitive and user-friendly fashion."),
@@ -57,15 +58,17 @@ body <- dashboardBody(
                   br(),
                   li(b("Mean/Sd"), ": This enables the computation of standard aggregate values (mean, standard deviation, count of observations) of the quantitative response variable conditioned on the levels of one or several experimental factors."),
                   br(),
-                  li(b("boxplot"), ": Plot individual datapoints on a box and whisker plot and conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)"),
+                  li(b("boxplot"), ": Plot individual datapoints on a box and whisker plot, conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)"),
                   br(),
-                  li(b("barplot"), ": Plot symptom averrage and standard deviation conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)."),
+                  li(b("barplot"), ": Plot symptom mean and standard deviation as a barplot, conditioned on up to three experimental variables (e.g. distribution of symptom by strain and genotype across several experiments.)."),
                   br(),
-                  li(b("Heatmap"), ": For very large data sets, it may be usefull to display averrage symptom measures in the compact form of a heatmap with levels of experimental variables as rows and columns. It also enables clustering of factor levels in rows and columns."),
+                  li(b("Heatmap"), ": For very large data sets, it may be usefull to display the means of symptom measurements in the compact form of a heatmap with levels of experimental variables as rows and columns. It also enables clustering of factor levels in rows and columns."),
                   br(),
-                  li(b("Plot Time Series"), ": Plot symptom averrage and standard deviation as a function of a time variable (e.g. date of the experiment). The plot can be further conditioned on other experimental variables."),
+                  li(b("Plot Time Series"), ": Plot symptom mean and standard deviation as a function of a time variable (e.g. date of the experiment). The plot can be further conditioned on other experimental variables."),
                   br(),
-                  li(b("Anova"), ": Allows to conduct Analysis of variance to identify experimental factors significantly  affecting the magnitude of symptoms. Also performs Tukey multiple comparisons of means."),
+                  li(b("Anova"), ": Allows to conduct Analysis of variance to identify experimental factors significantly  affecting the magnitude of symptoms. Also performs Tukey multiple comparisons of means and display results in a searchable table."),
+                  br(),
+                  li(b("Means Comparison"), ": When a factor is found to significantly impact symptoms readout, this tool performs multiple means comparison with a variety of methods to find means that are significantly different from each other and add the significant comparisons on top of a data plot."),
                   br(),
                   li(b("PCA"), ": Principal component analysis, a dimension reduction technique for multivariate datasets. This is usefull for example to identify clusters of isolates with similar virulence patterns or conversely identify groups of host genotypes with related susceptibility profiles."),
                   br(),
@@ -110,7 +113,7 @@ body <- dashboardBody(
               helper(icon = "question",
                      type = "markdown",
                      content = "file1"),
-            pickerInput(inputId='responseVar0', label ='Choose the response variable', "")
+            pickerInput(inputId='responseVar0', label ='Select the response variable', "")
            ),
           column(width = 6,
             column(width = 3,
@@ -154,10 +157,12 @@ body <- dashboardBody(
           DT::dataTableOutput(outputId = "DataSet")
         )
       ),
-      # THERE IS SOMETHING WEIRD WHEN TRYING TO SPECIFY FILTERING VALUES FOR 'Experiment_number' IN THE EXAMPLE DATASET
+# STILL TRUE : THERE IS SOMETHING WEIRD WHEN TRYING TO SPECIFY FILTERING VALUES FOR 'Experiment_number' IN THE EXAMPLE DATASET
+# Having two tables that display the same thing simultaneously is a bit confusing
+      
       fluidRow(
         box(width=12, class = "box2",
-            "You can a filter your dataset and download the filtered table below. All analysis will be done with the filtered dataset."
+            "You can a filter your dataset by specifying the criteria in the boxes on top of the columns above. The filtered table appears below and can be downloaded. All analysis will be done with the filtered dataset."
         )
       ),
       fluidRow(
@@ -171,12 +176,12 @@ body <- dashboardBody(
       tabName ="Mean",
       fluidRow(
         box(width=12, class = "box2",
-            "Calculate the number of observations (Count), the median, the mean and the standard deviation (Sd) of the chosen numeric value (e.g. symptom length) depending on an experimental factor or a group of experimental factors."
+            "Group data points by levels of one or several experimental factor(s) and calculate aggregated values : the number of observations (Count), the median, the mean and the standard deviation (Sd) of the selected response variable (e.g. symptom length)."
         ),
           box(width = 12,class = "box1",
-          pickerInput(inputId='responseVar1', label ='Choose the response variable', ""),
+          pickerInput(inputId='responseVar1', label ='Select the response variable', ""),
           pickerInput(inputId='factors1', 
-                      label ='Choose the experimental factors', 
+                      label ='Select experimental factors', 
                       "", 
                       multiple = TRUE,
                       options = list(
@@ -195,10 +200,11 @@ body <- dashboardBody(
     ),
     tabItem(
       tabName ="MeanPlot",
+##TODO: Update as necessary according to the final interface
       fluidRow(
-        box(width=12, class = "box2",
-            "Violin plots for group or condition comparisons in between-subjects."
-        ),
+         box(width=12, class = "box2",
+        "Violin plots for group or condition comparisons in between-subjects."
+         ),
         box(width = 12,class = "box1",
           column(width =6,
             pickerInput(inputId='responseVarMP', label ='Choose the response variable (y)', ""),
@@ -225,11 +231,11 @@ body <- dashboardBody(
       tabName ="Anova",
       fluidRow(
         box(width=12, class = "box2",
-            "Cet onglet permet de faire des statistiques permettant de comparer les moyennes des longueurs de lésion entre différents facteurs de variabilité. L'objectif est de savoir si la variable étudiée a une influence significative sur la variabilité de la distribution. L'utilisateur a la possibilité dd'effectuer une ANOVA sur un facteur ou sur deux facteurs de variabilité maximum."     
+            "Examine the influence of experimental factors on the continuous response variable (e.g. symptom intensity) using analysis of variance (ANOVA). If two experimental factors are selected (maximum) the model will automatically include an interaction term."     
         ),
         box(width = 12,class = "box1",
-            pickerInput(inputId='responseVar', label ='Choose the response variable', ""),
-            pickerInput(inputId='factors', label ='Choose the factors', "", multiple = TRUE,
+            pickerInput(inputId='responseVar', label ='Select the response variable', ""),
+            pickerInput(inputId='factors', label ='Select the factor(s)', "", multiple = TRUE,
                         options =  list(
                           "max-options" = 2
                         )
@@ -260,11 +266,11 @@ body <- dashboardBody(
         box(width = 12 ,class = "box1",
           withTags(
             div(
-              h4("Tukey's test :")
+              h4("Tukey HSD tests results: post hoc comparisons on each combination of factor levels in the model.")
             )
           ),
           column(width = 12,
-             DTOutput(outputId = "Tukey")
+                 DTOutput(outputId = "Tukey")
              # TEXT OUTPUT TRUNCATED IF VERY LONG LIST OF COMPARISONS
           )
           # ,
@@ -280,22 +286,22 @@ body <- dashboardBody(
       fluidRow(
         box(width=12, class = "box2",
           "Principal component analysis :  
-           Dimensionality reduction method which transforms a large dataset into a smaller one with less variables that still contains most of the information. 
-           PCA permits to vizualise optimally individuals and variables with 2 dimentions."
+           Dimensionality reduction method which transforms a large dataset into a simplified representation capturing most of the information of the original dataset.
+          This is usefull in exploratory data analysis, for example to identify strains with a similar virulence profile on a set of plant genotypes."
         ),
         box(width = 12, class = "box1",
-            pickerInput(inputId='respacp', label ='Choose the response variable', ""),
+            pickerInput(inputId='respacp', label ='Select the response variable (e.g. symtpols intensity)', ""),
             column(width = 6,
-              pickerInput(inputId='individual', label ='individuals', "")
+              pickerInput(inputId='individual', label ='Select factor that will define individuals (e.g. strains)', "")
             ),
             column(width = 6,
-              pickerInput(inputId='variable', label ='variables', "")
+              pickerInput(inputId='variable', label ='Select factor that will define variables (e.g. plant genotype)', "")
             ),
             column(width = 3,
-              checkboxInput("reduct", "reduct variable", FALSE)
+              checkboxInput("reduct", "reduct variables", FALSE)
             ),
             column(width = 3,
-              checkboxInput("center", "center variable", FALSE)
+              checkboxInput("center", "center variables", FALSE)
             ),
             column(width = 6,
               pickerInput(inputId='axis', label ='Number of axis', selected = 2, choices = c(2, 3))
@@ -354,9 +360,9 @@ body <- dashboardBody(
              "Heatmap visualization of averrage values of the response variable as a function of the levels of two experimental variables (rows and column). Can optionally order rows and column based on a hierarchical clustering approach (dendrogram added on top and/or on the side of the color matrix)."
              ),
           box(width = 12, class = "box1",
-             pickerInput(inputId='responseVarHeat', label ='Choose the response variable', ""),
-             pickerInput(inputId='factorH1', label ='Choose the factor displayed in rows', ""),
-             pickerInput(inputId='factorH2', label ='Choose the factor displayed in columns', ""),
+             pickerInput(inputId='responseVarHeat', label ='Select the response variable', ""),
+             pickerInput(inputId='factorH1', label ='Select the factor displayed in rows', ""),
+             pickerInput(inputId='factorH2', label ='Select the factor displayed in columns', ""),
              column(width=3,
                 HTML("Add clusterization for: ")
              ),
@@ -374,17 +380,19 @@ body <- dashboardBody(
           )
         )
       ),
+##TODO: keep working from here
       tabItem(
         tabName = "Heatmap2",
         fluidRow(
           box(width=12, class = "box2",
-             "Visualization of the several categories of resistance : 
-Heatmap + table of races for the factor displayed in row (If two rows are exactly in the same categories for every columns, they are in the same group/race) + barplot of frequency of each category of resistance in function of the factor displayed in row. "
+             p("Convert your symptom intensity data into a qualitative index for plant pathogen race analysis: 
+             Pathogen races (also referred to as physiological races or pathotypes) are defined by their profile of pathogenicity on a defined set of differential host cultivars (i.e. a set of host genotypes that each carry a distinct profile of resistance genes). Oftentimes, pathogenicity is defined as an ordered categorical variable (ordinal) with levels depicting disease outcome (e.g. Resistant < Moderately Susceptible < Susceptible)"),
+             p("This tool takes mean symptom measures and convert them into categories defined by the user. This categorical data is then plotted as a Heatmap where it is straightforward to observe the clustering of virulence profiles into races. Furthermore, unique pathogenicity profiles (i.e. races) in the data set are computed and assigned to each strain in the table summarizing the output data. Finally, the categories distribution for each individual (levels of the variable displayed in row) is displayed in the stacked barplot.")
              ),
           box(width = 12, class = "box1",
-              pickerInput(inputId='responseVarHeat2', label ='Choose the response variable', ""),
-              pickerInput(inputId='factorH21', label ='Choose the factor displayed in rows', ""),
-              pickerInput(inputId='factorH22', label ='Choose the factor displayed in columns', ""),
+              pickerInput(inputId='responseVarHeat2', label ='Select the response variable', ""),
+              pickerInput(inputId='factorH21', label ='Select the factor displayed in rows (e.g. Strain)', ""),
+              pickerInput(inputId='factorH22', label ='Select the factor displayed in columns (e.g. Plant line)', ""),
               column(width=3,
                      HTML("Clusterisation : ")
               ),
@@ -474,18 +482,19 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
       tabName = "boxplot",
       fluidRow(
         box(width=12, class = "box2",
-            "This page allows to plot individual data points together with 'standard' box and whisker representations and conditionned on exerimental factors."
+            "Plot individual data points together with 'standard' box and whisker representations, conditionned on experimental factors."
            ),
         box(width=12, class = "box1",
-          pickerInput(inputId='responseVarPG', label ='Choose the response variable (y)', "") %>%
+          pickerInput(inputId='responseVarPG', label ='Select the response variable (y)', "") %>%
             helper(icon = "question",
                    type = "markdown",
                    content = "Boxplot",
                    colour = "red",
                    size = "l"),
-          pickerInput(inputId='factorPG1', label ='Choose the factor for the x-axis (x)', ""),
-          pickerInput(inputId='factorPG2', label ='Choose a factor for coloring based on its levels (fill)', ""),
-          pickerInput(inputId='factorPG3', label ='Choose a third factor to generate one plot per level of this factor (grid)', "")
+          pickerInput(inputId='factorPG1', label ='Select the factor for the x-axis (x)', ""),
+##TODO: May be? Currently this will color the points based on the factor. But the expected behavior should be to color the boxplots, shouldn't it?
+          pickerInput(inputId='factorPG2', label ='Select a factor for coloring based on its levels (fill)', ""),
+          pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor in a grid', "")
         )
       ),
       fluidRow(
@@ -506,15 +515,15 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
            "This tool plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables." 
            ),
         box(width=12, class = "box1",
-            pickerInput(inputId='responseVarBar', label ='Choose the response variable (y)', "")%>%
+            pickerInput(inputId='responseVarBar', label ='Select the response variable (y)', "")%>%
               helper(icon = "question",
                      type = "markdown",
                      content = "Barplot",
                      colour = "red",
                      size = "l"),
-            pickerInput(inputId='factorBar1', label ='Choose the factor for the x-axis (x)', ""),
-            pickerInput(inputId='factorBar3', label ='Choose a factor for coloring based on its levels (fill)', ""),
-            pickerInput(inputId='factorBar2', label ='Choose a third factor to generate one plot per level of this factor (grid)', "")
+            pickerInput(inputId='factorBar1', label ='Select the factor for the x-axis (x)', ""),
+            pickerInput(inputId='factorBar3', label ='Select a factor for coloring based on its levels (fill)', ""),
+            pickerInput(inputId='factorBar2', label ='Select a third factor to generate one plot per level of this factor (grid)', "")
         )
       ),
       fluidRow(
@@ -532,26 +541,26 @@ Heatmap + table of races for the factor displayed in row (If two rows are exactl
       tabName = "Evolution",
         fluidRow(
           box(width=12, class = "box2",
-              "This tool may be particularly usefull if there is a time variable in you data set (e.g. date of the experiment) and want to plot values along time on the x-axis. It plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables."
+              "This tool may be particularly usefull if there is a time variable in you data set (e.g. date of the experiment) and you want to plot values along time on the x-axis. It plots aggregates of data values (Mean and standard variation) conditioned on one or several experimental variables."
           ),
           box(width = 12, class = "box1",
             column(width = 6,
-              pickerInput(inputId='responseVarT', label ='Choose the response variable (y)', "")
+              pickerInput(inputId='responseVarT', label ='Select the response variable (y)', "")
             ),
             column(width = 3,
-              pickerInput(inputId='TimeFactor', label ='Choose the variable for the x-axis', "")
+              pickerInput(inputId='TimeFactor', label ='Select the variable for the x-axis', "")
             ),
             column(width = 3,
               radioButtons("Time", "Specify its time format (e.g. 27/02/2018 -> dmy)", c("not a time format", "dmy", "ymd"), selected = "not a time format")
             ),
             column(width = 3,
-              pickerInput(inputId='factorT2', label ='Choose a factor for plots facetting (grid y)', "")
+              pickerInput(inputId='factorT2', label ='Select a factor for plots facetting (grid y)', "")
             ),
             column(width = 3,
-              pickerInput(inputId='factorT3', label ='Choose a factor for plots facetting (grid x)', "")
+              pickerInput(inputId='factorT3', label ='Select a factor for plots facetting (grid x)', "")
             ),
             column(width = 3,
-              pickerInput(inputId='factorT4', label ='Choose a factor for grouping/coloring on each sub-plot (z)', "")
+              pickerInput(inputId='factorT4', label ='Select a factor for grouping/coloring on each sub-plot (z)', "")
             ),
             column(width = 3,
               radioButtons("smoothing", "Smoothing", c("no", "smooth"), selected = "no")

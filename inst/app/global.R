@@ -326,7 +326,7 @@ ResistanceFrequency <- function(y, S){
 
   p <- ggplot()
   p <- p + geom_bar(aes(x=reorder(ResDF2[,1], ResDF2$PercentageSens), y = as.numeric(as.character(ResDF2$Percentage)), fill = factor(ResDF2$Type)), data = ResDF2, stat="identity")
-  p <- p + labs(x="Ricelines", y = "Percentage of resistance", fill="Resistance")
+  p <- p + labs(x="Row variable", y = "Percentage frequency of occurrence", fill="Category")
   p <- p + theme_minimal()
   p <- p + theme(axis.title.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
                  axis.title.x = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)),
@@ -335,6 +335,7 @@ ResistanceFrequency <- function(y, S){
                  axis.text.y = element_text(size = 14, margin = margin(t = 5, r = 5, b = 5, l = 5)))
   return(p)
 }
+
 
 
 
@@ -353,10 +354,8 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter, smoothing){
   if(var4 == "None"){
     var4 = NULL
   }
-  if(var2 == "None" || var3 == "None"){
-    var2 = NULL
-    var3 = NULL
-  }
+  if(var2 == "None"){var2 = NULL}
+  if(var3 == "None"){var3 = NULL  }
   
   varF = c(var2, var3, var4)
   
@@ -376,8 +375,14 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter, smoothing){
     p <- ggplot(allmoy, aes(x = allmoy[,tim], y = allmoy$Mean))
   }
   
-  if(!is.null(var2) && !is.null("None")){
+  if(!is.null(var2) && !is.null(var3)){
     p <- p + facet_grid(allmoy[,var2] ~ allmoy[,var3])
+  } else if (!is.null(var2) && is.null(var3)) {
+    p <- p + facet_grid(allmoy[,var2] ~ .)
+  } else if  (is.null(var2) && !is.null(var3)) {
+    p <- p + facet_grid(. ~ allmoy[,var3])
+  } else {
+    p <- p
   }
   
   p <- p + geom_point(size=(allmoy$Count/sum(allmoy$Count)*100), show.legend = TRUE) + geom_errorbar(aes(ymin=allmoy$Mean-allmoy$Sd, ymax=allmoy$Mean+allmoy$Sd), width =.2)
