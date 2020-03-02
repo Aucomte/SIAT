@@ -1,7 +1,7 @@
 
-# Symptoms Length Analysis Tool
+# Symptoms Intensity Analysis Tool
 
-![LeAFtool Logo](/inst/app/www/SLATtransparent.png)
+![LeAFtool Logo](/inst/app/www/SIATtransparent.png)
 
 
 ## About this package
