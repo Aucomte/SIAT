@@ -1,6 +1,6 @@
 
 #header <- dashboardHeader(title = "Symptoms Length Analysis Tool", titleWidth = 380)
-header <- dashboardHeader(title = img(style = 'width: 80%;', src = "SLATlogo2.png", class = 'img-responsive'), titleWidth = 500)
+header <- dashboardHeader(title = img(style = 'width: 80%;', src = "SIATlogo2.png", class = 'img-responsive'), titleWidth = 500)
 
 sidebar <- dashboardSidebar(
   width = 180,
@@ -32,7 +32,7 @@ body <- dashboardBody(
         box(class = "titlebox", width = 12,
             withTags(
               div(class = "title", 
-               img(style = 'width: 75%;', src = "SLATtransparent.png")
+               img(style = 'width: 75%;', src = "SIATtransparent.png")
               )
             )
         ),
