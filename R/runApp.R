@@ -7,7 +7,7 @@
 #' @examples
 #' runSLAT()
 runSLAT <- function() {
-  appDir <- system.file("app", package = "SLAT")
+  appDir <- system.file("app", package = "SIAT")
   if (appDir == "") {
     stop("Could not find myapp. Try re-installing `mypackage`.", call. = FALSE)
   }

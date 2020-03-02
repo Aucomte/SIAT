@@ -12,7 +12,7 @@ sidebar <- dashboardSidebar(
     menuItem("Heatmap", tabName = "Heatmap", icon = icon("eye")),
     menuItem("Plot Time Series", tabName = "Evolution", icon = icon("eye")),
     menuItem("Anova", tabName = "Anova", icon = icon("calculator")),
-    menuItem("Mean comparison", tabName = "MeanPlot", icon = icon("calculator")),
+    menuItem("Means comparison", tabName = "MeanPlot", icon = icon("calculator")),
     menuItem("PCA", tabName = "ACP", icon = icon("calculator")),
     menuItem("Categorical Analysis", tabName = "Heatmap2", icon = icon("eye")),
     menuItem("Session Info", tabName = "SI", icon = icon("book-open"))
@@ -203,12 +203,16 @@ body <- dashboardBody(
 ##TODO: Update as necessary according to the final interface
       fluidRow(
          box(width=12, class = "box2",
-        "Violin plots for group or condition comparisons in between-subjects."
+        p("When there is evidence that an experimental factor impacts on response, it is usefull to perform post hoc mean comparison tests to find the condition(s) that have an effect on readout."),
+        p("This page uses the ",
+          a(href = "https://cran.r-project.org/web/packages/ggstatsplot/readme/README.html", "ggstatsplot"),
+          "to create graphics with details from statistical tests.",
+          "Note that currently, the 'Pairwise Comparison' is EXTREMELY slow when a lot of comparisons are made. So, be patient, or filter your dataset before hand to compute only relevant comparisons. The 'Test Type' button specifiy the type of method used for mean comparisons. Refer to the package documentation for details.")
          ),
         box(width = 12,class = "box1",
           column(width =6,
-            pickerInput(inputId='responseVarMP', label ='Choose the response variable (y)', ""),
-            pickerInput(inputId='factorMP1', label ='Choose the factor for the x-axis (x)', ""),
+            pickerInput(inputId='responseVarMP', label ='Select the response variable (y)', ""),
+            pickerInput(inputId='factorMP1', label ='Select the factor for the x-axis (x)', ""),
             pickerInput(inputId='factorMP2', label ='Grouping variable', "")
           ),
           column(width =3,
@@ -217,7 +221,7 @@ body <- dashboardBody(
           ),
           column(width = 3,
             radioButtons("MeanPlotting", "Mean Plotting", choiceNames = c("yes", "no"), choiceValues =  c(TRUE, FALSE), selected = FALSE),
-            radioButtons("Comparaison", "Pairwise Comparison", choiceNames = c("yes", "no"), choiceValues=  c(TRUE, FALSE), selected = TRUE)
+            radioButtons("Comparaison", "Pairwise Comparison", choiceNames = c("yes", "no"), choiceValues=  c(TRUE, FALSE), selected = FALSE)
           )
         )
       ),
