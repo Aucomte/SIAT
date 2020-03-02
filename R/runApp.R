@@ -1,12 +1,12 @@
 #!/usr/bin/Rscript
 
-#' Launch SLAT GUI
+#' Launch SIAT GUI
 #'
-#' This function run the GUI shiny interface to run SLAT
+#' This function run the GUI shiny interface to run SIAT
 #'
 #' @examples
 #' runSLAT()
-runSLAT <- function() {
+runSIAT <- function() {
   appDir <- system.file("app", package = "SIAT")
   if (appDir == "") {
     stop("Could not find myapp. Try re-installing `mypackage`.", call. = FALSE)
