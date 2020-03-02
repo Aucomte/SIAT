@@ -5,7 +5,7 @@
 #' This function run the GUI shiny interface to run SIAT
 #'
 #' @examples
-#' runSLAT()
+#' runSIAT()
 runSIAT <- function() {
   appDir <- system.file("app", package = "SIAT")
   if (appDir == "") {
