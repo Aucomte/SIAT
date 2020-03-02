@@ -21,6 +21,7 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+  tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico")),
   includeCSS('www/styles.css'),
   useShinyjs(),
   useShinyFeedback(),

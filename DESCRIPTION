@@ -1,6 +1,6 @@
-Package: SLAT
+Package: SIAT
 Type: Package
-Title: SLAT: Symptom Lenght Tool Analysis
+Title: SIAT: Symptom Intensity Tool Analysis
 Version: 1.0.0
 Date: 2019-06-19
 Authors@R: c(person("A. COMTE", "Developer", role = c("aut", "cre"),
@@ -14,7 +14,7 @@ Encoding: UTF-8
 RoxygenNote: 6.1.1
 LazyData: true
 biocViews: Software
-URL: https://github.com/Aucomte/symptomsLength
+URL: https://github.com/Aucomte/SIAT
 RemoteType: github
 RemoteHost: https://api.github.com
 RemoteRepo: images
