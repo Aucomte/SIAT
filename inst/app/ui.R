@@ -97,7 +97,7 @@ body <- dashboardBody(
       fluidRow(
         box(width=12, class = "box2",
             "Upload your data file using the 'Browse...' button. 
-            It must be formated in a 'long format' with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). 
+            It must be formated in a 'long' or ", a(href = "http://dx.doi.org/10.18637/jss.v059.i10", "'tidy' format") , " with one row per symptom measurement and columns describing the levels of the experimental factors associated with this numeric value (e.g plant genotype, strain, replicate ID, experiment ID, etc). 
             Specify the type of field and decimal separators used to represent data in your file. 
             Once, there is no error message (Data Validation) and your data displays correctly in the table below, you can start your analysis with the tools."
         ),
@@ -157,7 +157,6 @@ body <- dashboardBody(
           DT::dataTableOutput(outputId = "DataSet")
         )
       ),
-# STILL TRUE : THERE IS SOMETHING WEIRD WHEN TRYING TO SPECIFY FILTERING VALUES FOR 'Experiment_number' IN THE EXAMPLE DATASET
 # Having two tables that display the same thing simultaneously is a bit confusing
       
       fluidRow(
@@ -200,7 +199,6 @@ body <- dashboardBody(
     ),
     tabItem(
       tabName ="MeanPlot",
-##TODO: Update as necessary according to the final interface
       fluidRow(
          box(width=12, class = "box2",
         p("When there is evidence that an experimental factor impacts on response, it is usefull to perform post hoc mean comparison tests to find the condition(s) that have an effect on readout."),
@@ -384,7 +382,6 @@ body <- dashboardBody(
           )
         )
       ),
-##TODO: keep working from here
       tabItem(
         tabName = "Heatmap2",
         fluidRow(
