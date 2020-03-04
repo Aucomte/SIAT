@@ -233,7 +233,7 @@ body <- dashboardBody(
       tabName ="Anova",
       fluidRow(
         box(width=12, class = "box2",
-            "Examine the influence of experimental factors on the continuous response variable (e.g. symptom intensity) using analysis of variance (ANOVA). If two experimental factors are selected (maximum) the model will automatically include an interaction term."     
+            "Examine the influence of experimental factors on the continuous response variable (e.g. symptom intensity) using analysis of variance (ANOVA). If two experimental factors are selected (maximum) the model will automatically include an interaction term. Note that these tests will only be valid if your data uses a balanced experimental design and meets ANOVA's assumptions."     
         ),
         box(width = 12,class = "box1",
             pickerInput(inputId='responseVar', label ='Select the response variable', ""),
