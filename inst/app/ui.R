@@ -153,19 +153,16 @@ body <- dashboardBody(
           )
       ),
       fluidRow(
-        box(width = 12,
-          DT::dataTableOutput(outputId = "DataSet")
-        )
-      ),
-# STILL TRUE : THERE IS SOMETHING WEIRD WHEN TRYING TO SPECIFY FILTERING VALUES FOR 'Experiment_number' IN THE EXAMPLE DATASET
-# Having two tables that display the same thing simultaneously is a bit confusing
-      
-      fluidRow(
         box(width=12, class = "box2",
             "You can a filter your dataset by specifying the criteria in the boxes on top of the columns above. The filtered table appears below and can be downloaded. All analysis will be done with the filtered dataset."
         )
       ),
       fluidRow(
+        box(width = 12,
+          DT::dataTableOutput(outputId = "DataSet")
+        )
+      )
+      ,fluidRow(
         box(width = 12,
           DT::dataTableOutput(outputId = "filtered_DataSet")
         )
@@ -195,6 +192,12 @@ body <- dashboardBody(
       fluidRow(
         box(width = 12,
           DTOutput(outputId = "moyenne")
+        )
+      ),
+      fluidRow(
+        box(width=12, "data summary by variable:"),
+        box(width = 12,
+            htmlOutput(outputId = "skim_sum")
         )
       )
     ),

@@ -33,6 +33,7 @@ library(heatmaply, quietly=TRUE, warn.conflicts = FALSE)
 library(broom, quietly=TRUE, warn.conflicts = FALSE)
 library(ggstatsplot, quietly=TRUE, warn.conflicts = FALSE)
 library(purrr, quietly=TRUE, warn.conflicts = FALSE)
+library(skimr, quietly=TRUE, warn.conflicts = FALSE)
 
 #FUNCTIONS
 #---------------------------------------------------------------------------------------------------------------

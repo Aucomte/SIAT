@@ -421,6 +421,9 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   output$meanplot <- renderPlot(
     meanplot(sr$tableF,sr$response,sr$explicative,sr$groupi,sr$testType,sr$MeanPlotting,sr$PlotType,sr$Comparaison)
   )
+  output$skim_sum <- renderTable(
+    skim(sr$tableF)
+  )
 
   # panel 3 : Anova
   
