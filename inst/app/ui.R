@@ -162,11 +162,11 @@ body <- dashboardBody(
           DT::dataTableOutput(outputId = "DataSet")
         )
       )
-      ,fluidRow(
-        box(width = 12,
-          DT::dataTableOutput(outputId = "filtered_DataSet")
-        )
-      )
+      # ,fluidRow(
+      #   box(width = 12,
+      #     DT::dataTableOutput(outputId = "filtered_DataSet")
+      #   )
+      # )
     ),
     
     tabItem(
@@ -195,7 +195,7 @@ body <- dashboardBody(
         )
       ),
       fluidRow(
-        box(width=12, "data summary by variable:"),
+        box(class = "box2", width=12, "data summary by variable:"),
         box(width = 12,
             htmlOutput(outputId = "skim_sum")
         )
