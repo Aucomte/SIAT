@@ -154,7 +154,8 @@ body <- dashboardBody(
       ),
       fluidRow(
         box(width=12, class = "box2",
-            "You can a filter your dataset by specifying the criteria in the boxes on top of the columns above. The filtered table appears below and can be downloaded. All analysis will be done with the filtered dataset."
+            #The filtered table appears below and can be downloaded. 
+            "You can a filter your dataset by specifying the criteria in the boxes on top of the columns above. All analysis will be done with the filtered dataset."
         )
       ),
       fluidRow(
