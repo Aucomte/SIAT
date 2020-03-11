@@ -155,7 +155,7 @@ body <- dashboardBody(
       fluidRow(
         box(width=12, class = "box2",
             #The filtered table appears below and can be downloaded. 
-            "You can a filter your dataset by specifying the criteria in the boxes on top of the columns above. All analysis will be done with the filtered dataset."
+            "You can a filter your dataset by specifying the criteria in the boxes on top of the columns below. All analysis will be done with the filtered dataset."
         )
       ),
       fluidRow(
@@ -196,7 +196,7 @@ body <- dashboardBody(
         )
       ),
       fluidRow(
-        box(class = "box2", width=12, "data summary by variable:"),
+        box(class = "box2", width=12, "Data summary by variable:"),
         box(width = 12,
             htmlOutput(outputId = "skim_sum")
         )
