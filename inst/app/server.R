@@ -97,6 +97,7 @@ server <-function(input,output,session){
     factorPG1 = NULL,
     factorPG2 = NULL,
     factorPG3 = NULL,
+    OrderX = TRUE,
     
     # panel 7 : Barplot
     
@@ -868,7 +869,7 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   # panel 6 : Visu
   
   outVisu <- function(){
-    x = NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+    x = NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3,sr$OrderX)
     return(x)
   }
   
@@ -884,10 +885,13 @@ Then, you need to choose a quantitative response variable (ex: Lenght)"
   observeEvent(input$factorPG3, {
     sr$factorPG3 = input$factorPG3
   })
-  observeEvent(c(sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3), ignoreInit = TRUE, {
+  observeEvent(input$OrderX, {
+    sr$OrderX = input$OrderX
+  })
+  observeEvent(c(sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3,sr$OrderX), ignoreInit = TRUE, {
     if(sr$booTable==1){
       output$PrettyG <- renderPlot({
-        NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3)
+        NiceGraph(sr$tableF,sr$responseVarPG,sr$factorPG1,sr$factorPG2,sr$factorPG3,sr$OrderX)
       })
     }
     else{

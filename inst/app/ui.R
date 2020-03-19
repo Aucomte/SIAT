@@ -500,7 +500,8 @@ body <- dashboardBody(
           pickerInput(inputId='factorPG1', label ='Select the factor for the x-axis (x)', ""),
 ##TODO: May be? Currently this will color the points based on the factor. But the expected behavior should be to color the boxplots, shouldn't it?
           pickerInput(inputId='factorPG2', label ='Select a factor for coloring based on its levels (fill)', ""),
-          pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor in a grid', "")
+          pickerInput(inputId='factorPG3', label ='Select a third factor to generate one plot per level of this factor in a grid', ""),
+          checkboxInput("OrderX", "Order the X axis by median", TRUE)
         )
       ),
       fluidRow(

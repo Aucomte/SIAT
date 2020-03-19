@@ -411,9 +411,21 @@ GraphTime <- function(tab,tim,var1,var2,var3,var4,timeselecter, smoothing){
 #---------------------------------------
 #visu
 
-NiceGraph <-  function(tab,var1,var2,var3,var4){
+NiceGraph <-  function(tab,var1,var2,var3,var4, order){
   tab = as.data.frame(tab)
-  p <- ggplot(data=tab, aes(x=reorder(tab[,var2], as.numeric(as.character(tab[,var1])),FUN = median), y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
+  if (order == TRUE){
+    p <- ggplot(data=tab, aes(x=reorder(tab[,var2], as.numeric(as.character(tab[,var1])),FUN = median), y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
+  }
+  else{
+    listX = vector()
+    for (i in 1:nrow(tab)){
+      if (!(as.character(tab[i,var2]) %in% listX)){
+        listX[length(listX)+1] = as.character(tab[i,var2])
+      }
+    }
+    tab[,var2] = factor(tab[,var2], levels = listX)
+    p <- ggplot(data=tab, aes(x=tab[,var2], y=as.numeric(as.character(tab[,var1])))) + geom_boxplot()
+  }
   if(var3 != "None" && !is.null(var3) && var3 !=""){
     p <- p + geom_jitter(aes(colour=tab[,var3]),width = 0.2)
   }
