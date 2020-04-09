@@ -44,6 +44,9 @@ runSIAT()
 ## Citation
 The paper is currently in prep.
 
+v1.0.0 archive DOI :
+[![DOI](https://zenodo.org/badge/167381301.svg)](https://zenodo.org/badge/latestdoi/167381301)
+
 ## License
 
 LGPL-3 | file LICENSE
