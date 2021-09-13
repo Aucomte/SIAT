@@ -153,7 +153,13 @@ server <-function(input,output,session){
     sr$dec = input$dec
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
-      sr$table = as.data.frame(myCSV())
+      sr$table = as.data.frame(myCSV(), stringsAsFactors = TRUE)
+      sr$outVar = colnames(myCSV())
+      updatePickerInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
+      sr$table  <- as.data.frame(sapply(sr$table, factor),stringsAsFactors = TRUE)
+      if (!is.null(sr$resp0) && sr$resp0 != ""){
+       sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+      }
     }
   })
   observeEvent(input$file1, {
@@ -201,6 +207,9 @@ server <-function(input,output,session){
           updatePickerInput(session, inputId = "factorT2", choices = c("None", sr$outVar), selected = "None")
           updatePickerInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
           updatePickerInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
+          if (!is.null(sr$resp0) && sr$resp0 != ""){
+            sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+          }
       }
   })
   
@@ -209,17 +218,21 @@ server <-function(input,output,session){
     input$sep), ignoreInit = TRUE,{
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, sep = sr$sep, dec=sr$dec, fill =TRUE)
-      sr$table = as.data.frame(myCSV())
+      sr$table = as.data.frame(myCSV(), stringsAsFactors = TRUE)
         sr$outVar = colnames(myCSV())
         updatePickerInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
+        sr$table  <- as.data.frame(sapply(sr$table, factor),stringsAsFactors = TRUE)
+        if (!is.null(sr$resp0) && sr$resp0 != ""){
+          sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+        }
     }
   })
  
   #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    output$DataSet <- DT::renderDataTable(
-      DT::datatable(
+    output$DataSet <- renderDataTable(
+      datatable(
         sr$table, 
-        filter = list(position = 'top', clear = TRUE, plain = FALSE), 
+        filter = list(position = 'top', clear = TRUE), 
         options = list(
           scrollX = TRUE,
           dom = 'Blfrtip',
@@ -232,9 +245,9 @@ server <-function(input,output,session){
         )
       )
     )
-    output$filtered_DataSet <- DT::renderDataTable( server = FALSE, {
+    output$filtered_DataSet <- renderDataTable( server = FALSE, {
         if (!is.null(sr$filtered_data)){
-          DT::datatable(
+          datatable(
             sr$tableF,
             extensions = 'Buttons', 
             options = list(
@@ -286,7 +299,6 @@ server <-function(input,output,session){
         #création de la table filtrée
         
         sr$tableF = sr$table[sr$filtered_data,]
-        
         if(sr$log == 1){
           isolate({
             sr$tableF[[sr$resp0]] = log(sr$table[sr$filtered_data,][[sr$resp0]])

@@ -126,7 +126,7 @@ return(pca.res)
 # HEATMAPS
 
 heatplot <- function(tab,var1,var2,var3,row,col){
-
+   
   varF = c(var2, var3)
   datatable = Data_Moyenne(tab,var1,varF)
   
@@ -151,7 +151,7 @@ heatplot <- function(tab,var1,var2,var3,row,col){
   x=data.matrix(x)
   kolor = c("#FFFFFF","#CCCCFF","#9999FF","#330099","#000033")
   p = heatmaply(x, Colv = col, Rowv = row, colors=kolor,  draw_cellnote = TRUE, digits = 1)
-  
+  print(x)
   HEAT = list()
   HEAT$plot = p
   HEAT$tab = x
