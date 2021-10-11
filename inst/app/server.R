@@ -150,7 +150,7 @@ server <-function(input,output,session){
     sr$sep = input$sep
   })
   observeEvent(input$dec, {
-    sr$dec = input$dec
+    sr$sp = input$dec
     if(sr$booTable == 1) {
       myCSV <- reactiveFileReader(100, session, input$file1$datapath, read.csv, header = TRUE, sep=sr$sep, dec=sr$dec, fill =TRUE)
       sr$table = as.data.frame(myCSV(), stringsAsFactors = TRUE)
@@ -158,7 +158,7 @@ server <-function(input,output,session){
       updatePickerInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
       sr$table  <- as.data.frame(sapply(sr$table, factor),stringsAsFactors = TRUE)
       if (!is.null(sr$resp0) && sr$resp0 != ""){
-       sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+       sr$table[[sr$resp0]] <- as.numeric(sub(",", ".", sr$table[[sr$resp0]], fixed = TRUE))
       }
     }
   })
@@ -208,7 +208,7 @@ server <-function(input,output,session){
           updatePickerInput(session, inputId = "factorT3", choices = c("None", sr$outVar), selected = "None")
           updatePickerInput(session, inputId = "factorT4", choices = c("None", sr$outVar), selected = "None")
           if (!is.null(sr$resp0) && sr$resp0 != ""){
-            sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+            sr$table[[sr$resp0]] <- as.numeric(sub(",", ".", sr$table[[sr$resp0]], fixed = TRUE))
           }
       }
   })
@@ -223,7 +223,7 @@ server <-function(input,output,session){
         updatePickerInput(session, inputId = "responseVar0", choices = c("",sr$outVar))
         sr$table  <- as.data.frame(sapply(sr$table, factor),stringsAsFactors = TRUE)
         if (!is.null(sr$resp0) && sr$resp0 != ""){
-          sr$table[[sr$resp0]] <- as.numeric(sr$table[[sr$resp0]])
+          sr$table[[sr$resp0]] <- as.numeric(sub(",", ".", sr$table[[sr$resp0]], fixed = TRUE))
         }
     }
   })
